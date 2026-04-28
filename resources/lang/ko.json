@@ -1,0 +1,54 @@
+{
+    "messages": {
+        "refund": {
+            "missing_tid": "거래번호가 없어 환불을 처리할 수 없습니다.",
+            "default_reason": "관리자 취소"
+        },
+        "errors": {
+            "order_not_found": "주문을 찾을 수 없습니다.",
+            "amount_mismatch": "결제 금액이 일치하지 않습니다.",
+            "authorize_failed": "결제 승인에 실패했습니다.",
+            "signature_mismatch": "서명 검증에 실패했습니다.",
+            "cbt_failed": "일본 결제(CBT) 승인에 실패했습니다."
+        }
+    },
+    "settings": {
+        "title": "KG 이니시스 설정",
+        "description": "KG 이니시스 결제 플러그인 설정을 관리합니다.",
+        "test_mode": "테스트 모드",
+        "test_mode_hint": "테스트 모드에서는 실제 결제가 발생하지 않습니다.",
+        "live_mode_warning_title": "라이브 모드 활성화",
+        "live_mode_warning_body": "실제 결제가 발생합니다. 라이브 MID 및 키를 정확히 설정했는지 확인하세요.",
+        "section_live_keys": "라이브 인증 정보",
+        "live_mid": "라이브 가맹점 ID (MID)",
+        "live_mid_hint": "KG 이니시스에서 발급받은 라이브 MID (SIR prefix 제외하고 입력)",
+        "live_mid_example": "예: shoptest → 실제 사용 MID는 SIRshoptest",
+        "live_sign_key": "라이브 사인키",
+        "live_sign_key_hint": "결제창 서명 생성에 사용되는 키입니다. 외부에 노출되지 않도록 주의하세요.",
+        "live_iniapi_key": "라이브 INIAPI 키",
+        "live_iniapi_key_hint": "취소 API 인증에 사용되는 키입니다. 외부에 노출되지 않도록 주의하세요.",
+        "live_iniapi_iv": "라이브 INIAPI IV",
+        "live_iniapi_iv_hint": "취소 API 암호화에 사용되는 초기화 벡터입니다.",
+        "section_japan": "일본 결제 (CBT)",
+        "section_japan_hint": "KG 이니시스 CBT(Cross Border Trade)를 통한 일본 엔(JPY) 결제 설정입니다.",
+        "japan_enabled": "일본 결제 활성화",
+        "japan_enabled_hint": "일본 엔(JPY) 결제를 위한 별도 CBT MID가 필요합니다.",
+        "test_japan_mid": "테스트 일본 MID",
+        "test_japan_mid_hint": "CBT 테스트용 MID (예: CBTTEST001)",
+        "test_japan_cbt_key": "테스트 일본 CBT 해시키",
+        "test_japan_cbt_key_hint": "CBT 해시 데이터 생성에 사용되는 테스트 KEY입니다.",
+        "live_japan_mid": "라이브 일본 MID",
+        "live_japan_mid_hint": "KG 이니시스 CBT 서비스에서 발급받은 라이브 MID",
+        "live_japan_cbt_key": "라이브 일본 CBT 해시키",
+        "live_japan_cbt_key_hint": "CBT 해시 데이터 생성에 사용되는 라이브 KEY입니다. 외부에 노출되지 않도록 주의하세요.",
+        "section_redirect": "리다이렉트 URL",
+        "redirect_success_url": "결제 성공 리다이렉트 URL",
+        "redirect_success_url_hint": "상대 경로(/shop/...) 또는 전체 URL 모두 가능합니다. {orderId}는 주문번호로 자동 치환됩니다.",
+        "redirect_fail_url": "결제 실패 리다이렉트 URL",
+        "redirect_fail_url_hint": "상대 경로 또는 전체 URL 모두 가능합니다. 오류 정보는 쿼리 파라미터로 자동 추가됩니다.",
+        "section_vbank_notify": "가상계좌 입금통보 URL",
+        "vbank_notify_hint": "KG 이니시스 가맹점 어드민에서 이 URL을 입금통보 URL로 등록해야 가상계좌 결제가 자동으로 처리됩니다.",
+        "vbank_notify_copied": "URL이 클립보드에 복사되었습니다.",
+        "copy": "복사"
+    }
+}

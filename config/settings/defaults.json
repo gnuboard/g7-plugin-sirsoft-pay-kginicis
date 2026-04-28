@@ -1,0 +1,18 @@
+{
+    "is_test_mode": true,
+    "test_mid": "INIpayTest",
+    "test_sign_key": "SU5JTElURV9UUklQTEVERVNfS0VZU1RS",
+    "test_iniapi_key": "ItEQKi3rY7uvDS8l",
+    "test_iniapi_iv": "HYb3yQ4f65QL89==",
+    "live_mid": "",
+    "live_sign_key": "",
+    "live_iniapi_key": "",
+    "live_iniapi_iv": "",
+    "japan_enabled": false,
+    "test_japan_mid": "",
+    "test_japan_sign_key": "5AL5Djb1Ipualn0F",
+    "live_japan_mid": "",
+    "live_japan_sign_key": "",
+    "redirect_success_url": "/shop/orders/{orderId}/complete",
+    "redirect_fail_url": "/shop/checkout"
+}
