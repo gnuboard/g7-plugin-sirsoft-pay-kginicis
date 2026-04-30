@@ -12,6 +12,10 @@
             "cbt_failed": "일본 결제(CBT) 승인에 실패했습니다."
         }
     },
+    "payment_error": {
+        "title": "결제 오류",
+        "message": "결제 처리 중 오류가 발생했습니다."
+    },
     "settings": {
         "title": "KG 이니시스 설정",
         "description": "KG 이니시스 결제 플러그인 설정을 관리합니다.",

@@ -12,6 +12,10 @@
             "cbt_failed": "Japan payment (CBT) authorization failed."
         }
     },
+    "payment_error": {
+        "title": "Payment Error",
+        "message": "An error occurred while processing the payment."
+    },
     "settings": {
         "title": "KG Inicis Settings",
         "description": "Manage KG Inicis payment plugin settings.",
