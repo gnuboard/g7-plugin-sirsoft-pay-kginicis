@@ -43,15 +43,26 @@ class PaymentCallbackController
         $validated = $request->validated();
 
         $resultCode = $validated['resultCode'];
-        $moid = $validated['MOID'];
-        $totPrice = (int) $validated['TotPrice'];
+
+        // 주문번호: 구버전 MOID, 신버전 orderNumber 모두 지원
+        $moid = $validated['MOID'] ?? $validated['orderNumber'] ?? null;
+
+        // 결제금액: 콜백에 없을 수 있음 → 서버 승인 후 PG 응답에서 가져옴
+        $totPrice = isset($validated['TotPrice']) ? (int) $validated['TotPrice'] : null;
 
         Log::info('KG Inicis: callback received', [
             'moid'        => $moid,
             'result_code' => $resultCode,
             'idc_name'    => $validated['idc_name'] ?? null,
             'auth_url'    => $validated['authUrl'] ?? null,
+            'all_fields'  => array_keys($request->all()),
         ]);
+
+        if (! $moid) {
+            Log::error('KG Inicis: order number missing from callback', ['input' => array_keys($request->all())]);
+
+            return redirect('/');
+        }
 
         // 결제 실패인 경우: authToken/authUrl 없이 올 수 있으므로 먼저 처리
         if ($resultCode !== '0000') {
@@ -71,7 +82,8 @@ class PaymentCallbackController
         // 결제 성공(0000) 이후: authToken, authUrl, idc_name 필수
         $authToken = $validated['authToken'] ?? null;
         $idcName = $validated['idc_name'] ?? null;
-        $receivedAuthUrl = $validated['authUrl'] ?? null;
+        // authUrl 또는 checkAckUrl (버전에 따라 다름)
+        $receivedAuthUrl = $validated['authUrl'] ?? $validated['checkAckUrl'] ?? null;
         $receivedNetCancelUrl = $validated['netCancelUrl'] ?? null;
 
         if (! $authToken || ! $idcName || ! $receivedAuthUrl) {
@@ -134,6 +146,11 @@ class PaymentCallbackController
             }
 
             $tid = $pgResponse['tid'] ?? '';
+
+            // TotPrice 가 콜백에 없으면 PG 승인 응답의 TotPrice 사용
+            if ($totPrice === null) {
+                $totPrice = (int) ($pgResponse['TotPrice'] ?? $pgResponse['totPrice'] ?? 0);
+            }
 
             $this->orderService->completePayment($order, [
                 'transaction_id' => $tid,
