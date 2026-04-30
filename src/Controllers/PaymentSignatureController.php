@@ -17,7 +17,8 @@ class PaymentSignatureController
     /**
      * 결제창 서명 생성
      *
-     * GET /plugins/sirsoft-pay-kginicis/payment/signature?oid=...&price=...&timestamp=...
+     * POST /api/plugins/sirsoft-pay-kginicis/payment/signature
+     * Body: { oid, price, timestamp }
      */
     public function generate(SignatureRequest $request): JsonResponse
     {
@@ -31,8 +32,10 @@ class PaymentSignatureController
         $mKey = $this->apiService->getMKey();
 
         return response()->json([
-            'signature' => $signature,
-            'mKey' => $mKey,
+            'data' => [
+                'signature' => $signature,
+                'mKey' => $mKey,
+            ],
         ]);
     }
 }

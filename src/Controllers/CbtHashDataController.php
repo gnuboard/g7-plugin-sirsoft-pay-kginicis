@@ -17,14 +17,14 @@ class CbtHashDataController
     /**
      * CBT 해시 데이터 생성
      *
-     * GET /plugins/sirsoft-pay-kginicis/payment/cbt/hash-data
-     *   ?oid={주문번호}&price={금액}&timestamp={밀리초 타임스탬프}
+     * POST /api/plugins/sirsoft-pay-kginicis/payment/cbt/hash-data
+     * Body: { oid, price, timestamp }
      */
     public function generate(Request $request): JsonResponse
     {
-        $oid = (string) $request->query('oid', '');
-        $price = (int) $request->query('price', 0);
-        $timestamp = (string) $request->query('timestamp', '');
+        $oid = (string) $request->input('oid', '');
+        $price = (int) $request->input('price', 0);
+        $timestamp = (string) $request->input('timestamp', '');
 
         if ($oid === '' || $price <= 0 || $timestamp === '') {
             return response()->json([

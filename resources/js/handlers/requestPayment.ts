@@ -86,11 +86,9 @@ async function requestKoreanPayment(
 ): Promise<void> {
     const timestamp = String(Math.floor(Date.now()));
 
-    const signatureJson: { data: SignatureResponse } = await G7Core.api.get(
-        config.callback_urls.signature +
-        `?oid=${encodeURIComponent(pgPaymentData.order_number)}` +
-        `&price=${pgPaymentData.amount}` +
-        `&timestamp=${timestamp}`
+    const signatureJson: { data: SignatureResponse } = await G7Core.api.post(
+        config.callback_urls.signature,
+        { oid: pgPaymentData.order_number, price: pgPaymentData.amount, timestamp },
     );
 
     const { signature, mKey } = signatureJson.data;
@@ -161,11 +159,9 @@ async function requestCbtPayment(
     const japanMid = config.japan_mid;
     const timestamp = String(Math.floor(Date.now()));
 
-    const hashResponse: { data: CbtHashDataResponse } = await G7Core.api.get(
-        config.callback_urls.cbt_hash_data +
-        `?oid=${encodeURIComponent(pgPaymentData.order_number)}` +
-        `&price=${pgPaymentData.amount}` +
-        `&timestamp=${timestamp}`
+    const hashResponse: { data: CbtHashDataResponse } = await G7Core.api.post(
+        config.callback_urls.cbt_hash_data,
+        { oid: pgPaymentData.order_number, price: pgPaymentData.amount, timestamp },
     );
 
     const { hash_data: hashData } = hashResponse.data;
