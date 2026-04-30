@@ -54,6 +54,10 @@ class KgInicisApiService
 
     private const ESCROW_TEST_MID = 'iniescrow0';
 
+    private const ESCROW_TEST_INIAPI_KEY = 'yERbIlJ3NhTeObsA';
+
+    private const ESCROW_TEST_INIAPI_IV = 'tOGDXbfoajk2DQ==';
+
     private const CBT_AUTH_URL_TEST = 'https://devcbt.inicis.com/cbtauth';
 
     private const CBT_AUTH_URL_LIVE = 'https://cbt.inicis.com/cbtauth';
@@ -71,6 +75,12 @@ class KgInicisApiService
     private string $inapiKey;
 
     private string $inapiIv;
+
+    private string $standardTestMid;
+
+    private string $standardTestInapiKey;
+
+    private string $standardTestInapiIv;
 
     private bool $japanEnabled;
 
@@ -92,11 +102,14 @@ class KgInicisApiService
             ? ($settings['test_sign_key'] ?? '')
             : ($settings['live_sign_key'] ?? '');
         $this->inapiKey = $this->isTest
-            ? ($settings['test_iniapi_key'] ?? '')
+            ? ($useEscrow ? self::ESCROW_TEST_INIAPI_KEY : ($settings['test_iniapi_key'] ?? ''))
             : ($settings['live_iniapi_key'] ?? '');
         $this->inapiIv = $this->isTest
-            ? ($settings['test_iniapi_iv'] ?? '')
+            ? ($useEscrow ? self::ESCROW_TEST_INIAPI_IV : ($settings['test_iniapi_iv'] ?? ''))
             : ($settings['live_iniapi_iv'] ?? '');
+        $this->standardTestMid = $settings['test_mid'] ?? 'INIpayTest';
+        $this->standardTestInapiKey = $settings['test_iniapi_key'] ?? 'ItEQKi3rY7uvDS8l';
+        $this->standardTestInapiIv = $settings['test_iniapi_iv'] ?? '2IgsAQSbMqHkAkj3';
         $this->japanEnabled = $settings['japan_enabled'] ?? false;
         $this->japanMid = $this->isTest
             ? ($settings['test_japan_mid'] ?? '')
@@ -107,6 +120,28 @@ class KgInicisApiService
         $this->mobileHashKey = $this->isTest
             ? ($settings['test_mobile_hash_key'] ?? '')
             : ($settings['live_mobile_hash_key'] ?? '');
+    }
+
+    public function isTestMode(): bool
+    {
+        return $this->isTest;
+    }
+
+    public function useEscrowCredentials(bool $isEscrow): void
+    {
+        if (! $this->isTest) {
+            return;
+        }
+
+        if ($isEscrow) {
+            $this->mid = self::ESCROW_TEST_MID;
+            $this->inapiKey = self::ESCROW_TEST_INIAPI_KEY;
+            $this->inapiIv = self::ESCROW_TEST_INIAPI_IV;
+        } else {
+            $this->mid = $this->standardTestMid;
+            $this->inapiKey = $this->standardTestInapiKey;
+            $this->inapiIv = $this->standardTestInapiIv;
+        }
     }
 
     public function getMid(): string
@@ -335,6 +370,45 @@ class KgInicisApiService
         parse_str($response->body(), $result);
 
         return $result;
+    }
+
+    /**
+     * 거래 조회 API 호출 (INIAPI v2)
+     *
+     * @param string $tid 거래번호
+     * @return array PG 응답 데이터
+     * @throws \Exception API 호출 실패 시
+     */
+    public function queryTransaction(string $tid): array
+    {
+        $type = 'inquiry';
+        $timestamp = date('YmdHis');
+        $clientIp = request()->ip() ?? '127.0.0.1';
+
+        $detail = ['tid' => $tid];
+        $detailJson = str_replace('\\/', '/', json_encode($detail, JSON_UNESCAPED_UNICODE));
+        $hashData = hash('sha512', $this->inapiKey . $this->mid . $type . $timestamp . $detailJson);
+
+        $baseUrl = $this->isTest ? self::API_BASE_URL_TEST : self::API_BASE_URL_LIVE;
+        $apiUrl = $baseUrl . '/v2/pg/inquiry';
+
+        $payload = [
+            'mid'       => $this->mid,
+            'type'      => $type,
+            'timestamp' => $timestamp,
+            'clientIp'  => $clientIp,
+            'data'      => $detail,
+            'hashData'  => $hashData,
+        ];
+
+        $response = Http::withHeaders(['Content-Type' => 'application/json;charset=utf-8'])
+            ->post($apiUrl, $payload);
+
+        if ($response->failed()) {
+            throw new \Exception('KG Inicis inquiry API error: HTTP ' . $response->status());
+        }
+
+        return $response->json() ?? [];
     }
 
     /**

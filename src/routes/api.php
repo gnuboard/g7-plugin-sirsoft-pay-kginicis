@@ -1,6 +1,7 @@
 <?php
 
 use Illuminate\Support\Facades\Route;
+use Plugins\Sirsoft\Pay\Kginicis\Controllers\AdminTransactionController;
 use Plugins\Sirsoft\Pay\Kginicis\Controllers\CbtHashDataController;
 use Plugins\Sirsoft\Pay\Kginicis\Controllers\MobileSignatureController;
 use Plugins\Sirsoft\Pay\Kginicis\Controllers\PaymentSignatureController;
@@ -43,4 +44,12 @@ Route::prefix('admin')->name('admin.')->middleware(['auth:sanctum', 'admin'])->g
             ],
         ]);
     })->name('vbank.notify.url');
+
+    // 거래 조회 — TID 직접 조회
+    Route::post('/transaction/query', [AdminTransactionController::class, 'query'])
+        ->name('transaction.query');
+
+    // 주문번호로 거래 상태 조회 (레이아웃 확장 자동 로드용)
+    Route::get('/orders/{orderNumber}/transaction-status', [AdminTransactionController::class, 'queryByOrder'])
+        ->name('orders.transaction-status');
 });

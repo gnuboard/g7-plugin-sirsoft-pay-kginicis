@@ -19,6 +19,24 @@
     "user": {
         "test_mode_badge": "테스트 결제"
     },
+    "admin": {
+        "test_mode_badge": "테스트 결제",
+        "test_mode_order_notice": "이 주문은 테스트 결제로 처리되었습니다.",
+        "order_verify_title": "KG 이니시스 결제 검증",
+        "order_verify_description": "KG 이니시스 서버에서 실시간으로 결제 상태를 조회합니다.",
+        "order_verify_button": "결제 조회",
+        "order_verify_error": "결제 조회 중 오류가 발생했습니다.",
+        "pay_status_approved": "승인",
+        "pay_status_cancelled": "취소",
+        "pay_status_unknown": "미확인",
+        "escrow_badge": "에스크로",
+        "escrow_yes": "에스크로",
+        "escrow_no": "일반결제",
+        "result_auth_code": "승인번호",
+        "result_auth_date": "승인일시",
+        "result_pay_method": "결제수단",
+        "result_result_code": "응답코드"
+    },
     "settings": {
         "title": "KG 이니시스 설정",
         "description": "KG 이니시스 결제 플러그인 설정을 관리합니다.",

@@ -19,6 +19,24 @@
     "user": {
         "test_mode_badge": "Test Payment"
     },
+    "admin": {
+        "test_mode_badge": "Test Payment",
+        "test_mode_order_notice": "This order was processed as a test payment.",
+        "order_verify_title": "KG Inicis Payment Verification",
+        "order_verify_description": "Query real-time payment status from KG Inicis servers.",
+        "order_verify_button": "Query Payment",
+        "order_verify_error": "An error occurred while querying payment status.",
+        "pay_status_approved": "Approved",
+        "pay_status_cancelled": "Cancelled",
+        "pay_status_unknown": "Unknown",
+        "escrow_badge": "Escrow",
+        "escrow_yes": "Escrow",
+        "escrow_no": "Standard",
+        "result_auth_code": "Auth Code",
+        "result_auth_date": "Auth Date",
+        "result_pay_method": "Pay Method",
+        "result_result_code": "Result Code"
+    },
     "settings": {
         "title": "KG Inicis Settings",
         "description": "Manage KG Inicis payment plugin settings.",
