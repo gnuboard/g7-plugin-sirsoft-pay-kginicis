@@ -49,6 +49,9 @@ class KgInicisApiService
         'stg' => 'https://stgstdpay.inicis.com/api/netCancel',
     ];
 
+    /** 모바일 결제창 URL (테스트/라이브 공통, MID로 모드 구분) */
+    private const MOBILE_PAYMENT_URL = 'https://mobile.inicis.com/smart/payment/';
+
     private const CBT_AUTH_URL_TEST = 'https://devcbt.inicis.com/cbtauth';
 
     private const CBT_AUTH_URL_LIVE = 'https://cbt.inicis.com/cbtauth';
@@ -73,6 +76,8 @@ class KgInicisApiService
 
     private string $japanCbtKey;
 
+    private string $mobileHashKey;
+
     public function __construct(PluginSettingsService $pluginSettingsService)
     {
         $settings = $pluginSettingsService->get(self::PLUGIN_IDENTIFIER) ?? [];
@@ -96,6 +101,9 @@ class KgInicisApiService
         $this->japanCbtKey = $this->isTest
             ? ($settings['test_japan_sign_key'] ?? '')
             : ($settings['live_japan_sign_key'] ?? '');
+        $this->mobileHashKey = $this->isTest
+            ? ($settings['test_mobile_hash_key'] ?? '')
+            : ($settings['live_mobile_hash_key'] ?? '');
     }
 
     public function getMid(): string
@@ -281,6 +289,49 @@ class KgInicisApiService
         } catch (\Throwable $e) {
             Log::error('KG Inicis net cancel failed', ['error' => $e->getMessage()]);
         }
+    }
+
+    /**
+     * 모바일 결제창 URL 반환 (테스트/라이브 모두 동일, MID로 모드 구분)
+     */
+    public function getMobilePaymentUrl(): string
+    {
+        return self::MOBILE_PAYMENT_URL;
+    }
+
+    /**
+     * 모바일 금액 위변조 방지 해시 생성
+     * base64(sha512_binary(P_AMT + P_OID + P_TIMESTAMP + HashKey))
+     */
+    public function generateMobileChkfake(string $oid, int $amount, string $timestamp): string
+    {
+        $plain = (string) $amount . $oid . $timestamp . $this->mobileHashKey;
+
+        return base64_encode(hash('sha512', $plain, true));
+    }
+
+    /**
+     * 모바일 서버 승인 API 호출
+     *
+     * 샘플(INImobile_mo_return.php) 기준:
+     *   POST P_REQ_URL with { P_MID, P_TID }
+     *   응답: URL-encoded 문자열 (parse_str로 파싱)
+     *   P_STATUS === '00' 이면 성공
+     */
+    public function authorizeMobilePayment(string $reqUrl, string $tid): array
+    {
+        $response = Http::asForm()->post($reqUrl, [
+            'P_MID' => $this->mid,
+            'P_TID' => $tid,
+        ]);
+
+        if ($response->failed()) {
+            throw new \Exception('KG Inicis mobile authorize API error: HTTP ' . $response->status());
+        }
+
+        parse_str($response->body(), $result);
+
+        return $result;
     }
 
     /**

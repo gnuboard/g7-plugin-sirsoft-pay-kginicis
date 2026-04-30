@@ -28,6 +28,8 @@ interface ClientConfig {
         cbt_hash_data: string;
         cbt_callback: string;
         cbt_auth_url: string;
+        mobile_signature: string;
+        mobile_callback: string;
     };
     japan_enabled: boolean;
     japan_mid: string;
@@ -37,6 +39,11 @@ interface SignatureResponse {
     signature: string;
     verification: string;
     mKey: string;
+}
+
+interface MobileSignatureResponse {
+    chkfake: string;
+    mobile_payment_url: string;
 }
 
 interface CbtHashDataResponse {
@@ -52,6 +59,10 @@ declare global {
             };
         };
     }
+}
+
+function isMobileUserAgent(): boolean {
+    return /Mobi|Android|iPhone|iPad|iPod/i.test(navigator.userAgent);
 }
 
 function loadScript(src: string): Promise<void> {
@@ -70,10 +81,11 @@ function loadScript(src: string): Promise<void> {
     });
 }
 
-function submitForm(action: string, fields: Record<string, string>): void {
+function submitForm(action: string, fields: Record<string, string>, charset = 'utf-8'): void {
     const form = document.createElement('form');
     form.method = 'POST';
     form.action = action;
+    form.acceptCharset = charset;
 
     for (const [name, value] of Object.entries(fields)) {
         const input = document.createElement('input');
@@ -87,6 +99,7 @@ function submitForm(action: string, fields: Record<string, string>): void {
     form.submit();
 }
 
+// PC 결제수단 → INIStdPay gopaymethod 매핑
 const GOPAYMETHOD_MAP: Record<string, string> = {
     card:  'Card',
     vbank: 'VBank',
@@ -94,8 +107,59 @@ const GOPAYMETHOD_MAP: Record<string, string> = {
     phone: 'HPP',
 };
 
+// 모바일 결제수단 → P_INI_PAYMENT 매핑
+const MOBILE_PAYMETHOD_MAP: Record<string, string> = {
+    card:  'CARD',
+    vbank: 'VBANK',
+    bank:  'BANK',
+    phone: 'HPP',
+};
+
 /**
- * KG 이니시스 한국 표준결제 (INIStdPay 팝업)
+ * KG 이니시스 한국 모바일 결제
+ *
+ * 페이지 이동 방식: https://mobile.inicis.com/smart/payment/ 로 폼 제출
+ * → KG 이니시스 인증 → P_NEXT_URL(서버)로 GET 리다이렉트 → 서버 승인
+ */
+async function requestMobileKoreanPayment(
+    G7Core: any,
+    config: ClientConfig,
+    pgPaymentData: PgPaymentData,
+    paymentMethod: string,
+): Promise<void> {
+    const timestamp = String(Math.floor(Date.now()));
+
+    const sigJson: { data: MobileSignatureResponse } = await G7Core.api.post(
+        config.callback_urls.mobile_signature,
+        { oid: pgPaymentData.order_number, price: pgPaymentData.amount, timestamp },
+    );
+
+    const { chkfake, mobile_payment_url: mobilePaymentUrl } = sigJson.data;
+
+    const nextUrl =
+        window.location.origin +
+        config.callback_urls.mobile_callback;
+
+    submitForm(mobilePaymentUrl, {
+        P_INI_PAYMENT: MOBILE_PAYMETHOD_MAP[paymentMethod] ?? 'CARD',
+        P_MID:         config.mid,
+        P_OID:         pgPaymentData.order_number,
+        P_AMT:         String(pgPaymentData.amount),
+        P_GOODS:       pgPaymentData.order_name,
+        P_UNAME:       pgPaymentData.customer_name ?? '',
+        P_MOBILE:      pgPaymentData.customer_phone ?? '',
+        P_EMAIL:       pgPaymentData.customer_email ?? '',
+        P_NEXT_URL:    nextUrl,
+        P_CHARSET:     'utf8',
+        P_TIMESTAMP:   timestamp,
+        P_CHKFAKE:     chkfake,
+        // centerCd=Y: 취소 버튼 활성화 / amt_hash=Y: 금액 위변조 검증 활성화
+        P_RESERVED:    'below1000=Y&vbank_receipt=Y&centerCd=Y&amt_hash=Y',
+    }, 'euc-kr');
+}
+
+/**
+ * KG 이니시스 한국 표준결제 (INIStdPay 팝업, PC 전용)
  */
 async function requestKoreanPayment(
     G7Core: any,
@@ -135,26 +199,26 @@ async function requestKoreanPayment(
     form.acceptCharset = 'euc-kr';
 
     const fields: Record<string, string> = {
-        version: '1.0',
-        mid: config.mid,
-        oid: pgPaymentData.order_number,
-        goodname: pgPaymentData.order_name,
-        price: String(pgPaymentData.amount),
-        currency: pgPaymentData.currency === 'KRW' ? 'WON' : (pgPaymentData.currency ?? 'WON'),
-        buyername: pgPaymentData.customer_name ?? '',
-        buyeremail: pgPaymentData.customer_email ?? '',
-        buyertel: pgPaymentData.customer_phone ?? '',
+        version:      '1.0',
+        mid:          config.mid,
+        oid:          pgPaymentData.order_number,
+        goodname:     pgPaymentData.order_name,
+        price:        String(pgPaymentData.amount),
+        currency:     pgPaymentData.currency === 'KRW' ? 'WON' : (pgPaymentData.currency ?? 'WON'),
+        buyername:    pgPaymentData.customer_name ?? '',
+        buyeremail:   pgPaymentData.customer_email ?? '',
+        buyertel:     pgPaymentData.customer_phone ?? '',
         timestamp,
         signature,
         verification,
         mKey,
-        returnUrl: callbackUrl,
-        closeUrl: orderCloseUrl,
-        gopaymethod: GOPAYMETHOD_MAP[paymentMethod] ?? 'Card',
+        returnUrl:    callbackUrl,
+        closeUrl:     orderCloseUrl,
+        gopaymethod:  GOPAYMETHOD_MAP[paymentMethod] ?? 'Card',
         acceptmethod: paymentMethod === 'phone' ? 'HPP(1):centerCd(Y)' : 'centerCd(Y)',
-        payViewType: 'overlay',
-        use_chkfake: 'Y',
-        charset: 'UTF-8',
+        payViewType:  'overlay',
+        use_chkfake:  'Y',
+        charset:      'UTF-8',
     };
 
     for (const [name, value] of Object.entries(fields)) {
@@ -196,30 +260,27 @@ async function requestCbtPayment(
         `?oid=${encodeURIComponent(pgPaymentData.order_number)}&amount=${pgPaymentData.amount}`;
 
     submitForm(config.callback_urls.cbt_auth_url, {
-        cbtType: 'JPPG',
-        mid: japanMid,
+        cbtType:     'JPPG',
+        mid:         japanMid,
         timestamp,
         returnUrl,
-        buyerName: pgPaymentData.customer_name ?? '',
-        buyerEmail: pgPaymentData.customer_email ?? '',
-        goodName: pgPaymentData.order_name,
-        amount: String(pgPaymentData.amount),
-        orderId: pgPaymentData.order_number,
+        buyerName:   pgPaymentData.customer_name ?? '',
+        buyerEmail:  pgPaymentData.customer_email ?? '',
+        goodName:    pgPaymentData.order_name,
+        amount:      String(pgPaymentData.amount),
+        orderId:     pgPaymentData.order_number,
         hashData,
-        extraData: JSON.stringify({}),
+        extraData:   JSON.stringify({}),
     });
 }
 
 /**
  * KG 이니시스 결제창 호출 핸들러
  *
- * 체크아웃 레이아웃에서 주문 생성 API 성공 후 호출됩니다:
- *   handler: "sirsoft-pay-kginicis.requestPayment"
- *   params: { pgPaymentData: response.data.pg_payment_data }
- *
  * 결제 흐름:
- *   - KRW/WON: INIStdPay 팝업 (표준결제)
  *   - JPY (japan_enabled): CBT 페이지 전환 결제
+ *   - KRW + 모바일 UA: 모바일 결제 (페이지 이동)
+ *   - KRW + PC: INIStdPay 팝업 (표준결제)
  */
 export async function requestPaymentHandler(action: any, _context?: any): Promise<void> {
     const { pgPaymentData, paymentMethod: paramPaymentMethod } = (action.params || {}) as RequestPaymentParams;
@@ -246,6 +307,8 @@ export async function requestPaymentHandler(action: any, _context?: any): Promis
 
         if (isJapan) {
             await requestCbtPayment(G7Core, config, pgPaymentData);
+        } else if (isMobileUserAgent()) {
+            await requestMobileKoreanPayment(G7Core, config, pgPaymentData, paymentMethod);
         } else {
             await requestKoreanPayment(G7Core, config, pgPaymentData, paymentMethod);
         }

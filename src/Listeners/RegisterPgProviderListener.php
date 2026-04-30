@@ -63,11 +63,13 @@ class RegisterPgProviderListener implements HookListenerInterface
                 ? 'https://stgstdpay.inicis.com/stdjs/INIStdPay.js'
                 : 'https://stdpay.inicis.com/stdjs/INIStdPay.js',
             'callback_urls' => [
-                'signature' => '/plugins/sirsoft-pay-kginicis/payment/signature',
-                'callback' => '/plugins/sirsoft-pay-kginicis/payment/callback',
-                'cbt_hash_data' => '/plugins/sirsoft-pay-kginicis/payment/cbt/hash-data',
-                'cbt_callback' => '/plugins/sirsoft-pay-kginicis/payment/cbt/callback',
-                'cbt_auth_url' => $isTest ? self::CBT_AUTH_URL_TEST : self::CBT_AUTH_URL_LIVE,
+                'signature'        => '/plugins/sirsoft-pay-kginicis/payment/signature',
+                'callback'         => '/plugins/sirsoft-pay-kginicis/payment/callback',
+                'cbt_hash_data'    => '/plugins/sirsoft-pay-kginicis/payment/cbt/hash-data',
+                'cbt_callback'     => '/plugins/sirsoft-pay-kginicis/payment/cbt/callback',
+                'cbt_auth_url'     => $isTest ? self::CBT_AUTH_URL_TEST : self::CBT_AUTH_URL_LIVE,
+                'mobile_signature' => '/plugins/sirsoft-pay-kginicis/payment/mobile/signature',
+                'mobile_callback'  => '/plugins/sirsoft-pay-kginicis/payment/mobile/callback',
             ],
             'japan_enabled' => $settings['japan_enabled'] ?? false,
             'japan_mid' => $isTest
