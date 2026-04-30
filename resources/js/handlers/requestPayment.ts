@@ -106,6 +106,8 @@ async function requestKoreanPayment(
     }
 
     const callbackUrl = window.location.origin + config.callback_urls.callback;
+    const shopBase = (window as any).G7Core?.state?.get?.('templateSettings')?.shopBase ?? '/shop';
+    const orderCloseUrl = window.location.origin + shopBase + '/orders/' + pgPaymentData.order_number;
     const formId = 'kginicis_pay_form_' + Date.now();
 
     const form = document.createElement('form');
@@ -127,7 +129,7 @@ async function requestKoreanPayment(
         signature,
         mKey,
         returnUrl: callbackUrl,
-        closeUrl: window.location.href,
+        closeUrl: orderCloseUrl,
         gopaymethod: 'Card',
         acceptmethod: 'CARDPOINT',
         payViewType: 'overlay',
