@@ -127,7 +127,7 @@ async function requestKoreanPayment(
         signature,
         mKey,
         returnUrl: callbackUrl,
-        closeUrl: callbackUrl,
+        closeUrl: window.location.href,
         gopaymethod: 'Card',
         acceptmethod: 'CARDPOINT',
         payViewType: 'overlay',
