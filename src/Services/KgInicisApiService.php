@@ -18,9 +18,9 @@ class KgInicisApiService
 
     private const JS_URL_LIVE = 'https://stdpay.inicis.com/stdjs/INIStdPay.js';
 
-    private const API_URL_TEST = 'https://stginiapi.inicis.com/api/v1/refund';
+    private const API_BASE_URL_TEST = 'https://stginiapi.inicis.com';
 
-    private const API_URL_LIVE = 'https://iniapi.inicis.com/api/v1/refund';
+    private const API_BASE_URL_LIVE = 'https://iniapi.inicis.com';
 
     /**
      * idc_name → PC 서버 승인 URL 화이트리스트 (SSRF 방어)
@@ -284,12 +284,13 @@ class KgInicisApiService
     }
 
     /**
-     * 결제 취소 API 호출 (INIAPI)
+     * 결제 취소 API 호출 (INIAPI v2)
      *
-     * @param string      $tid         거래번호 (이니시스 TID)
-     * @param string      $payMethod   결제수단 (Card/Vacct 등)
-     * @param int|null    $cancelPrice 취소 금액 (null이면 전액 취소)
-     * @param string      $msg         취소 사유
+     * @param string      $tid          거래번호 (이니시스 TID)
+     * @param string      $payMethod    결제수단 (사용하지 않음, 하위 호환용)
+     * @param int|null    $cancelPrice  취소 금액 (null이면 전액 취소)
+     * @param string      $msg          취소 사유
+     * @param int|null    $totalAmount  원결제 금액 (부분취소 시 confirmPrice 계산용)
      * @return array PG 응답 데이터
      * @throws \Exception API 호출 실패 시
      */
@@ -298,35 +299,43 @@ class KgInicisApiService
         string $payMethod,
         ?int $cancelPrice = null,
         string $msg = '관리자 취소',
+        ?int $totalAmount = null,
     ): array {
-        $type = $cancelPrice === null ? 'Refund' : 'PartialRefund';
-        $timestamp = (string) round(microtime(true) * 1000);
+        $type = $cancelPrice === null ? 'refund' : 'partialRefund';
+        $timestamp = date('YmdHis');
         $clientIp = request()->ip() ?? '127.0.0.1';
 
-        $hashBase = $this->inapiKey . $type . $payMethod . $timestamp . $clientIp . $this->mid . $tid;
-        if ($cancelPrice !== null) {
-            $hashBase .= (string) $cancelPrice;
-        }
-        $hashData = hash('sha512', $hashBase);
-
-        $params = [
-            'type' => $type,
-            'paymethod' => $payMethod,
-            'timestamp' => $timestamp,
-            'clientIp' => $clientIp,
-            'mid' => $this->mid,
+        $detail = [
             'tid' => $tid,
             'msg' => $msg,
-            'hashData' => $hashData,
         ];
 
         if ($cancelPrice !== null) {
-            $params['price'] = $cancelPrice;
+            $confirmPrice = $totalAmount !== null ? ($totalAmount - $cancelPrice) : 0;
+            $detail['price'] = (string) $cancelPrice;
+            $detail['confirmPrice'] = (string) $confirmPrice;
+            $detail['currency'] = 'WON';
+            $detail['tax'] = '0';
+            $detail['taxfree'] = '0';
         }
 
-        $apiUrl = $this->isTest ? self::API_URL_TEST : self::API_URL_LIVE;
+        $detailJson = str_replace('\\/', '/', json_encode($detail, JSON_UNESCAPED_UNICODE));
+        $hashData = hash('sha512', $this->inapiKey . $this->mid . $type . $timestamp . $detailJson);
 
-        $response = Http::asForm()->post($apiUrl, $params);
+        $baseUrl = $this->isTest ? self::API_BASE_URL_TEST : self::API_BASE_URL_LIVE;
+        $apiUrl = $baseUrl . '/v2/pg/' . $type;
+
+        $payload = [
+            'mid' => $this->mid,
+            'type' => $type,
+            'timestamp' => $timestamp,
+            'clientIp' => $clientIp,
+            'data' => $detail,
+            'hashData' => $hashData,
+        ];
+
+        $response = Http::withHeaders(['Content-Type' => 'application/json;charset=utf-8'])
+            ->post($apiUrl, $payload);
 
         if ($response->failed()) {
             throw new \Exception('KG Inicis cancel API error: HTTP ' . $response->status());

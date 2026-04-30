@@ -61,6 +61,7 @@ class PaymentRefundListener implements HookListenerInterface
                 $payMethod,
                 $isPartial ? $cancelAmt : null,
                 $cancelMsg,
+                $isPartial ? (int) $payment->amount : null,
             );
 
             Log::info('KG Inicis: refund success', [
