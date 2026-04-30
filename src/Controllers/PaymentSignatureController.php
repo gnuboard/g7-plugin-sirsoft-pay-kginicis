@@ -29,11 +29,13 @@ class PaymentSignatureController
         $timestamp = $validated['timestamp'];
 
         $signature = $this->apiService->generateSignature($oid, $price, $timestamp);
+        $verification = $this->apiService->generateVerification($oid, $price, $timestamp);
         $mKey = $this->apiService->getMKey();
 
         return response()->json([
             'data' => [
                 'signature' => $signature,
+                'verification' => $verification,
                 'mKey' => $mKey,
             ],
         ]);

@@ -30,6 +30,7 @@ interface ClientConfig {
 
 interface SignatureResponse {
     signature: string;
+    verification: string;
     mKey: string;
 }
 
@@ -91,7 +92,7 @@ async function requestKoreanPayment(
         { oid: pgPaymentData.order_number, price: pgPaymentData.amount, timestamp },
     );
 
-    const { signature, mKey } = signatureJson.data;
+    const { signature, verification, mKey } = signatureJson.data;
 
     if (!window.INIStdPay) {
         await loadScript(config.sdk_url);
@@ -127,12 +128,14 @@ async function requestKoreanPayment(
         buyertel: pgPaymentData.customer_phone ?? '',
         timestamp,
         signature,
+        verification,
         mKey,
         returnUrl: callbackUrl,
         closeUrl: orderCloseUrl,
         gopaymethod: 'Card',
-        acceptmethod: 'CARDPOINT',
+        acceptmethod: 'centerCd(Y)',
         payViewType: 'overlay',
+        use_chkfake: 'Y',
         charset: 'UTF-8',
     };
 
@@ -145,6 +148,7 @@ async function requestKoreanPayment(
     }
 
     document.body.appendChild(form);
+
     window.INIStdPay.pay(formId);
 }
 
