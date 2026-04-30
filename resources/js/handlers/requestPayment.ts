@@ -12,6 +12,11 @@ interface PgPaymentData {
 
 interface RequestPaymentParams {
     pgPaymentData: PgPaymentData;
+    paymentMethod?: string;
+}
+
+interface TemplateLocalState {
+    paymentMethod?: string;
 }
 
 interface ClientConfig {
@@ -41,6 +46,11 @@ interface CbtHashDataResponse {
 declare global {
     interface Window {
         INIStdPay: any;
+        __templateApp?: {
+            globalState?: {
+                _local?: TemplateLocalState;
+            };
+        };
     }
 }
 
@@ -77,6 +87,13 @@ function submitForm(action: string, fields: Record<string, string>): void {
     form.submit();
 }
 
+const GOPAYMETHOD_MAP: Record<string, string> = {
+    card:  'Card',
+    vbank: 'VBank',
+    bank:  'DirectBank',
+    phone: 'HPP',
+};
+
 /**
  * KG 이니시스 한국 표준결제 (INIStdPay 팝업)
  */
@@ -84,6 +101,7 @@ async function requestKoreanPayment(
     G7Core: any,
     config: ClientConfig,
     pgPaymentData: PgPaymentData,
+    paymentMethod: string,
 ): Promise<void> {
     const timestamp = String(Math.floor(Date.now()));
 
@@ -132,8 +150,8 @@ async function requestKoreanPayment(
         mKey,
         returnUrl: callbackUrl,
         closeUrl: orderCloseUrl,
-        gopaymethod: 'Card',
-        acceptmethod: 'centerCd(Y)',
+        gopaymethod: GOPAYMETHOD_MAP[paymentMethod] ?? 'Card',
+        acceptmethod: paymentMethod === 'phone' ? 'HPP(1):centerCd(Y)' : 'centerCd(Y)',
         payViewType: 'overlay',
         use_chkfake: 'Y',
         charset: 'UTF-8',
@@ -204,11 +222,14 @@ async function requestCbtPayment(
  *   - JPY (japan_enabled): CBT 페이지 전환 결제
  */
 export async function requestPaymentHandler(action: any, _context?: any): Promise<void> {
-    const { pgPaymentData } = (action.params || {}) as RequestPaymentParams;
+    const { pgPaymentData, paymentMethod: paramPaymentMethod } = (action.params || {}) as RequestPaymentParams;
 
     if (!pgPaymentData) {
         return;
     }
+
+    const localState = window.__templateApp?.globalState?._local;
+    const paymentMethod = paramPaymentMethod ?? localState?.paymentMethod ?? 'card';
 
     const G7Core = (window as any).G7Core;
 
@@ -226,7 +247,7 @@ export async function requestPaymentHandler(action: any, _context?: any): Promis
         if (isJapan) {
             await requestCbtPayment(G7Core, config, pgPaymentData);
         } else {
-            await requestKoreanPayment(G7Core, config, pgPaymentData);
+            await requestKoreanPayment(G7Core, config, pgPaymentData, paymentMethod);
         }
 
     } catch (error: unknown) {
