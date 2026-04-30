@@ -16,6 +16,9 @@
         "title": "결제 오류",
         "message": "결제 처리 중 오류가 발생했습니다."
     },
+    "user": {
+        "test_mode_badge": "테스트 결제"
+    },
     "settings": {
         "title": "KG 이니시스 설정",
         "description": "KG 이니시스 결제 플러그인 설정을 관리합니다.",
@@ -45,6 +48,10 @@
         "live_japan_mid_hint": "KG 이니시스 CBT 서비스에서 발급받은 라이브 MID",
         "live_japan_cbt_key": "라이브 일본 CBT 해시키",
         "live_japan_cbt_key_hint": "CBT 해시 데이터 생성에 사용되는 라이브 KEY입니다. 외부에 노출되지 않도록 주의하세요.",
+        "section_escrow": "에스크로 결제",
+        "section_escrow_hint": "에스크로 결제는 구매자가 상품을 받은 후 판매자에게 대금이 지급되는 안전 결제 방식입니다.",
+        "use_escrow": "에스크로 결제 활성화",
+        "use_escrow_hint": "활성화 시 PC는 acceptmethod에 useescrow가 추가되고, 모바일은 P_RESERVED에 useescrow=Y가 추가됩니다.",
         "section_redirect": "리다이렉트 URL",
         "redirect_success_url": "결제 성공 리다이렉트 URL",
         "redirect_success_url_hint": "상대 경로(/shop/...) 또는 전체 URL 모두 가능합니다. {orderId}는 주문번호로 자동 치환됩니다.",

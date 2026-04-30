@@ -32,6 +32,7 @@ interface ClientConfig {
         mobile_callback: string;
     };
     japan_enabled: boolean;
+    use_escrow: boolean;
     japan_mid: string;
 }
 
@@ -153,8 +154,10 @@ async function requestMobileKoreanPayment(
         P_CHARSET:     'utf8',
         P_TIMESTAMP:   timestamp,
         P_CHKFAKE:     chkfake,
-        // centerCd=Y: 취소 버튼 활성화 / amt_hash=Y: 금액 위변조 검증 활성화
-        P_RESERVED:    'below1000=Y&vbank_receipt=Y&centerCd=Y&amt_hash=Y',
+        // centerCd=Y: 취소 버튼 활성화 / amt_hash=Y: 금액 위변조 검증 활성화 / useescrow=Y: 에스크로 결제
+        P_RESERVED:    config.use_escrow
+            ? 'below1000=Y&vbank_receipt=Y&useescrow=Y&centerCd=Y&amt_hash=Y'
+            : 'below1000=Y&vbank_receipt=Y&centerCd=Y&amt_hash=Y',
     }, 'euc-kr');
 }
 
@@ -215,7 +218,12 @@ async function requestKoreanPayment(
         returnUrl:    callbackUrl,
         closeUrl:     orderCloseUrl,
         gopaymethod:  GOPAYMETHOD_MAP[paymentMethod] ?? 'Card',
-        acceptmethod: paymentMethod === 'phone' ? 'HPP(1):centerCd(Y)' : 'centerCd(Y)',
+        acceptmethod: (() => {
+            const escrow = config.use_escrow ? 'useescrow:' : '';
+            return paymentMethod === 'phone'
+                ? `HPP(1):${escrow}centerCd(Y)`
+                : `${escrow}centerCd(Y)`;
+        })(),
         payViewType:  'overlay',
         use_chkfake:  'Y',
         charset:      'UTF-8',

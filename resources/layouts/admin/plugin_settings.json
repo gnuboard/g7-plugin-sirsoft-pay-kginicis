@@ -621,6 +621,71 @@
                         ]
                     },
                     {
+                        "id": "escrow_section",
+                        "type": "basic",
+                        "name": "Div",
+                        "props": { "className": "mt-6 bg-white dark:bg-gray-800 rounded-lg shadow-sm border border-gray-200 dark:border-gray-700" },
+                        "children": [
+                            {
+                                "type": "basic",
+                                "name": "Div",
+                                "props": { "className": "px-6 py-4 border-b border-gray-200 dark:border-gray-700" },
+                                "children": [
+                                    {
+                                        "type": "basic",
+                                        "name": "H3",
+                                        "props": { "className": "text-base font-semibold text-gray-900 dark:text-white" },
+                                        "text": "$t:sirsoft-pay-kginicis.settings.section_escrow"
+                                    },
+                                    {
+                                        "type": "basic",
+                                        "name": "P",
+                                        "props": { "className": "mt-1 text-xs text-gray-500 dark:text-gray-400" },
+                                        "text": "$t:sirsoft-pay-kginicis.settings.section_escrow_hint"
+                                    }
+                                ]
+                            },
+                            {
+                                "type": "basic",
+                                "name": "Div",
+                                "props": { "className": "p-6" },
+                                "children": [
+                                    {
+                                        "id": "field_use_escrow",
+                                        "type": "basic",
+                                        "name": "Div",
+                                        "props": { "className": "flex items-center justify-between" },
+                                        "children": [
+                                            {
+                                                "type": "basic",
+                                                "name": "Div",
+                                                "children": [
+                                                    {
+                                                        "type": "basic",
+                                                        "name": "Label",
+                                                        "props": { "className": "block text-sm font-medium text-gray-700 dark:text-gray-300" },
+                                                        "text": "$t:sirsoft-pay-kginicis.settings.use_escrow"
+                                                    },
+                                                    {
+                                                        "type": "basic",
+                                                        "name": "P",
+                                                        "props": { "className": "mt-1 text-xs text-gray-500 dark:text-gray-400" },
+                                                        "text": "$t:sirsoft-pay-kginicis.settings.use_escrow_hint"
+                                                    }
+                                                ]
+                                            },
+                                            {
+                                                "type": "composite",
+                                                "name": "Toggle",
+                                                "props": { "name": "use_escrow" }
+                                            }
+                                        ]
+                                    }
+                                ]
+                            }
+                        ]
+                    },
+                    {
                         "id": "redirect_section",
                         "type": "basic",
                         "name": "Div",
@@ -893,6 +958,7 @@
         "live_iniapi_key": { "type": "string", "default": "", "sensitive": true },
         "live_iniapi_iv": { "type": "string", "default": "", "sensitive": true },
         "japan_enabled": { "type": "boolean", "default": false },
+        "use_escrow": { "type": "boolean", "default": false },
         "test_japan_mid": { "type": "string", "default": "" },
         "live_japan_mid": { "type": "string", "default": "" },
         "live_japan_sign_key": { "type": "string", "default": "", "sensitive": true },

@@ -72,6 +72,7 @@ class RegisterPgProviderListener implements HookListenerInterface
                 'mobile_callback'  => '/plugins/sirsoft-pay-kginicis/payment/mobile/callback',
             ],
             'japan_enabled' => $settings['japan_enabled'] ?? false,
+            'use_escrow' => $settings['use_escrow'] ?? false,
             'japan_mid' => $isTest
                 ? ($settings['test_japan_mid'] ?? '')
                 : ($settings['live_japan_mid'] ?? ''),
