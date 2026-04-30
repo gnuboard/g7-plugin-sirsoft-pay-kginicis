@@ -43,40 +43,70 @@ class PaymentCallbackController
         $validated = $request->validated();
 
         $resultCode = $validated['resultCode'];
-        $authToken = $validated['authToken'];
-        $idcName = $validated['idc_name'];
-        $receivedAuthUrl = $validated['authUrl'];
-        $receivedNetCancelUrl = $validated['netCancelUrl'];
         $moid = $validated['MOID'];
         $totPrice = (int) $validated['TotPrice'];
 
-        // idc_name 기반 화이트리스트에서 URL 결정 (SSRF 방어: 브라우저 전달 URL을 그대로 사용하지 않음)
+        Log::info('KG Inicis: callback received', [
+            'moid'        => $moid,
+            'result_code' => $resultCode,
+            'idc_name'    => $validated['idc_name'] ?? null,
+            'auth_url'    => $validated['authUrl'] ?? null,
+        ]);
+
+        // 결제 실패인 경우: authToken/authUrl 없이 올 수 있으므로 먼저 처리
+        if ($resultCode !== '0000') {
+            Log::warning('KG Inicis: auth result failed', [
+                'moid'        => $moid,
+                'result_code' => $resultCode,
+                'result_msg'  => $validated['resultMsg'] ?? '',
+            ]);
+
+            return redirect($this->resolveFailUrl([
+                'error'   => $resultCode,
+                'message' => $validated['resultMsg'] ?? '',
+                'orderId' => $moid,
+            ]));
+        }
+
+        // 결제 성공(0000) 이후: authToken, authUrl, idc_name 필수
+        $authToken = $validated['authToken'] ?? null;
+        $idcName = $validated['idc_name'] ?? null;
+        $receivedAuthUrl = $validated['authUrl'] ?? null;
+        $receivedNetCancelUrl = $validated['netCancelUrl'] ?? null;
+
+        if (! $authToken || ! $idcName || ! $receivedAuthUrl) {
+            Log::error('KG Inicis: missing required fields on success callback', [
+                'moid'      => $moid,
+                'idc_name'  => $idcName,
+                'auth_url'  => $receivedAuthUrl,
+                'has_token' => (bool) $authToken,
+            ]);
+
+            return redirect($this->resolveFailUrl(['error' => 'missing_fields', 'orderId' => $moid]));
+        }
+
+        // idc_name 화이트리스트 기반 URL 결정 (SSRF 방어)
         $authUrl = $this->apiService->resolveIdcAuthUrl($idcName);
         $netCancelUrl = $this->apiService->resolveIdcNetCancelUrl($idcName);
 
-        if ($authUrl === null || $authUrl !== $receivedAuthUrl) {
-            Log::error('KG Inicis: authUrl mismatch', [
-                'moid' => $moid,
+        if ($authUrl === null) {
+            Log::error('KG Inicis: unknown idc_name', [
+                'moid'     => $moid,
+                'idc_name' => $idcName,
+            ]);
+
+            return redirect($this->resolveFailUrl(['error' => 'auth_url_invalid', 'orderId' => $moid]));
+        }
+
+        if ($authUrl !== $receivedAuthUrl) {
+            Log::error('KG Inicis: authUrl mismatch (possible SSRF attempt)', [
+                'moid'     => $moid,
                 'idc_name' => $idcName,
                 'expected' => $authUrl,
                 'received' => $receivedAuthUrl,
             ]);
 
             return redirect($this->resolveFailUrl(['error' => 'auth_url_invalid', 'orderId' => $moid]));
-        }
-
-        if ($resultCode !== '0000') {
-            Log::warning('KG Inicis: auth result failed', [
-                'moid' => $moid,
-                'result_code' => $resultCode,
-                'result_msg' => $validated['resultMsg'] ?? '',
-            ]);
-
-            return redirect($this->resolveFailUrl([
-                'error' => $resultCode,
-                'message' => $validated['resultMsg'] ?? '',
-                'orderId' => $moid,
-            ]));
         }
 
         try {
