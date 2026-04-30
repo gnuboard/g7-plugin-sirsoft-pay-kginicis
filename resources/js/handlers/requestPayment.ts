@@ -121,7 +121,7 @@ async function requestKoreanPayment(
         oid: pgPaymentData.order_number,
         goodname: pgPaymentData.order_name,
         price: String(pgPaymentData.amount),
-        currency: pgPaymentData.currency ?? 'WON',
+        currency: pgPaymentData.currency === 'KRW' ? 'WON' : (pgPaymentData.currency ?? 'WON'),
         buyername: pgPaymentData.customer_name ?? '',
         buyeremail: pgPaymentData.customer_email ?? '',
         buyertel: pgPaymentData.customer_phone ?? '',
