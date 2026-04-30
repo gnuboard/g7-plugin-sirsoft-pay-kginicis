@@ -52,6 +52,8 @@ class KgInicisApiService
     /** 모바일 결제창 URL (테스트/라이브 공통, MID로 모드 구분) */
     private const MOBILE_PAYMENT_URL = 'https://mobile.inicis.com/smart/payment/';
 
+    private const ESCROW_TEST_MID = 'iniescrow0';
+
     private const CBT_AUTH_URL_TEST = 'https://devcbt.inicis.com/cbtauth';
 
     private const CBT_AUTH_URL_LIVE = 'https://cbt.inicis.com/cbtauth';
@@ -82,8 +84,9 @@ class KgInicisApiService
     {
         $settings = $pluginSettingsService->get(self::PLUGIN_IDENTIFIER) ?? [];
         $this->isTest = $settings['is_test_mode'] ?? true;
+        $useEscrow = (bool) ($settings['use_escrow'] ?? false);
         $this->mid = $this->isTest
-            ? ($settings['test_mid'] ?? '')
+            ? ($useEscrow ? self::ESCROW_TEST_MID : ($settings['test_mid'] ?? ''))
             : $this->buildLiveMid($settings['live_mid'] ?? '');
         $this->signKey = $this->isTest
             ? ($settings['test_sign_key'] ?? '')

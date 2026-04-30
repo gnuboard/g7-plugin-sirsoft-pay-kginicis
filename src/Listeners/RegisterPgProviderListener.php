@@ -12,6 +12,8 @@ class RegisterPgProviderListener implements HookListenerInterface
 
     private const LIVE_MID_PREFIX = 'SIR';
 
+    private const ESCROW_TEST_MID = 'iniescrow0';
+
     private const CBT_AUTH_URL_TEST = 'https://devcbt.inicis.com/cbtauth';
 
     private const CBT_AUTH_URL_LIVE = 'https://cbt.inicis.com/cbtauth';
@@ -55,9 +57,11 @@ class RegisterPgProviderListener implements HookListenerInterface
         $settings = $this->getPluginSettings();
         $isTest = $settings['is_test_mode'] ?? true;
 
+        $useEscrow = (bool) ($settings['use_escrow'] ?? false);
+
         return array_merge($config, [
             'mid' => $isTest
-                ? ($settings['test_mid'] ?? '')
+                ? ($useEscrow ? self::ESCROW_TEST_MID : ($settings['test_mid'] ?? ''))
                 : $this->buildLiveMid($settings['live_mid'] ?? ''),
             'sdk_url' => $isTest
                 ? 'https://stgstdpay.inicis.com/stdjs/INIStdPay.js'
