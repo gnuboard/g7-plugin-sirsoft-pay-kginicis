@@ -110,7 +110,7 @@ class KgInicisApiService
     }
 
     /**
-     * 결제창 서명 생성: SHA256("oid=" + oid + "&price=" + price + "&timestamp=" + timestamp)
+     * 결제창 서명 생성: SHA256("oid=" + oid + "&price=" + price + "&signKey=" + signKey + "&timestamp=" + timestamp)
      *
      * @param string $oid       주문번호
      * @param int    $price     결제 금액
@@ -118,7 +118,7 @@ class KgInicisApiService
      */
     public function generateSignature(string $oid, int $price, string $timestamp): string
     {
-        $plain = 'oid=' . $oid . '&price=' . $price . '&timestamp=' . $timestamp;
+        $plain = 'oid=' . $oid . '&price=' . $price . '&signKey=' . $this->signKey . '&timestamp=' . $timestamp;
 
         return hash('sha256', $plain);
     }
