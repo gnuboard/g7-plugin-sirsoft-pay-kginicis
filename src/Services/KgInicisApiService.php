@@ -22,14 +22,27 @@ class KgInicisApiService
 
     private const API_URL_LIVE = 'https://iniapi.inicis.com/api/v1/refund';
 
-    /** idc_name → 서버 승인 URL 화이트리스트 (SSRF 방어) */
+    /**
+     * idc_name → PC 서버 승인 URL 화이트리스트 (SSRF 방어)
+     * 출처: 이니시스 PC 일반결제 샘플 properties.php
+     */
     private const IDC_AUTH_URLS = [
         'fc'  => 'https://fcstdpay.inicis.com/api/payAuth',
         'ks'  => 'https://ksstdpay.inicis.com/api/payAuth',
         'stg' => 'https://stgstdpay.inicis.com/api/payAuth',
     ];
 
-    /** idc_name → 망취소 URL 화이트리스트 */
+    /**
+     * idc_name → 모바일 서버 승인 URL 화이트리스트
+     * 출처: 이니시스 모바일 결제 메뉴얼 IDC센터코드 표
+     */
+    private const IDC_MOBILE_AUTH_URLS = [
+        'fc'  => 'https://fcmobile.inicis.com/smart/payReq.ini',
+        'ks'  => 'https://ksmobile.inicis.com/smart/payReq.ini',
+        'stg' => 'https://stgmobile.inicis.com/smart/payReq.ini',
+    ];
+
+    /** idc_name → PC 망취소 URL 화이트리스트 */
     private const IDC_NET_CANCEL_URLS = [
         'fc'  => 'https://fcstdpay.inicis.com/api/netCancel',
         'ks'  => 'https://ksstdpay.inicis.com/api/netCancel',
@@ -116,12 +129,31 @@ class KgInicisApiService
     }
 
     /**
-     * idc_name으로 서버 승인 URL을 결정합니다.
-     * 브라우저가 전달한 authUrl이 이 값과 일치해야만 실제 API 호출에 사용합니다 (SSRF 방어).
+     * idc_name + 수신된 authUrl로 화이트리스트 검증 후 신뢰할 URL을 반환합니다.
+     * PC와 모바일 패턴을 모두 허용합니다 (SSRF 방어).
+     * 일치하는 화이트리스트 URL이 없으면 null 반환.
      */
-    public function resolveIdcAuthUrl(string $idcName): ?string
+    public function resolveIdcAuthUrl(string $idcName, string $receivedUrl = ''): ?string
     {
-        return self::IDC_AUTH_URLS[$idcName] ?? null;
+        $pc     = self::IDC_AUTH_URLS[$idcName] ?? null;
+        $mobile = self::IDC_MOBILE_AUTH_URLS[$idcName] ?? null;
+
+        if ($receivedUrl !== '' && $receivedUrl === $mobile) {
+            return $mobile;
+        }
+
+        return $pc;
+    }
+
+    /**
+     * idc_name + 수신된 authUrl이 화이트리스트에 있는지 검증합니다.
+     */
+    public function isValidIdcAuthUrl(string $idcName, string $receivedUrl): bool
+    {
+        $pc     = self::IDC_AUTH_URLS[$idcName] ?? null;
+        $mobile = self::IDC_MOBILE_AUTH_URLS[$idcName] ?? null;
+
+        return $receivedUrl === $pc || $receivedUrl === $mobile;
     }
 
     /**

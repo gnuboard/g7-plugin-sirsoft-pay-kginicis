@@ -85,29 +85,20 @@ class PaymentCallbackController
             return redirect($this->resolveFailUrl(['error' => 'missing_fields', 'orderId' => $moid]));
         }
 
-        // idc_name 화이트리스트 기반 URL 결정 (SSRF 방어)
-        $authUrl = $this->apiService->resolveIdcAuthUrl($idcName);
-        $netCancelUrl = $this->apiService->resolveIdcNetCancelUrl($idcName);
-
-        if ($authUrl === null) {
-            Log::error('KG Inicis: unknown idc_name', [
+        // idc_name + authUrl 화이트리스트 검증 (PC/모바일 URL 모두 허용, SSRF 방어)
+        if (! $this->apiService->isValidIdcAuthUrl($idcName, $receivedAuthUrl)) {
+            Log::error('KG Inicis: authUrl not in whitelist (possible SSRF attempt)', [
                 'moid'     => $moid,
                 'idc_name' => $idcName,
-            ]);
-
-            return redirect($this->resolveFailUrl(['error' => 'auth_url_invalid', 'orderId' => $moid]));
-        }
-
-        if ($authUrl !== $receivedAuthUrl) {
-            Log::error('KG Inicis: authUrl mismatch (possible SSRF attempt)', [
-                'moid'     => $moid,
-                'idc_name' => $idcName,
-                'expected' => $authUrl,
                 'received' => $receivedAuthUrl,
             ]);
 
             return redirect($this->resolveFailUrl(['error' => 'auth_url_invalid', 'orderId' => $moid]));
         }
+
+        // 화이트리스트 검증 통과 → 수신된 URL을 그대로 사용 (PC/모바일 자동 대응)
+        $authUrl = $receivedAuthUrl;
+        $netCancelUrl = $this->apiService->resolveIdcNetCancelUrl($idcName);
 
         try {
             $order = $this->orderService->findByOrderNumber($moid);
