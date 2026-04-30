@@ -44,10 +44,26 @@ class PaymentCallbackController
 
         $resultCode = $validated['resultCode'];
         $authToken = $validated['authToken'];
-        $authUrl = $validated['authUrl'];
-        $netCancelUrl = $validated['netCancelUrl'];
+        $idcName = $validated['idc_name'];
+        $receivedAuthUrl = $validated['authUrl'];
+        $receivedNetCancelUrl = $validated['netCancelUrl'];
         $moid = $validated['MOID'];
         $totPrice = (int) $validated['TotPrice'];
+
+        // idc_name 기반 화이트리스트에서 URL 결정 (SSRF 방어: 브라우저 전달 URL을 그대로 사용하지 않음)
+        $authUrl = $this->apiService->resolveIdcAuthUrl($idcName);
+        $netCancelUrl = $this->apiService->resolveIdcNetCancelUrl($idcName);
+
+        if ($authUrl === null || $authUrl !== $receivedAuthUrl) {
+            Log::error('KG Inicis: authUrl mismatch', [
+                'moid' => $moid,
+                'idc_name' => $idcName,
+                'expected' => $authUrl,
+                'received' => $receivedAuthUrl,
+            ]);
+
+            return redirect($this->resolveFailUrl(['error' => 'auth_url_invalid', 'orderId' => $moid]));
+        }
 
         if ($resultCode !== '0000') {
             Log::warning('KG Inicis: auth result failed', [

@@ -21,6 +21,7 @@ class AuthCallbackRequest extends FormRequest
             'authToken' => ['required', 'string'],
             'authUrl' => ['required', 'url'],
             'netCancelUrl' => ['required', 'url'],
+            'idc_name' => ['required', 'string', 'in:fc,ks,stg'],
             'MOID' => ['required', 'string'],
             'TotPrice' => ['required', 'integer', 'min:0'],
         ];

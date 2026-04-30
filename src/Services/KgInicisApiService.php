@@ -22,6 +22,20 @@ class KgInicisApiService
 
     private const API_URL_LIVE = 'https://iniapi.inicis.com/api/v1/refund';
 
+    /** idc_name → 서버 승인 URL 화이트리스트 (SSRF 방어) */
+    private const IDC_AUTH_URLS = [
+        'fc'  => 'https://fcstdpay.inicis.com/api/payAuth',
+        'ks'  => 'https://ksstdpay.inicis.com/api/payAuth',
+        'stg' => 'https://stgstdpay.inicis.com/api/payAuth',
+    ];
+
+    /** idc_name → 망취소 URL 화이트리스트 */
+    private const IDC_NET_CANCEL_URLS = [
+        'fc'  => 'https://fcstdpay.inicis.com/api/netCancel',
+        'ks'  => 'https://ksstdpay.inicis.com/api/netCancel',
+        'stg' => 'https://stgstdpay.inicis.com/api/netCancel',
+    ];
+
     private const CBT_AUTH_URL_TEST = 'https://devcbt.inicis.com/cbtauth';
 
     private const CBT_AUTH_URL_LIVE = 'https://cbt.inicis.com/cbtauth';
@@ -99,6 +113,23 @@ class KgInicisApiService
     public function getCbtApproveUrl(): string
     {
         return $this->isTest ? self::CBT_APPROVE_URL_TEST : self::CBT_APPROVE_URL_LIVE;
+    }
+
+    /**
+     * idc_name으로 서버 승인 URL을 결정합니다.
+     * 브라우저가 전달한 authUrl이 이 값과 일치해야만 실제 API 호출에 사용합니다 (SSRF 방어).
+     */
+    public function resolveIdcAuthUrl(string $idcName): ?string
+    {
+        return self::IDC_AUTH_URLS[$idcName] ?? null;
+    }
+
+    /**
+     * idc_name으로 망취소 URL을 결정합니다.
+     */
+    public function resolveIdcNetCancelUrl(string $idcName): ?string
+    {
+        return self::IDC_NET_CANCEL_URLS[$idcName] ?? null;
     }
 
     /**
