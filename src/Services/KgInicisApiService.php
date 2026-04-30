@@ -208,17 +208,32 @@ class KgInicisApiService
     }
 
     /**
-     * 서버 승인 API 호출 (authUrl로 POST)
+     * 서버 승인 API 호출
      *
-     * @param string $authUrl   이니시스가 콜백으로 전달한 authUrl
-     * @param string $authToken 이니시스가 콜백으로 전달한 authToken
-     * @return array PG 응답 데이터
-     * @throws \Exception API 호출 실패 시
+     * 샘플(INIstdpay_pc_return.php) 기준 필수 파라미터:
+     *   mid, authToken, signature, verification, timestamp, charset, format
+     *
+     * signature    = SHA256(알파벳순 정렬: "authToken={v}&timestamp={v}")
+     * verification = SHA256(알파벳순 정렬: "authToken={v}&signKey={v}&timestamp={v}")
      */
     public function authorizePayment(string $authUrl, string $authToken): array
     {
+        $timestamp = (string) round(microtime(true) * 1000);
+
+        // 알파벳순 정렬: authToken < timestamp
+        $signature = hash('sha256', 'authToken=' . $authToken . '&timestamp=' . $timestamp);
+
+        // 알파벳순 정렬: authToken < signKey < timestamp
+        $verification = hash('sha256', 'authToken=' . $authToken . '&signKey=' . $this->signKey . '&timestamp=' . $timestamp);
+
         $response = Http::asForm()->post($authUrl, [
-            'authToken' => $authToken,
+            'mid'          => $this->mid,
+            'authToken'    => $authToken,
+            'signature'    => $signature,
+            'verification' => $verification,
+            'timestamp'    => $timestamp,
+            'charset'      => 'UTF-8',
+            'format'       => 'JSON',
         ]);
 
         if ($response->failed()) {
