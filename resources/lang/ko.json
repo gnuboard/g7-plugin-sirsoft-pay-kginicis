@@ -17,7 +17,11 @@
         "message": "결제 처리 중 오류가 발생했습니다."
     },
     "user": {
-        "test_mode_badge": "테스트 결제"
+        "test_mode_badge": "테스트 결제",
+        "payment_type_label": "결제 방식",
+        "receipt_label": "영수증",
+        "receipt_view": "영수증 조회",
+        "escrow_confirm_button": "구매결정"
     },
     "admin": {
         "test_mode_badge": "테스트 결제",

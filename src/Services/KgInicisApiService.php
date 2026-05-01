@@ -58,6 +58,9 @@ class KgInicisApiService
 
     private const ESCROW_TEST_INIAPI_IV = 'tOGDXbfoajk2DQ==';
 
+    /** 에스크로 테스트 구매결정용 signKey (mKey = SHA-256(signKey)) */
+    private const ESCROW_TEST_SIGN_KEY = 'SU5JTElURV9UUklQTEVERVNfS0VZU1RS';
+
     private const CBT_AUTH_URL_TEST = 'https://devcbt.inicis.com/cbtauth';
 
     private const CBT_AUTH_URL_LIVE = 'https://cbt.inicis.com/cbtauth';
@@ -147,6 +150,17 @@ class KgInicisApiService
     public function getMid(): string
     {
         return $this->mid;
+    }
+
+    /**
+     * PC 에스크로 구매결정 폼의 mKey 반환 (SHA-256(escrow signKey))
+     * 테스트: 이니시스 에스크로 테스트 signKey 사용
+     * 라이브: 에스크로 가맹점 signKey 사용 (live_sign_key 설정값)
+     */
+    public function getEscrowConfirmMKey(): string
+    {
+        $signKey = $this->isTest ? self::ESCROW_TEST_SIGN_KEY : $this->signKey;
+        return hash('sha256', $signKey);
     }
 
     public function getJapanMid(): string

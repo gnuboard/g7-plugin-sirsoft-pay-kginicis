@@ -17,7 +17,11 @@
         "message": "An error occurred while processing the payment."
     },
     "user": {
-        "test_mode_badge": "Test Payment"
+        "test_mode_badge": "Test Payment",
+        "payment_type_label": "Payment Type",
+        "receipt_label": "Receipt",
+        "receipt_view": "View Receipt",
+        "escrow_confirm_button": "Confirm Purchase"
     },
     "admin": {
         "test_mode_badge": "Test Payment",
