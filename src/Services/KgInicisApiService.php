@@ -484,6 +484,93 @@ class KgInicisApiService
     }
 
     /**
+     * 에스크로 배송등록/변경 API 호출 (INIAPI v1)
+     *
+     * PC/모바일 공통 엔드포인트: /api/v1/escrow
+     * 메뉴얼: https://manual.inicis.com/pay/escrow_pc.html#dlv
+     *
+     * @param array $data {
+     *   tid:         에스크로 결제 승인 TID
+     *   oid:         주문번호
+     *   price:       결제금액
+     *   report:      등록형태 ('I'=등록, 'U'=변경)
+     *   invoice:     운송장번호
+     *   registName:  배송등록자
+     *   exCode:      택배사코드 (hanjin, cjgls, loge, epost 등)
+     *   exName:      택배사명
+     *   charge:      배송비 지급형태 ('SH'=판매자부담, 'BH'=구매자부담)
+     *   invoiceDay:  배송등록 확인일자 (예: '2024-01-01 10:00:00')
+     *   sendName:    송신자 이름
+     *   sendTel:     송신자 전화번호
+     *   sendPost:    송신자 우편번호
+     *   sendAddr1:   송신자 주소
+     *   recvName:    수신자 이름
+     *   recvTel:     수신자 전화번호
+     *   recvPost:    수신자 우편번호
+     *   recvAddr:    수신자 주소
+     * }
+     * @return array PG 응답 (resultCode '00' = 성공)
+     * @throws \Exception
+     */
+    public function registerEscrowDelivery(array $data): array
+    {
+        $type = 'Dlv';
+        $timestamp = date('YmdHis');
+        $clientIp = request()->ip() ?? '127.0.0.1';
+
+        // hash: SHA-512(key + type + timestamp + clientIp + mid + oid + tid + price)
+        $plainText = $this->inapiKey . $type . $timestamp . $clientIp
+            . $this->mid . $data['oid'] . $data['tid'] . $data['price'];
+        $hashData = hash('sha512', $plainText);
+
+        $payload = [
+            'type'        => $type,
+            'mid'         => $this->mid,
+            'clientIp'    => $clientIp,
+            'timestamp'   => $timestamp,
+            'tid'         => $data['tid'],
+            'oid'         => $data['oid'],
+            'price'       => (string) $data['price'],
+            'report'      => $data['report'] ?? 'I',
+            'invoice'     => $data['invoice'],
+            'registName'  => $data['registName'] ?? '',
+            'exCode'      => $data['exCode'],
+            'exName'      => $data['exName'],
+            'charge'      => $data['charge'] ?? 'SH',
+            'invoiceDay'  => $data['invoiceDay'] ?? date('Y-m-d H:i:s'),
+            'sendName'    => $data['sendName'] ?? '',
+            'sendTel'     => $data['sendTel'] ?? '',
+            'sendPost'    => $data['sendPost'] ?? '',
+            'sendAddr1'   => $data['sendAddr1'] ?? '',
+            'recvName'    => $data['recvName'] ?? '',
+            'recvTel'     => $data['recvTel'] ?? '',
+            'recvPost'    => $data['recvPost'] ?? '',
+            'recvAddr'    => $data['recvAddr'] ?? '',
+            'hashData'    => $hashData,
+        ];
+
+        $baseUrl = $this->isTest ? self::API_BASE_URL_TEST : self::API_BASE_URL_LIVE;
+        $apiUrl = $baseUrl . '/api/v1/escrow';
+
+        $response = Http::withHeaders([
+            'Content-Type' => 'application/x-www-form-urlencoded; charset=utf-8',
+        ])->asForm()->post($apiUrl, $payload);
+
+        if ($response->failed()) {
+            throw new \Exception('KG Inicis escrow delivery API error: HTTP ' . $response->status());
+        }
+
+        // 응답: URL-encoded 문자열 또는 JSON 모두 처리
+        $body = $response->body();
+        $result = json_decode($body, true);
+        if (json_last_error() !== JSON_ERROR_NONE) {
+            parse_str($body, $result);
+        }
+
+        return $result ?: [];
+    }
+
+    /**
      * 현금영수증 별도발행 API 호출 (INIAPI v2)
      *
      * 메뉴얼: https://manual.inicis.com/pay/etc-receipt.html

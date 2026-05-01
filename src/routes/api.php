@@ -2,6 +2,7 @@
 
 use Illuminate\Support\Facades\Route;
 use Plugins\Sirsoft\Pay\Kginicis\Controllers\AdminCashReceiptController;
+use Plugins\Sirsoft\Pay\Kginicis\Controllers\AdminEscrowDeliveryController;
 use Plugins\Sirsoft\Pay\Kginicis\Controllers\AdminTransactionController;
 use Plugins\Sirsoft\Pay\Kginicis\Controllers\CbtHashDataController;
 use Plugins\Sirsoft\Pay\Kginicis\Controllers\MobileSignatureController;
@@ -59,4 +60,10 @@ Route::prefix('admin')->name('admin.')->middleware(['auth:sanctum', 'admin'])->g
     // 현금영수증 별도발행
     Route::post('/orders/{orderNumber}/cash-receipt', [AdminCashReceiptController::class, 'issue'])
         ->name('orders.cash-receipt.issue');
+
+    // 에스크로 배송등록
+    Route::get('/orders/{orderNumber}/escrow-delivery', [AdminEscrowDeliveryController::class, 'formData'])
+        ->name('orders.escrow-delivery.form');
+    Route::post('/orders/{orderNumber}/escrow-delivery', [AdminEscrowDeliveryController::class, 'register'])
+        ->name('orders.escrow-delivery.register');
 });
