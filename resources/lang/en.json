@@ -69,7 +69,17 @@
         "escrow_delivery_registered_at": "Registered At",
         "escrow_delivery_invoice_info": "Invoice No.",
         "escrow_delivery_courier_info": "Courier",
-        "escrow_delivery_recv_addr": "Delivery Address"
+        "escrow_delivery_recv_addr": "Delivery Address",
+        "escrow_deny_confirm_title": "Escrow Denial Confirmation",
+        "escrow_deny_confirm_description": "Seller confirmation for buyer's purchase denial.",
+        "escrow_deny_confirm_button": "Confirm Denial",
+        "escrow_deny_confirming": "Processing...",
+        "escrow_deny_confirm_success": "Denial confirmation completed.",
+        "escrow_deny_confirm_error": "Failed to confirm denial.",
+        "escrow_deny_confirm_done": "Denial Confirmed",
+        "escrow_deny_confirm_done_at": "Confirmed At",
+        "escrow_deny_confirm_status_label": "Purchase Status",
+        "escrow_deny_confirm_buyer_denied": "Denied by Buyer"
     },
     "settings": {
         "title": "KG Inicis Settings",

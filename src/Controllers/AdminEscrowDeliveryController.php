@@ -69,9 +69,11 @@ class AdminEscrowDeliveryController extends AdminBaseController
             ])
             ->first();
 
-        // payment_meta에서 기존 배송등록 이력 추출
-        $meta = $payment->payment_meta ? json_decode($payment->payment_meta, true) : [];
+        // payment_meta에서 이력 추출
+        $meta           = $payment->payment_meta ? json_decode($payment->payment_meta, true) : [];
         $escrowDelivery = $meta['escrow_delivery'] ?? null;
+        $escrowConfirm  = $meta['escrow_confirm'] ?? null;
+        $denyConfirmed  = isset($meta['escrow_deny_confirm']);
 
         return ResponseHelper::success('messages.success', [
             'has_escrow_payment'   => true,
@@ -85,6 +87,8 @@ class AdminEscrowDeliveryController extends AdminBaseController
                 'recvAddr'  => trim(($address?->address ?? '') . ' ' . ($address?->address_detail ?? '')),
             ],
             'registered_delivery'  => $escrowDelivery,
+            'escrow_confirm'       => $escrowConfirm,
+            'deny_confirmed'       => $denyConfirmed,
         ]);
     }
 

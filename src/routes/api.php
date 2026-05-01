@@ -3,6 +3,7 @@
 use Illuminate\Support\Facades\Route;
 use Plugins\Sirsoft\Pay\Kginicis\Controllers\AdminCashReceiptController;
 use Plugins\Sirsoft\Pay\Kginicis\Controllers\AdminEscrowDeliveryController;
+use Plugins\Sirsoft\Pay\Kginicis\Controllers\AdminEscrowDenyConfirmController;
 use Plugins\Sirsoft\Pay\Kginicis\Controllers\AdminTransactionController;
 use Plugins\Sirsoft\Pay\Kginicis\Controllers\CbtHashDataController;
 use Plugins\Sirsoft\Pay\Kginicis\Controllers\MobileSignatureController;
@@ -66,4 +67,8 @@ Route::prefix('admin')->name('admin.')->middleware(['auth:sanctum', 'admin'])->g
         ->name('orders.escrow-delivery.form');
     Route::post('/orders/{orderNumber}/escrow-delivery', [AdminEscrowDeliveryController::class, 'register'])
         ->name('orders.escrow-delivery.register');
+
+    // 에스크로 구매거절확인
+    Route::post('/orders/{orderNumber}/escrow-deny-confirm', [AdminEscrowDenyConfirmController::class, 'confirm'])
+        ->name('orders.escrow-deny-confirm');
 });

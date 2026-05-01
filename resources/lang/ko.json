@@ -69,7 +69,17 @@
         "escrow_delivery_registered_at": "등록일시",
         "escrow_delivery_invoice_info": "운송장번호",
         "escrow_delivery_courier_info": "택배사",
-        "escrow_delivery_recv_addr": "배송지"
+        "escrow_delivery_recv_addr": "배송지",
+        "escrow_deny_confirm_title": "에스크로 구매거절확인",
+        "escrow_deny_confirm_description": "구매자 구매거절에 대한 판매자 확인 처리입니다.",
+        "escrow_deny_confirm_button": "구매거절확인",
+        "escrow_deny_confirming": "처리 중...",
+        "escrow_deny_confirm_success": "구매거절확인이 완료되었습니다.",
+        "escrow_deny_confirm_error": "구매거절확인에 실패했습니다.",
+        "escrow_deny_confirm_done": "거절확인 완료",
+        "escrow_deny_confirm_done_at": "처리일시",
+        "escrow_deny_confirm_status_label": "구매거절 상태",
+        "escrow_deny_confirm_buyer_denied": "구매거절"
     },
     "settings": {
         "title": "KG 이니시스 설정",

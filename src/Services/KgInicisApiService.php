@@ -585,6 +585,55 @@ class KgInicisApiService
     }
 
     /**
+     * 에스크로 구매거절확인 API 호출 (INIAPI v1 /api/v1/escrow, type=Dncf)
+     *
+     * 구매자가 구매거절 선택 후 판매자(관리자)가 거절을 확인하는 절차.
+     * hash: SHA-512(key + type + timestamp + clientIp + mid + originalTid)
+     *
+     * @param array $data { originalTid: string, dcnfName: string }
+     * @return array PG 응답 (resultCode '00' = 성공)
+     * @throws \Exception
+     */
+    public function denyConfirmEscrow(array $data): array
+    {
+        $type      = 'Dncf';
+        $timestamp = date('YmdHis');
+        $clientIp  = request()->ip() ?? '127.0.0.1';
+
+        $plainText = $this->inapiKey . $type . $timestamp . $clientIp
+            . $this->mid . $data['originalTid'];
+        $hashData = hash('sha512', $plainText);
+
+        $payload = [
+            'type'        => $type,
+            'mid'         => $this->mid,
+            'clientIp'    => $clientIp,
+            'timestamp'   => $timestamp,
+            'originalTid' => $data['originalTid'],
+            'dcnfName'    => $data['dcnfName'] ?? '관리자',
+            'hashData'    => $hashData,
+        ];
+
+        $baseUrl = $this->isTest ? self::API_BASE_URL_TEST : self::API_BASE_URL_LIVE;
+
+        $response = Http::withHeaders([
+            'Content-Type' => 'application/x-www-form-urlencoded; charset=utf-8',
+        ])->asForm()->post($baseUrl . '/api/v1/escrow', $payload);
+
+        if ($response->failed()) {
+            throw new \Exception('KG Inicis escrow deny confirm API error: HTTP ' . $response->status());
+        }
+
+        $body   = $response->body();
+        $result = json_decode($body, true);
+        if (json_last_error() !== JSON_ERROR_NONE) {
+            parse_str($body, $result);
+        }
+
+        return $result ?: [];
+    }
+
+    /**
      * 현금영수증 별도발행 API 호출 (INIAPI v2)
      *
      * 메뉴얼: https://manual.inicis.com/pay/etc-receipt.html
