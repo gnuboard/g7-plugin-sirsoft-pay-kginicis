@@ -75,9 +75,15 @@
         "redirect_success_url_hint": "Supports relative paths or full URLs. {orderId} will be replaced with the actual order number.",
         "redirect_fail_url": "Payment Failure Redirect URL",
         "redirect_fail_url_hint": "Supports relative paths or full URLs. Error details are appended as query parameters.",
-        "section_vbank_notify": "Virtual Account Deposit Notification URL",
-        "vbank_notify_hint": "Register this URL as the deposit notification URL in the KG Inicis merchant admin to enable automatic virtual account payment processing.",
+        "section_vbank_notify": "Virtual Account Deposit Notification URL (PC)",
+        "vbank_notify_hint": "Register this URL as the PC virtual account deposit notification URL in the KG Inicis merchant admin.",
         "vbank_notify_copied": "URL copied to clipboard.",
+        "section_mobile_vbank_notify": "Virtual Account Deposit Notification URL (Mobile)",
+        "mobile_vbank_notify_hint": "Register this URL as the mobile virtual account deposit notification URL in the KG Inicis merchant admin.",
+        "mobile_vbank_notify_copied": "Mobile notification URL copied to clipboard.",
+        "section_escrow_notify": "Escrow Status Change Notification URL",
+        "escrow_notify_hint": "Register this URL as the escrow status notification URL in the KG Inicis merchant admin. Required when using escrow payments.",
+        "escrow_notify_copied": "Escrow notification URL copied to clipboard.",
         "copy": "Copy"
     }
 }

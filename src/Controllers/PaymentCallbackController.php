@@ -12,6 +12,7 @@ use Illuminate\Support\Facades\Log;
 use Modules\Sirsoft\Ecommerce\Exceptions\PaymentAmountMismatchException;
 use Modules\Sirsoft\Ecommerce\Services\OrderProcessingService;
 use Plugins\Sirsoft\Pay\Kginicis\Http\Requests\AuthCallbackRequest;
+use Plugins\Sirsoft\Pay\Kginicis\Http\Requests\MobileVbankNotifyRequest;
 use Plugins\Sirsoft\Pay\Kginicis\Http\Requests\VbankNotifyRequest;
 use Plugins\Sirsoft\Pay\Kginicis\Services\KgInicisApiService;
 
@@ -203,54 +204,131 @@ class PaymentCallbackController
     }
 
     /**
-     * 가상계좌 입금 통보 처리
+     * PC 가상계좌 입금 통보 처리
      *
      * POST /plugins/sirsoft-pay-kginicis/payment/vbank-notify
-     * (이니시스 서버 → 우리 서버, CSRF 제외)
+     * (KG 이니시스 서버 → 우리 서버, CSRF 제외)
+     * 매뉴얼: https://manual.inicis.com/pay/etc-noti.html#pc
      */
     public function vbankNotify(VbankNotifyRequest $request): Response
     {
         $validated = $request->validated();
 
-        $tid = $validated['tid'];
-        $moid = $validated['MOID'];
-        $totPrice = (int) $validated['TotPrice'];
-        $resultCode = $validated['resultCode'];
+        $tid  = (string) $validated['no_tid'];
+        $moid = (string) $validated['no_oid'];
+        $amt  = (int) $validated['amt_input'];
 
-        if ($resultCode !== '0000') {
-            Log::warning('KG Inicis: vbank deposit cancelled', ['tid' => $tid, 'moid' => $moid]);
-
-            return response('OK', 200)->header('Content-Type', 'text/plain');
-        }
+        Log::info('KG Inicis: PC vbank deposit notify received', [
+            'tid'      => $tid,
+            'moid'     => $moid,
+            'amt'      => $amt,
+            'bank'     => $validated['nm_inputbank'] ?? null,
+            'depositor' => $validated['nm_input'] ?? null,
+        ]);
 
         try {
             $order = $this->orderService->findByOrderNumber($moid);
 
             if (! $order) {
-                Log::error('KG Inicis: vbank notify - order not found', ['moid' => $moid, 'tid' => $tid]);
+                Log::error('KG Inicis: PC vbank notify - order not found', ['moid' => $moid, 'tid' => $tid]);
 
                 return response('FAIL', 200)->header('Content-Type', 'text/plain');
             }
 
             $this->orderService->completePayment($order, [
                 'transaction_id' => $tid,
-                'payment_meta' => [
-                    'result_code' => $resultCode,
-                    'vbank_num' => $validated['vbankNum'] ?? null,
-                    'vbank_name' => $validated['vbankName'] ?? null,
-                    'vbank_exp_date' => $validated['vbankExpDate'] ?? null,
+                'payment_meta'   => [
+                    'vbank_num'       => $validated['no_vacct'] ?? null,
+                    'vbank_name'      => $validated['nm_inputbank'] ?? null,
+                    'depositor_name'  => $validated['nm_input'] ?? null,
+                    'deposit_date'    => ($validated['dt_trans'] ?? '') . ($validated['tm_trans'] ?? ''),
+                    'bank_code'       => $validated['cd_bank'] ?? null,
                     'pg_raw_response' => $validated,
                 ],
-            ], $totPrice);
+            ], $amt);
 
-            Log::info('KG Inicis: vbank deposit confirmed', ['tid' => $tid, 'moid' => $moid, 'amt' => $totPrice]);
+            Log::info('KG Inicis: PC vbank deposit confirmed', ['tid' => $tid, 'moid' => $moid, 'amt' => $amt]);
 
             return response('OK', 200)->header('Content-Type', 'text/plain');
 
         } catch (\Exception $e) {
-            Log::error('KG Inicis: vbank notify failed', [
-                'tid' => $tid,
-                'moid' => $moid,
+            Log::error('KG Inicis: PC vbank notify failed', [
+                'tid'   => $tid,
+                'moid'  => $moid,
+                'error' => $e->getMessage(),
+            ]);
+
+            return response('FAIL', 200)->header('Content-Type', 'text/plain');
+        }
+    }
+
+    /**
+     * 모바일 가상계좌 입금 통보 처리
+     *
+     * POST /plugins/sirsoft-pay-kginicis/payment/mobile/vbank-notify
+     * (KG 이니시스 서버 → 우리 서버, CSRF 제외)
+     * 매뉴얼: https://manual.inicis.com/pay/etc-noti.html#mo
+     *
+     * P_STATUS == "02" && P_TYPE == "VBANK" 인 경우만 입금 처리.
+     */
+    public function mobileVbankNotify(MobileVbankNotifyRequest $request): Response
+    {
+        $validated = $request->validated();
+
+        $pStatus = (string) $validated['P_STATUS'];
+        $pType   = (string) $validated['P_TYPE'];
+        $tid     = (string) $validated['P_TID'];
+        $moid    = (string) $validated['P_OID'];
+        $amt     = (int) $validated['P_AMT'];
+
+        // P_STATUS == "02" (입금통보) + P_TYPE == "VBANK" 만 처리
+        if ($pStatus !== '02' || $pType !== 'VBANK') {
+            Log::info('KG Inicis: mobile vbank notify - not a deposit, ignored', [
+                'tid'      => $tid,
+                'P_STATUS' => $pStatus,
+                'P_TYPE'   => $pType,
+            ]);
+
+            return response('OK', 200)->header('Content-Type', 'text/plain');
+        }
+
+        Log::info('KG Inicis: mobile vbank deposit notify received', [
+            'tid'      => $tid,
+            'moid'     => $moid,
+            'amt'      => $amt,
+            'bank'     => $validated['P_FN_NM'] ?? null,
+            'depositor' => $validated['P_UNAME'] ?? null,
+        ]);
+
+        try {
+            $order = $this->orderService->findByOrderNumber($moid);
+
+            if (! $order) {
+                Log::error('KG Inicis: mobile vbank notify - order not found', ['moid' => $moid, 'tid' => $tid]);
+
+                return response('FAIL', 200)->header('Content-Type', 'text/plain');
+            }
+
+            $this->orderService->completePayment($order, [
+                'transaction_id' => $tid,
+                'payment_meta'   => [
+                    'vbank_name'      => $validated['P_FN_NM'] ?? null,
+                    'depositor_name'  => $validated['P_UNAME'] ?? null,
+                    'deposit_date'    => $validated['P_AUTH_DT'] ?? null,
+                    'bank_code'       => $validated['P_FN_CD1'] ?? null,
+                    'pg_raw_response' => $validated,
+                ],
+                'payment_device' => 'mobile',
+            ], $amt);
+
+            Log::info('KG Inicis: mobile vbank deposit confirmed', ['tid' => $tid, 'moid' => $moid, 'amt' => $amt]);
+
+            return response('OK', 200)->header('Content-Type', 'text/plain');
+
+        } catch (\Exception $e) {
+            Log::error('KG Inicis: mobile vbank notify failed', [
+                'tid'   => $tid,
+                'moid'  => $moid,
                 'error' => $e->getMessage(),
             ]);
 

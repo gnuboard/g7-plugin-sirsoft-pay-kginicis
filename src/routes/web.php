@@ -2,6 +2,7 @@
 
 use Illuminate\Support\Facades\Route;
 use Plugins\Sirsoft\Pay\Kginicis\Controllers\CbtCallbackController;
+use Plugins\Sirsoft\Pay\Kginicis\Controllers\EscrowNotifyController;
 use Plugins\Sirsoft\Pay\Kginicis\Controllers\MobileCallbackController;
 use Plugins\Sirsoft\Pay\Kginicis\Controllers\PaymentCallbackController;
 
@@ -14,6 +15,12 @@ Route::withoutMiddleware([\Illuminate\Foundation\Http\Middleware\ValidateCsrfTok
 
     Route::post('/payment/vbank-notify', [PaymentCallbackController::class, 'vbankNotify'])
         ->name('payment.vbank-notify');
+
+    Route::post('/payment/mobile/vbank-notify', [PaymentCallbackController::class, 'mobileVbankNotify'])
+        ->name('payment.mobile.vbank-notify');
+
+    Route::post('/payment/escrow-notify', [EscrowNotifyController::class, 'handle'])
+        ->name('payment.escrow-notify');
 
     // 모바일: KG 이니시스가 인증 후 GET 리다이렉트로 P_NEXT_URL 호출
     Route::get('/payment/mobile/callback', [MobileCallbackController::class, 'handle'])

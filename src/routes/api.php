@@ -41,6 +41,8 @@ Route::prefix('admin')->name('admin.')->middleware(['auth:sanctum', 'admin'])->g
             'success' => true,
             'data' => [
                 'url' => url('/plugins/sirsoft-pay-kginicis/payment/vbank-notify'),
+                'mobile_url' => url('/plugins/sirsoft-pay-kginicis/payment/mobile/vbank-notify'),
+                'escrow_url' => url('/plugins/sirsoft-pay-kginicis/payment/escrow-notify'),
             ],
         ]);
     })->name('vbank.notify.url');
