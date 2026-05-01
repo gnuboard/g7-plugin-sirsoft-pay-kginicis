@@ -1,6 +1,7 @@
 <?php
 
 use Illuminate\Support\Facades\Route;
+use Plugins\Sirsoft\Pay\Kginicis\Controllers\AdminCashReceiptController;
 use Plugins\Sirsoft\Pay\Kginicis\Controllers\AdminTransactionController;
 use Plugins\Sirsoft\Pay\Kginicis\Controllers\CbtHashDataController;
 use Plugins\Sirsoft\Pay\Kginicis\Controllers\MobileSignatureController;
@@ -54,4 +55,8 @@ Route::prefix('admin')->name('admin.')->middleware(['auth:sanctum', 'admin'])->g
     // 주문번호로 거래 상태 조회 (레이아웃 확장 자동 로드용)
     Route::get('/orders/{orderNumber}/transaction-status', [AdminTransactionController::class, 'queryByOrder'])
         ->name('orders.transaction-status');
+
+    // 현금영수증 별도발행
+    Route::post('/orders/{orderNumber}/cash-receipt', [AdminCashReceiptController::class, 'issue'])
+        ->name('orders.cash-receipt.issue');
 });

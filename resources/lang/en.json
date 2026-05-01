@@ -35,7 +35,21 @@
         "result_auth_code": "Auth Code",
         "result_auth_date": "Auth Date",
         "result_pay_method": "Pay Method",
-        "result_result_code": "Result Code"
+        "result_result_code": "Result Code",
+        "cash_receipt_title": "Cash Receipt Issuance",
+        "cash_receipt_description": "Issue a cash receipt via KG Inicis INIAPI.",
+        "cash_receipt_already_issued": "Already Issued",
+        "cash_receipt_issued_at": "Issued At",
+        "cash_receipt_type_label": "Issue Type",
+        "cash_receipt_type_income": "Income Deduction (Consumer)",
+        "cash_receipt_type_expenditure": "Expenditure Proof (Business)",
+        "cash_receipt_number_label": "Identifier",
+        "cash_receipt_number_placeholder_income": "Phone number or SSN",
+        "cash_receipt_number_placeholder_expenditure": "Business registration number",
+        "cash_receipt_issue_button": "Issue Cash Receipt",
+        "cash_receipt_issuing": "Issuing...",
+        "cash_receipt_success": "Cash receipt has been issued.",
+        "cash_receipt_error": "Failed to issue cash receipt."
     },
     "settings": {
         "title": "KG Inicis Settings",

@@ -314,6 +314,289 @@
                             ]
                         }
                     ]
+                },
+                {
+                    "id": "kginicis_cash_receipt_panel",
+                    "type": "basic",
+                    "name": "Div",
+                    "if": "{{(order.data?.payments?.filter(p => p.transaction_id && p.pg_provider === 'kginicis') ?? []).length > 0}}",
+                    "props": { "className": "card mt-4" },
+                    "children": [
+                        {
+                            "type": "basic",
+                            "name": "Div",
+                            "props": { "className": "flex items-center gap-2 mb-4" },
+                            "children": [
+                                {
+                                    "type": "basic",
+                                    "name": "Div",
+                                    "props": { "className": "w-1.5 h-4 bg-green-500 rounded-full flex-shrink-0" }
+                                },
+                                {
+                                    "type": "basic",
+                                    "name": "H3",
+                                    "props": { "className": "text-sm font-semibold text-gray-800 dark:text-gray-200" },
+                                    "text": "$t:sirsoft-pay-kginicis.admin.cash_receipt_title"
+                                },
+                                {
+                                    "type": "basic",
+                                    "name": "Span",
+                                    "props": { "className": "text-xs text-gray-400 dark:text-gray-500 hidden sm:inline" },
+                                    "text": "$t:sirsoft-pay-kginicis.admin.cash_receipt_description"
+                                }
+                            ]
+                        },
+                        {
+                            "type": "basic",
+                            "name": "Div",
+                            "props": { "className": "space-y-3" },
+                            "iteration": {
+                                "source": "{{order.data?.payments?.filter(p => p.transaction_id && p.pg_provider === 'kginicis') ?? []}}",
+                                "item_var": "payment",
+                                "index_var": "crIdx"
+                            },
+                            "children": [
+                                {
+                                    "type": "basic",
+                                    "name": "Div",
+                                    "props": { "className": "rounded-lg border border-gray-100 dark:border-gray-700 p-3 bg-gray-50 dark:bg-gray-800/50" },
+                                    "children": [
+                                        {
+                                            "type": "basic",
+                                            "name": "Div",
+                                            "props": { "className": "flex flex-wrap items-center gap-3 mb-3" },
+                                            "children": [
+                                                {
+                                                    "type": "basic",
+                                                    "name": "Span",
+                                                    "props": { "className": "font-mono text-xs text-gray-500 dark:text-gray-400 break-all" },
+                                                    "text": "{{payment.transaction_id}}"
+                                                },
+                                                {
+                                                    "type": "basic",
+                                                    "name": "Span",
+                                                    "if": "{{payment.is_cash_receipt_issued}}",
+                                                    "props": { "className": "inline-flex items-center gap-1 px-2 py-0.5 rounded-full text-xs font-semibold bg-green-100 text-green-800 dark:bg-green-900/30 dark:text-green-300" },
+                                                    "children": [
+                                                        { "type": "basic", "name": "Icon", "props": { "name": "check-circle", "className": "w-3 h-3" } },
+                                                        { "type": "basic", "name": "Span", "text": "$t:sirsoft-pay-kginicis.admin.cash_receipt_already_issued" }
+                                                    ]
+                                                }
+                                            ]
+                                        },
+                                        {
+                                            "type": "basic",
+                                            "name": "Div",
+                                            "if": "{{payment.is_cash_receipt_issued}}",
+                                            "props": { "className": "grid grid-cols-2 gap-x-4 gap-y-1 text-xs" },
+                                            "children": [
+                                                {
+                                                    "type": "basic",
+                                                    "name": "Span",
+                                                    "props": { "className": "text-gray-500 dark:text-gray-400" },
+                                                    "text": "$t:sirsoft-pay-kginicis.admin.cash_receipt_issued_at"
+                                                },
+                                                {
+                                                    "type": "basic",
+                                                    "name": "Span",
+                                                    "props": { "className": "text-gray-900 dark:text-gray-100 font-mono" },
+                                                    "text": "{{payment.cash_receipt_issued_at ?? '-'}}"
+                                                },
+                                                {
+                                                    "type": "basic",
+                                                    "name": "Span",
+                                                    "props": { "className": "text-gray-500 dark:text-gray-400" },
+                                                    "text": "$t:sirsoft-pay-kginicis.admin.cash_receipt_type_label"
+                                                },
+                                                {
+                                                    "type": "basic",
+                                                    "name": "Span",
+                                                    "props": { "className": "text-gray-900 dark:text-gray-100" },
+                                                    "text": "{{payment.cash_receipt_type === 'income_deduction' ? '$t:sirsoft-pay-kginicis.admin.cash_receipt_type_income' : '$t:sirsoft-pay-kginicis.admin.cash_receipt_type_expenditure'}}"
+                                                }
+                                            ]
+                                        },
+                                        {
+                                            "type": "basic",
+                                            "name": "Div",
+                                            "if": "{{!payment.is_cash_receipt_issued}}",
+                                            "props": { "className": "space-y-2" },
+                                            "children": [
+                                                {
+                                                    "type": "basic",
+                                                    "name": "Div",
+                                                    "props": { "className": "flex items-center gap-2" },
+                                                    "children": [
+                                                        {
+                                                            "type": "basic",
+                                                            "name": "Label",
+                                                            "props": { "className": "text-xs text-gray-500 dark:text-gray-400 w-16 flex-shrink-0" },
+                                                            "text": "$t:sirsoft-pay-kginicis.admin.cash_receipt_type_label"
+                                                        },
+                                                        {
+                                                            "type": "basic",
+                                                            "name": "Select",
+                                                            "props": {
+                                                                "name": "_cr_issue_type",
+                                                                "data-idx": "{{crIdx}}",
+                                                                "className": "flex-1 text-xs px-2 py-1.5 border border-gray-300 dark:border-gray-600 rounded bg-white dark:bg-gray-700 text-gray-900 dark:text-gray-100"
+                                                            },
+                                                            "actions": [
+                                                                {
+                                                                    "type": "change",
+                                                                    "handler": "setState",
+                                                                    "params": {
+                                                                        "target": "local",
+                                                                        "_cr_issue_type_{{crIdx}}": "{{$event.target.value}}"
+                                                                    }
+                                                                }
+                                                            ],
+                                                            "children": [
+                                                                {
+                                                                    "type": "basic",
+                                                                    "name": "Option",
+                                                                    "props": { "value": "0" },
+                                                                    "text": "$t:sirsoft-pay-kginicis.admin.cash_receipt_type_income"
+                                                                },
+                                                                {
+                                                                    "type": "basic",
+                                                                    "name": "Option",
+                                                                    "props": { "value": "1" },
+                                                                    "text": "$t:sirsoft-pay-kginicis.admin.cash_receipt_type_expenditure"
+                                                                }
+                                                            ]
+                                                        }
+                                                    ]
+                                                },
+                                                {
+                                                    "type": "basic",
+                                                    "name": "Div",
+                                                    "props": { "className": "flex items-center gap-2" },
+                                                    "children": [
+                                                        {
+                                                            "type": "basic",
+                                                            "name": "Label",
+                                                            "props": { "className": "text-xs text-gray-500 dark:text-gray-400 w-16 flex-shrink-0" },
+                                                            "text": "$t:sirsoft-pay-kginicis.admin.cash_receipt_number_label"
+                                                        },
+                                                        {
+                                                            "type": "basic",
+                                                            "name": "Input",
+                                                            "props": {
+                                                                "type": "text",
+                                                                "placeholder": "$t:sirsoft-pay-kginicis.admin.cash_receipt_number_placeholder_income",
+                                                                "className": "flex-1 text-xs px-2 py-1.5 border border-gray-300 dark:border-gray-600 rounded bg-white dark:bg-gray-700 text-gray-900 dark:text-gray-100 font-mono"
+                                                            },
+                                                            "actions": [
+                                                                {
+                                                                    "type": "change",
+                                                                    "handler": "setState",
+                                                                    "params": {
+                                                                        "target": "local",
+                                                                        "_cr_issue_number_{{crIdx}}": "{{$event.target.value}}"
+                                                                    }
+                                                                }
+                                                            ]
+                                                        },
+                                                        {
+                                                            "type": "basic",
+                                                            "name": "Button",
+                                                            "props": {
+                                                                "disabled": "{{_local._cr_issuing_{{crIdx}}}}",
+                                                                "className": "flex items-center gap-1.5 px-3 py-1.5 text-xs font-medium bg-green-600 hover:bg-green-700 text-white rounded-md transition-colors disabled:opacity-50 disabled:cursor-not-allowed whitespace-nowrap flex-shrink-0"
+                                                            },
+                                                            "actions": [
+                                                                {
+                                                                    "type": "click",
+                                                                    "handler": "sequence",
+                                                                    "actions": [
+                                                                        {
+                                                                            "handler": "setState",
+                                                                            "params": {
+                                                                                "target": "local",
+                                                                                "_cr_issuing_{{crIdx}}": true,
+                                                                                "_cr_error_{{crIdx}}": null
+                                                                            }
+                                                                        },
+                                                                        {
+                                                                            "handler": "apiCall",
+                                                                            "auth_required": true,
+                                                                            "target": "/api/plugins/sirsoft-pay-kginicis/admin/orders/{{route.orderNumber}}/cash-receipt",
+                                                                            "params": {
+                                                                                "method": "POST",
+                                                                                "body": {
+                                                                                    "issue_type": "{{_local._cr_issue_type_{{crIdx}} ?? '0'}}",
+                                                                                    "issue_number": "{{_local._cr_issue_number_{{crIdx}} ?? ''}}"
+                                                                                }
+                                                                            },
+                                                                            "onSuccess": [
+                                                                                {
+                                                                                    "handler": "setState",
+                                                                                    "params": {
+                                                                                        "target": "local",
+                                                                                        "_cr_issuing_{{crIdx}}": false
+                                                                                    }
+                                                                                },
+                                                                                {
+                                                                                    "handler": "toast",
+                                                                                    "params": { "type": "success", "message": "$t:sirsoft-pay-kginicis.admin.cash_receipt_success" }
+                                                                                },
+                                                                                {
+                                                                                    "handler": "refetchDataSource",
+                                                                                    "params": { "dataSourceId": "order" }
+                                                                                }
+                                                                            ],
+                                                                            "onError": [
+                                                                                {
+                                                                                    "handler": "setState",
+                                                                                    "params": {
+                                                                                        "target": "local",
+                                                                                        "_cr_issuing_{{crIdx}}": false,
+                                                                                        "_cr_error_{{crIdx}}": "$t:sirsoft-pay-kginicis.admin.cash_receipt_error"
+                                                                                    }
+                                                                                }
+                                                                            ]
+                                                                        }
+                                                                    ]
+                                                                }
+                                                            ],
+                                                            "children": [
+                                                                {
+                                                                    "type": "basic",
+                                                                    "name": "Icon",
+                                                                    "if": "{{_local._cr_issuing_{{crIdx}}}}",
+                                                                    "props": { "name": "spinner", "className": "w-3 h-3 animate-spin" }
+                                                                },
+                                                                {
+                                                                    "type": "basic",
+                                                                    "name": "Span",
+                                                                    "if": "{{_local._cr_issuing_{{crIdx}}}}",
+                                                                    "text": "$t:sirsoft-pay-kginicis.admin.cash_receipt_issuing"
+                                                                },
+                                                                {
+                                                                    "type": "basic",
+                                                                    "name": "Span",
+                                                                    "if": "{{!_local._cr_issuing_{{crIdx}}}}",
+                                                                    "text": "$t:sirsoft-pay-kginicis.admin.cash_receipt_issue_button"
+                                                                }
+                                                            ]
+                                                        }
+                                                    ]
+                                                },
+                                                {
+                                                    "type": "basic",
+                                                    "name": "Div",
+                                                    "if": "{{_local._cr_error_{{crIdx}}}}",
+                                                    "props": { "className": "text-xs text-red-600 dark:text-red-400 bg-red-50 dark:bg-red-900/20 rounded px-2 py-1.5" },
+                                                    "text": "{{_local._cr_error_{{crIdx}}}}"
+                                                }
+                                            ]
+                                        }
+                                    ]
+                                }
+                            ]
+                        }
+                    ]
                 }
             ]
         }

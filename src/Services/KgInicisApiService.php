@@ -483,6 +483,85 @@ class KgInicisApiService
         return $result;
     }
 
+    /**
+     * 현금영수증 별도발행 API 호출 (INIAPI v2)
+     *
+     * 메뉴얼: https://manual.inicis.com/pay/etc-receipt.html
+     *
+     * @param array $data {
+     *   issueType:   '0'=소득공제(소비자용), '1'=지출증빙(사업자용)
+     *   issueNumber: 휴대폰번호 / 주민번호 / 사업자번호 (평문 — 내부에서 AES-128-CBC 암호화)
+     *   price:       총 결제금액 (int)
+     *   supplyPrice: 공급가액 (int)
+     *   tax:         부가세 (int)
+     *   goodName:    상품명
+     *   buyerName:   구매자명
+     *   buyerEmail:  구매자 이메일
+     *   buyerTel:    구매자 전화번호
+     * }
+     * @return array PG 응답 (resultCode '00' = 성공)
+     * @throws \Exception
+     */
+    public function issueCashReceipt(array $data): array
+    {
+        $type = 'receipt';
+        $timestamp = date('YmdHis');
+        $clientIp = request()->ip() ?? '127.0.0.1';
+
+        // issueNumber: AES-128-CBC(PKCS7) 암호화 후 base64 인코딩
+        $encrypted = openssl_encrypt(
+            $data['issueNumber'],
+            'aes-128-cbc',
+            $this->inapiKey,
+            OPENSSL_RAW_DATA,
+            $this->inapiIv
+        );
+
+        if ($encrypted === false) {
+            throw new \Exception('KG Inicis cash receipt: issueNumber encryption failed');
+        }
+
+        $encIssueNumber = base64_encode($encrypted);
+
+        $detail = [
+            'price'        => (string) $data['price'],
+            'supplyPrice'  => (string) $data['supplyPrice'],
+            'tax'          => (string) $data['tax'],
+            'servicePrice' => '0',
+            'issueType'    => $data['issueType'],
+            'issueNumber'  => $encIssueNumber,
+            'goodName'     => $data['goodName'],
+            'buyerName'    => $data['buyerName'],
+            'buyerEmail'   => $data['buyerEmail'] ?? '',
+            'buyerTel'     => $data['buyerTel'] ?? '',
+            'currency'     => 'WON',
+        ];
+
+        $detailJson = str_replace('\\/', '/', json_encode($detail, JSON_UNESCAPED_UNICODE));
+        $hashData = hash('sha512', $this->inapiKey . $this->mid . $type . $timestamp . $detailJson);
+
+        $baseUrl = $this->isTest ? self::API_BASE_URL_TEST : self::API_BASE_URL_LIVE;
+        $apiUrl = $baseUrl . '/v2/pg/receipt';
+
+        $payload = [
+            'mid'       => $this->mid,
+            'type'      => $type,
+            'timestamp' => $timestamp,
+            'clientIp'  => $clientIp,
+            'data'      => $detail,
+            'hashData'  => $hashData,
+        ];
+
+        $response = Http::withHeaders(['Content-Type' => 'application/json;charset=utf-8'])
+            ->post($apiUrl, $payload);
+
+        if ($response->failed()) {
+            throw new \Exception('KG Inicis cash receipt API error: HTTP ' . $response->status());
+        }
+
+        return $response->json() ?? [];
+    }
+
     private function buildLiveMid(string $suffix): string
     {
         if ($suffix === '') {
