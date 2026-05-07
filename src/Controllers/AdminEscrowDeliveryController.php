@@ -2,7 +2,7 @@
 
 declare(strict_types=1);
 
-namespace Plugins\Sirsoft\Pay\Kginicis\Controllers;
+namespace Plugins\Sirsoft\PayKginicis\Controllers;
 
 use App\Helpers\ResponseHelper;
 use App\Http\Controllers\Api\Base\AdminBaseController;
@@ -10,7 +10,7 @@ use Illuminate\Http\JsonResponse;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\DB;
 use Illuminate\Support\Facades\Log;
-use Plugins\Sirsoft\Pay\Kginicis\Services\KgInicisApiService;
+use Plugins\Sirsoft\PayKginicis\Services\KgInicisApiService;
 
 /**
  * KG 이니시스 에스크로 배송등록 관리자 컨트롤러
@@ -45,8 +45,10 @@ class AdminEscrowDeliveryController extends AdminBaseController
     }
 
     /**
-     * GET /api/plugins/sirsoft-pay-kginicis/admin/orders/{orderNumber}/escrow-delivery
-     * 배송등록 폼 프리필 데이터 반환 (수신자 주소 등)
+     * formData
+     *
+     * @param  string  $orderNumber
+     * @return JsonResponse
      */
     public function formData(string $orderNumber): JsonResponse
     {
@@ -93,23 +95,11 @@ class AdminEscrowDeliveryController extends AdminBaseController
     }
 
     /**
-     * POST /api/plugins/sirsoft-pay-kginicis/admin/orders/{orderNumber}/escrow-delivery
-     * 에스크로 배송등록 (또는 변경)
+     * register
      *
-     * Body:
-     *   invoice:     운송장번호 (필수)
-     *   ex_code:     택배사코드 (필수)
-     *   regist_name: 배송등록자
-     *   charge:      배송비 지급형태 ('SH'|'BH', 기본 'SH')
-     *   report:      등록형태 ('I'=등록, 'U'=변경, 기본 'I')
-     *   send_name:   송신자 이름
-     *   send_tel:    송신자 전화번호
-     *   send_post:   송신자 우편번호
-     *   send_addr:   송신자 주소
-     *   recv_name:   수신자 이름
-     *   recv_tel:    수신자 전화번호
-     *   recv_post:   수신자 우편번호
-     *   recv_addr:   수신자 주소
+     * @param  Request  $request
+     * @param  string  $orderNumber
+     * @return JsonResponse
      */
     public function register(Request $request, string $orderNumber): JsonResponse
     {

@@ -1,7 +1,7 @@
 import { handlerMap } from './handlers';
 import { installOrderResponseInterceptor } from './orderResponseInterceptor';
 
-const PLUGIN_IDENTIFIER = 'sirsoft-pay-kginicis';
+const PLUGIN_IDENTIFIER = 'sirsoft-pay_kginicis';
 
 const logger = {
     info: (...args: unknown[]) => console.info(`[${PLUGIN_IDENTIFIER}]`, ...args),

@@ -2,17 +2,32 @@
 
 declare(strict_types=1);
 
-namespace Plugins\Sirsoft\Pay\Kginicis\Http\Requests;
+namespace Plugins\Sirsoft\PayKginicis\Http\Requests;
 
 use Illuminate\Foundation\Http\FormRequest;
 use Illuminate\Support\Facades\Log;
 
 class MobileCallbackRequest extends FormRequest
 {
+    /**
+     * authorize
+     *
+     * @return bool
+     */
     public function authorize(): bool
     {
         return true;
     }
+
+/**
+
+ * rules
+
+ *
+
+ * @return array
+
+ */
 
     public function rules(): array
     {

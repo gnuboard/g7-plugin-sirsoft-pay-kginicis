@@ -2,7 +2,7 @@
 
 declare(strict_types=1);
 
-namespace Plugins\Sirsoft\Pay\Kginicis\Controllers;
+namespace Plugins\Sirsoft\PayKginicis\Controllers;
 
 use App\Http\Controllers\Controller;
 use Illuminate\Http\RedirectResponse;
@@ -11,7 +11,7 @@ use Illuminate\Http\Response;
 use Illuminate\Support\Facades\Auth;
 use Illuminate\Support\Facades\DB;
 use Illuminate\Support\Facades\Log;
-use Plugins\Sirsoft\Pay\Kginicis\Services\KgInicisApiService;
+use Plugins\Sirsoft\PayKginicis\Services\KgInicisApiService;
 
 /**
  * KG 이니시스 에스크로 구매결정 컨트롤러 (사용자용)
@@ -30,8 +30,11 @@ class UserEscrowConfirmController extends Controller
     ) {}
 
     /**
-     * GET /payment/escrow-confirm/{orderNumber}
-     * 구매결정 페이지: PC는 팝업 창, 모바일은 자동 submit
+     * show
+     *
+     * @param  Request  $request
+     * @param  string  $orderNumber
+     * @return Response
      */
     public function show(Request $request, string $orderNumber): Response
     {
@@ -51,11 +54,10 @@ class UserEscrowConfirmController extends Controller
     }
 
     /**
-     * POST /payment/escrow-confirm/pc/return  (CSRF 제외)
-     * PC 팝업에서 구매결정/거절 결과 수신 후 팝업 닫기
+     * pcReturn
      *
-     * 구매결정: ResultCode=00, CNF_Date, CNF_Time
-     * 구매거절: ResultCode≠00, DNY_Date, DNY_Time, DNY_DenyMsg
+     * @param  Request  $request
+     * @return Response
      */
     public function pcReturn(Request $request): Response
     {
@@ -84,8 +86,9 @@ class UserEscrowConfirmController extends Controller
     }
 
     /**
-     * GET /payment/escrow-confirm/close  (CSRF 불필요)
-     * 구매결정 창 닫기 URL
+     * close
+     *
+     * @return Response
      */
     public function close(): Response
     {
@@ -93,10 +96,10 @@ class UserEscrowConfirmController extends Controller
     }
 
     /**
-     * POST /payment/escrow-confirm/mobile/return  (CSRF 제외)
-     * 모바일 구매결정 결과 수신 후 마이페이지 주문 상세로 redirect
+     * mobileReturn
      *
-     * P_STATUS=00 : 구매결정, 기타 : 구매거절/오류
+     * @param  Request  $request
+     * @return RedirectResponse
      */
     public function mobileReturn(Request $request): RedirectResponse
     {
@@ -130,8 +133,8 @@ class UserEscrowConfirmController extends Controller
         $mKey      = $this->apiService->getEscrowConfirmMKey();
         $timestamp = (string) round(microtime(true) * 1000);
         $jsUrl     = $isTest ? self::PC_JS_URL_TEST : self::PC_JS_URL_LIVE;
-        $returnUrl = url('/plugins/sirsoft-pay-kginicis/payment/escrow-confirm/pc/return');
-        $closeUrl  = url('/plugins/sirsoft-pay-kginicis/payment/escrow-confirm/close');
+        $returnUrl = url('/plugins/sirsoft-pay_kginicis/payment/escrow-confirm/pc/return');
+        $closeUrl  = url('/plugins/sirsoft-pay_kginicis/payment/escrow-confirm/close');
 
         $html = <<<HTML
         <!DOCTYPE html>
@@ -171,7 +174,7 @@ class UserEscrowConfirmController extends Controller
     private function mobileConfirmPage(string $tid): Response
     {
         $mid     = $this->apiService->getMid();
-        $nextUrl = url('/plugins/sirsoft-pay-kginicis/payment/escrow-confirm/mobile/return');
+        $nextUrl = url('/plugins/sirsoft-pay_kginicis/payment/escrow-confirm/mobile/return');
         $payUrl  = self::MOBILE_PAY_URL;
 
         $html = <<<HTML

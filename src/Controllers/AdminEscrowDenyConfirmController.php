@@ -2,7 +2,7 @@
 
 declare(strict_types=1);
 
-namespace Plugins\Sirsoft\Pay\Kginicis\Controllers;
+namespace Plugins\Sirsoft\PayKginicis\Controllers;
 
 use App\Helpers\ResponseHelper;
 use App\Http\Controllers\Api\Base\AdminBaseController;
@@ -10,7 +10,7 @@ use Illuminate\Http\JsonResponse;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\DB;
 use Illuminate\Support\Facades\Log;
-use Plugins\Sirsoft\Pay\Kginicis\Services\KgInicisApiService;
+use Plugins\Sirsoft\PayKginicis\Services\KgInicisApiService;
 
 /**
  * KG 이니시스 에스크로 구매거절확인 관리자 컨트롤러
@@ -27,10 +27,11 @@ class AdminEscrowDenyConfirmController extends AdminBaseController
     }
 
     /**
-     * POST /api/plugins/sirsoft-pay-kginicis/admin/orders/{orderNumber}/escrow-deny-confirm
+     * confirm
      *
-     * Body:
-     *   dcnf_name: 거절확인 처리자명 (선택, 기본 '관리자')
+     * @param  Request  $request
+     * @param  string  $orderNumber
+     * @return JsonResponse
      */
     public function confirm(Request $request, string $orderNumber): JsonResponse
     {

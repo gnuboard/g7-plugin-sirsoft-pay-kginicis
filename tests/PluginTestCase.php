@@ -1,6 +1,6 @@
 <?php
 
-namespace Plugins\Sirsoft\Pay\Kginicis\Tests;
+namespace Plugins\Sirsoft\PayKginicis\Tests;
 
 use Illuminate\Foundation\Testing\RefreshDatabase;
 use Tests\TestCase;
@@ -74,7 +74,7 @@ abstract class PluginTestCase extends TestCase
 
     protected function registerPluginAutoload(): void
     {
-        $pluginBasePath = base_path('plugins/sirsoft-pay-kginicis/src/');
+        $pluginBasePath = base_path('plugins/sirsoft-pay_kginicis/src/');
 
         spl_autoload_register(function ($class) use ($pluginBasePath) {
             $prefix = 'Plugins\\Sirsoft\\Kginicis\\';
@@ -107,11 +107,11 @@ abstract class PluginTestCase extends TestCase
 
     protected function registerPluginRoutes(): void
     {
-        $webRoutesFile = base_path('plugins/sirsoft-pay-kginicis/src/routes/web.php');
+        $webRoutesFile = base_path('plugins/sirsoft-pay_kginicis/src/routes/web.php');
 
         if (file_exists($webRoutesFile)) {
-            \Illuminate\Support\Facades\Route::prefix('plugins/sirsoft-pay-kginicis')
-                ->name('plugins.sirsoft-pay-kginicis.')
+            \Illuminate\Support\Facades\Route::prefix('plugins/sirsoft-pay_kginicis')
+                ->name('plugins.sirsoft-pay_kginicis.')
                 ->middleware('web')
                 ->group($webRoutesFile);
         }

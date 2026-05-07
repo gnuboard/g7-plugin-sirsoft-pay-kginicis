@@ -2,7 +2,7 @@
 
 declare(strict_types=1);
 
-namespace Plugins\Sirsoft\Pay\Kginicis\Controllers;
+namespace Plugins\Sirsoft\PayKginicis\Controllers;
 
 use App\Services\PluginSettingsService;
 use Illuminate\Http\JsonResponse;
@@ -11,7 +11,7 @@ use Illuminate\Support\Facades\DB;
 
 class UserReceiptController
 {
-    private const PLUGIN_IDENTIFIER = 'sirsoft-pay-kginicis';
+    private const PLUGIN_IDENTIFIER = 'sirsoft-pay_kginicis';
 
     // 출처: C:\xampp824\www\gnu5\shop\orderinquiryview.php (mCmReceipt_head.jsp)
     private const RECEIPT_BASE_URL = 'https://iniweb.inicis.com/DefaultWebApp/mall/cr/cm/mCmReceipt_head.jsp';
@@ -21,7 +21,11 @@ class UserReceiptController
     ) {}
 
     /**
-     * GET /api/plugins/sirsoft-pay-kginicis/user/orders/{orderNumber}/receipt
+     * show
+     *
+     * @param  Request  $request
+     * @param  string  $orderNumber
+     * @return JsonResponse
      */
     public function show(Request $request, string $orderNumber): JsonResponse
     {

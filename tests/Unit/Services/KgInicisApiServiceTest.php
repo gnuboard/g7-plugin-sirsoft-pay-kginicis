@@ -1,11 +1,11 @@
 <?php
 
-namespace Plugins\Sirsoft\Pay\Kginicis\Tests\Unit\Services;
+namespace Plugins\Sirsoft\PayKginicis\Tests\Unit\Services;
 
 use App\Services\PluginSettingsService;
 use Illuminate\Support\Facades\Http;
-use Plugins\Sirsoft\Pay\Kginicis\Services\KgInicisApiService;
-use Plugins\Sirsoft\Pay\Kginicis\Tests\PluginTestCase;
+use Plugins\Sirsoft\PayKginicis\Services\KgInicisApiService;
+use Plugins\Sirsoft\PayKginicis\Tests\PluginTestCase;
 
 class KgInicisApiServiceTest extends PluginTestCase
 {

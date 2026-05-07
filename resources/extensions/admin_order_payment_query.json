@@ -4,7 +4,7 @@
         {
             "id": "kginicis_status",
             "type": "api",
-            "endpoint": "/api/plugins/sirsoft-pay-kginicis/admin/orders/{{route.orderNumber}}/transaction-status",
+            "endpoint": "/api/plugins/sirsoft-pay_kginicis/admin/orders/{{route.orderNumber}}/transaction-status",
             "method": "GET",
             "auto_fetch": true,
             "auth_required": true
@@ -12,7 +12,7 @@
         {
             "id": "kginicis_escrow_delivery",
             "type": "api",
-            "endpoint": "/api/plugins/sirsoft-pay-kginicis/admin/orders/{{route.orderNumber}}/escrow-delivery",
+            "endpoint": "/api/plugins/sirsoft-pay_kginicis/admin/orders/{{route.orderNumber}}/escrow-delivery",
             "method": "GET",
             "auto_fetch": true,
             "auth_required": true
@@ -38,13 +38,13 @@
                             "type": "basic",
                             "name": "Span",
                             "props": { "className": "text-sm font-semibold text-orange-800 dark:text-orange-300" },
-                            "text": "$t:sirsoft-pay-kginicis.admin.test_mode_badge"
+                            "text": "$t:sirsoft-pay_kginicis.admin.test_mode_badge"
                         },
                         {
                             "type": "basic",
                             "name": "Span",
                             "props": { "className": "text-sm text-orange-700 dark:text-orange-400" },
-                            "text": "$t:sirsoft-pay-kginicis.admin.test_mode_order_notice"
+                            "text": "$t:sirsoft-pay_kginicis.admin.test_mode_order_notice"
                         }
                     ]
                 }
@@ -78,13 +78,13 @@
                                     "type": "basic",
                                     "name": "H3",
                                     "props": { "className": "text-sm font-semibold text-gray-800 dark:text-gray-200" },
-                                    "text": "$t:sirsoft-pay-kginicis.admin.order_verify_title"
+                                    "text": "$t:sirsoft-pay_kginicis.admin.order_verify_title"
                                 },
                                 {
                                     "type": "basic",
                                     "name": "Span",
                                     "props": { "className": "text-xs text-gray-400 dark:text-gray-500 hidden sm:inline" },
-                                    "text": "$t:sirsoft-pay-kginicis.admin.order_verify_description"
+                                    "text": "$t:sirsoft-pay_kginicis.admin.order_verify_description"
                                 }
                             ]
                         },
@@ -153,7 +153,7 @@
                                                                 {
                                                                     "handler": "apiCall",
                                                                     "auth_required": true,
-                                                                    "target": "/api/plugins/sirsoft-pay-kginicis/admin/transaction/query",
+                                                                    "target": "/api/plugins/sirsoft-pay_kginicis/admin/transaction/query",
                                                                     "params": {
                                                                         "method": "POST",
                                                                         "body": {
@@ -176,7 +176,7 @@
                                                                             "params": {
                                                                                 "target": "local",
                                                                                 "_kginicisQuerying": false,
-                                                                                "_kginicisError": "$t:sirsoft-pay-kginicis.admin.order_verify_error"
+                                                                                "_kginicisError": "$t:sirsoft-pay_kginicis.admin.order_verify_error"
                                                                             }
                                                                         }
                                                                     ]
@@ -194,7 +194,7 @@
                                                         {
                                                             "type": "basic",
                                                             "name": "Span",
-                                                            "text": "$t:sirsoft-pay-kginicis.admin.order_verify_button"
+                                                            "text": "$t:sirsoft-pay_kginicis.admin.order_verify_button"
                                                         }
                                                     ]
                                                 }
@@ -224,14 +224,14 @@
                                                             "name": "Span",
                                                             "if": "{{(_local._kginicisResult ?? kginicis_status.data).resultCode === '00' || (_local._kginicisResult ?? kginicis_status.data).resultCode === 'SUCCESS'}}",
                                                             "props": { "className": "inline-flex items-center px-2 py-0.5 rounded-full text-xs font-semibold bg-green-100 text-green-800 dark:bg-green-900/30 dark:text-green-300" },
-                                                            "text": "$t:sirsoft-pay-kginicis.admin.pay_status_approved"
+                                                            "text": "$t:sirsoft-pay_kginicis.admin.pay_status_approved"
                                                         },
                                                         {
                                                             "type": "basic",
                                                             "name": "Span",
                                                             "if": "{{(_local._kginicisResult ?? kginicis_status.data).resultCode !== '00' && (_local._kginicisResult ?? kginicis_status.data).resultCode !== 'SUCCESS'}}",
                                                             "props": { "className": "inline-flex items-center px-2 py-0.5 rounded-full text-xs font-semibold bg-amber-100 text-amber-800 dark:bg-amber-900/30 dark:text-amber-300" },
-                                                            "text": "$t:sirsoft-pay-kginicis.admin.pay_status_unknown"
+                                                            "text": "$t:sirsoft-pay_kginicis.admin.pay_status_unknown"
                                                         },
                                                         {
                                                             "type": "basic",
@@ -247,7 +247,7 @@
                                                                 {
                                                                     "type": "basic",
                                                                     "name": "Span",
-                                                                    "text": "$t:sirsoft-pay-kginicis.admin.escrow_badge"
+                                                                    "text": "$t:sirsoft-pay_kginicis.admin.escrow_badge"
                                                                 }
                                                             ]
                                                         },
@@ -256,7 +256,7 @@
                                                             "name": "Span",
                                                             "if": "{{(_local._kginicisResult ?? kginicis_status.data)?._is_test_mode === true}}",
                                                             "props": { "className": "inline-flex items-center px-2 py-0.5 rounded-full text-xs font-semibold bg-orange-100 text-orange-800 dark:bg-orange-900/30 dark:text-orange-300" },
-                                                            "text": "$t:sirsoft-pay-kginicis.admin.test_mode_badge"
+                                                            "text": "$t:sirsoft-pay_kginicis.admin.test_mode_badge"
                                                         }
                                                     ]
                                                 },
@@ -269,7 +269,7 @@
                                                             "type": "basic",
                                                             "name": "Span",
                                                             "props": { "className": "text-gray-500 dark:text-gray-400" },
-                                                            "text": "$t:sirsoft-pay-kginicis.admin.result_auth_code"
+                                                            "text": "$t:sirsoft-pay_kginicis.admin.result_auth_code"
                                                         },
                                                         {
                                                             "type": "basic",
@@ -281,7 +281,7 @@
                                                             "type": "basic",
                                                             "name": "Span",
                                                             "props": { "className": "text-gray-500 dark:text-gray-400" },
-                                                            "text": "$t:sirsoft-pay-kginicis.admin.result_auth_date"
+                                                            "text": "$t:sirsoft-pay_kginicis.admin.result_auth_date"
                                                         },
                                                         {
                                                             "type": "basic",
@@ -293,7 +293,7 @@
                                                             "type": "basic",
                                                             "name": "Span",
                                                             "props": { "className": "text-gray-500 dark:text-gray-400" },
-                                                            "text": "$t:sirsoft-pay-kginicis.admin.result_pay_method"
+                                                            "text": "$t:sirsoft-pay_kginicis.admin.result_pay_method"
                                                         },
                                                         {
                                                             "type": "basic",
@@ -305,7 +305,7 @@
                                                             "type": "basic",
                                                             "name": "Span",
                                                             "props": { "className": "text-gray-500 dark:text-gray-400" },
-                                                            "text": "$t:sirsoft-pay-kginicis.admin.result_result_code"
+                                                            "text": "$t:sirsoft-pay_kginicis.admin.result_result_code"
                                                         },
                                                         {
                                                             "type": "basic",
@@ -344,13 +344,13 @@
                                     "type": "basic",
                                     "name": "H3",
                                     "props": { "className": "text-sm font-semibold text-gray-800 dark:text-gray-200" },
-                                    "text": "$t:sirsoft-pay-kginicis.admin.escrow_delivery_title"
+                                    "text": "$t:sirsoft-pay_kginicis.admin.escrow_delivery_title"
                                 },
                                 {
                                     "type": "basic",
                                     "name": "Span",
                                     "props": { "className": "text-xs text-gray-400 dark:text-gray-500 hidden sm:inline" },
-                                    "text": "$t:sirsoft-pay-kginicis.admin.escrow_delivery_description"
+                                    "text": "$t:sirsoft-pay_kginicis.admin.escrow_delivery_description"
                                 }
                             ]
                         },
@@ -374,7 +374,7 @@
                                             "type": "basic",
                                             "name": "Span",
                                             "props": { "className": "inline-flex items-center px-2 py-0.5 rounded-full text-xs font-semibold bg-purple-100 text-purple-800 dark:bg-purple-900/30 dark:text-purple-300" },
-                                            "text": "$t:sirsoft-pay-kginicis.admin.escrow_delivery_already_registered"
+                                            "text": "$t:sirsoft-pay_kginicis.admin.escrow_delivery_already_registered"
                                         }
                                     ]
                                 },
@@ -387,7 +387,7 @@
                                             "type": "basic",
                                             "name": "Span",
                                             "props": { "className": "text-gray-500 dark:text-gray-400" },
-                                            "text": "$t:sirsoft-pay-kginicis.admin.escrow_delivery_registered_at"
+                                            "text": "$t:sirsoft-pay_kginicis.admin.escrow_delivery_registered_at"
                                         },
                                         {
                                             "type": "basic",
@@ -399,7 +399,7 @@
                                             "type": "basic",
                                             "name": "Span",
                                             "props": { "className": "text-gray-500 dark:text-gray-400" },
-                                            "text": "$t:sirsoft-pay-kginicis.admin.escrow_delivery_invoice_info"
+                                            "text": "$t:sirsoft-pay_kginicis.admin.escrow_delivery_invoice_info"
                                         },
                                         {
                                             "type": "basic",
@@ -411,7 +411,7 @@
                                             "type": "basic",
                                             "name": "Span",
                                             "props": { "className": "text-gray-500 dark:text-gray-400" },
-                                            "text": "$t:sirsoft-pay-kginicis.admin.escrow_delivery_courier_info"
+                                            "text": "$t:sirsoft-pay_kginicis.admin.escrow_delivery_courier_info"
                                         },
                                         {
                                             "type": "basic",
@@ -423,7 +423,7 @@
                                             "type": "basic",
                                             "name": "Span",
                                             "props": { "className": "text-gray-500 dark:text-gray-400" },
-                                            "text": "$t:sirsoft-pay-kginicis.admin.escrow_delivery_recv_addr"
+                                            "text": "$t:sirsoft-pay_kginicis.admin.escrow_delivery_recv_addr"
                                         },
                                         {
                                             "type": "basic",
@@ -449,14 +449,14 @@
                                             "type": "basic",
                                             "name": "Label",
                                             "props": { "className": "text-xs text-gray-500 dark:text-gray-400 w-16 flex-shrink-0" },
-                                            "text": "$t:sirsoft-pay-kginicis.admin.escrow_delivery_invoice_label"
+                                            "text": "$t:sirsoft-pay_kginicis.admin.escrow_delivery_invoice_label"
                                         },
                                         {
                                             "type": "basic",
                                             "name": "Input",
                                             "props": {
                                                 "type": "text",
-                                                "placeholder": "$t:sirsoft-pay-kginicis.admin.escrow_delivery_invoice_placeholder",
+                                                "placeholder": "$t:sirsoft-pay_kginicis.admin.escrow_delivery_invoice_placeholder",
                                                 "className": "flex-1 text-xs px-2 py-1.5 border border-gray-300 dark:border-gray-600 rounded bg-white dark:bg-gray-700 text-gray-900 dark:text-gray-100 font-mono"
                                             },
                                             "actions": [
@@ -481,7 +481,7 @@
                                             "type": "basic",
                                             "name": "Label",
                                             "props": { "className": "text-xs text-gray-500 dark:text-gray-400 w-16 flex-shrink-0" },
-                                            "text": "$t:sirsoft-pay-kginicis.admin.escrow_delivery_courier_label"
+                                            "text": "$t:sirsoft-pay_kginicis.admin.escrow_delivery_courier_label"
                                         },
                                         {
                                             "type": "basic",
@@ -500,7 +500,7 @@
                                                 }
                                             ],
                                             "children": [
-                                                { "type": "basic", "name": "Option", "props": { "value": "" }, "text": "$t:sirsoft-pay-kginicis.admin.escrow_delivery_courier_placeholder" },
+                                                { "type": "basic", "name": "Option", "props": { "value": "" }, "text": "$t:sirsoft-pay_kginicis.admin.escrow_delivery_courier_placeholder" },
                                                 { "type": "basic", "name": "Option", "props": { "value": "hanjin" }, "text": "한진택배" },
                                                 { "type": "basic", "name": "Option", "props": { "value": "cjgls" }, "text": "CJ대한통운" },
                                                 { "type": "basic", "name": "Option", "props": { "value": "loge" }, "text": "롯데택배" },
@@ -547,7 +547,7 @@
                                                         {
                                                             "handler": "apiCall",
                                                             "auth_required": true,
-                                                            "target": "/api/plugins/sirsoft-pay-kginicis/admin/orders/{{route.orderNumber}}/escrow-delivery",
+                                                            "target": "/api/plugins/sirsoft-pay_kginicis/admin/orders/{{route.orderNumber}}/escrow-delivery",
                                                             "params": {
                                                                 "method": "POST",
                                                                 "body": {
@@ -566,7 +566,7 @@
                                                                 },
                                                                 {
                                                                     "handler": "toast",
-                                                                    "params": { "type": "success", "message": "$t:sirsoft-pay-kginicis.admin.escrow_delivery_success" }
+                                                                    "params": { "type": "success", "message": "$t:sirsoft-pay_kginicis.admin.escrow_delivery_success" }
                                                                 },
                                                                 {
                                                                     "handler": "refetchDataSource",
@@ -579,7 +579,7 @@
                                                                     "params": {
                                                                         "target": "local",
                                                                         "_ed_registering": false,
-                                                                        "_ed_error": "{{response?.errors?.message?.[0] ?? '$t:sirsoft-pay-kginicis.admin.escrow_delivery_error'}}"
+                                                                        "_ed_error": "{{response?.errors?.message?.[0] ?? '$t:sirsoft-pay_kginicis.admin.escrow_delivery_error'}}"
                                                                     }
                                                                 }
                                                             ]
@@ -598,19 +598,19 @@
                                                     "type": "basic",
                                                     "name": "Span",
                                                     "if": "{{_local._ed_registering}}",
-                                                    "text": "$t:sirsoft-pay-kginicis.admin.escrow_delivery_registering"
+                                                    "text": "$t:sirsoft-pay_kginicis.admin.escrow_delivery_registering"
                                                 },
                                                 {
                                                     "type": "basic",
                                                     "name": "Span",
                                                     "if": "{{!_local._ed_registering && !kginicis_escrow_delivery.data?.registered_delivery}}",
-                                                    "text": "$t:sirsoft-pay-kginicis.admin.escrow_delivery_register_button"
+                                                    "text": "$t:sirsoft-pay_kginicis.admin.escrow_delivery_register_button"
                                                 },
                                                 {
                                                     "type": "basic",
                                                     "name": "Span",
                                                     "if": "{{!_local._ed_registering && kginicis_escrow_delivery.data?.registered_delivery}}",
-                                                    "text": "$t:sirsoft-pay-kginicis.admin.escrow_delivery_change_button"
+                                                    "text": "$t:sirsoft-pay_kginicis.admin.escrow_delivery_change_button"
                                                 }
                                             ]
                                         }
@@ -648,13 +648,13 @@
                                     "type": "basic",
                                     "name": "H3",
                                     "props": { "className": "text-sm font-semibold text-gray-800 dark:text-gray-200" },
-                                    "text": "$t:sirsoft-pay-kginicis.admin.escrow_deny_confirm_title"
+                                    "text": "$t:sirsoft-pay_kginicis.admin.escrow_deny_confirm_title"
                                 },
                                 {
                                     "type": "basic",
                                     "name": "Span",
                                     "props": { "className": "text-xs text-gray-400 dark:text-gray-500 hidden sm:inline" },
-                                    "text": "$t:sirsoft-pay-kginicis.admin.escrow_deny_confirm_description"
+                                    "text": "$t:sirsoft-pay_kginicis.admin.escrow_deny_confirm_description"
                                 }
                             ]
                         },
@@ -677,7 +677,7 @@
                                             "type": "basic",
                                             "name": "Span",
                                             "props": { "className": "text-xs font-semibold text-red-700 dark:text-red-400" },
-                                            "text": "$t:sirsoft-pay-kginicis.admin.escrow_deny_confirm_buyer_denied"
+                                            "text": "$t:sirsoft-pay_kginicis.admin.escrow_deny_confirm_buyer_denied"
                                         }
                                     ]
                                 },
@@ -717,7 +717,7 @@
                                     "type": "basic",
                                     "name": "Span",
                                     "props": { "className": "text-gray-600 dark:text-gray-300" },
-                                    "text": "$t:sirsoft-pay-kginicis.admin.escrow_deny_confirm_done"
+                                    "text": "$t:sirsoft-pay_kginicis.admin.escrow_deny_confirm_done"
                                 }
                             ]
                         },
@@ -750,7 +750,7 @@
                                                 {
                                                     "handler": "apiCall",
                                                     "auth_required": true,
-                                                    "target": "/api/plugins/sirsoft-pay-kginicis/admin/orders/{{route.orderNumber}}/escrow-deny-confirm",
+                                                    "target": "/api/plugins/sirsoft-pay_kginicis/admin/orders/{{route.orderNumber}}/escrow-deny-confirm",
                                                     "params": {
                                                         "method": "POST",
                                                         "body": {}
@@ -765,7 +765,7 @@
                                                         },
                                                         {
                                                             "handler": "toast",
-                                                            "params": { "type": "success", "message": "$t:sirsoft-pay-kginicis.admin.escrow_deny_confirm_success" }
+                                                            "params": { "type": "success", "message": "$t:sirsoft-pay_kginicis.admin.escrow_deny_confirm_success" }
                                                         },
                                                         {
                                                             "handler": "refetchDataSource",
@@ -778,7 +778,7 @@
                                                             "params": {
                                                                 "target": "local",
                                                                 "_dncf_processing": false,
-                                                                "_dncf_error": "{{response?.errors?.message?.[0] ?? '$t:sirsoft-pay-kginicis.admin.escrow_deny_confirm_error'}}"
+                                                                "_dncf_error": "{{response?.errors?.message?.[0] ?? '$t:sirsoft-pay_kginicis.admin.escrow_deny_confirm_error'}}"
                                                             }
                                                         }
                                                     ]
@@ -797,13 +797,13 @@
                                             "type": "basic",
                                             "name": "Span",
                                             "if": "{{_local._dncf_processing}}",
-                                            "text": "$t:sirsoft-pay-kginicis.admin.escrow_deny_confirming"
+                                            "text": "$t:sirsoft-pay_kginicis.admin.escrow_deny_confirming"
                                         },
                                         {
                                             "type": "basic",
                                             "name": "Span",
                                             "if": "{{!_local._dncf_processing}}",
-                                            "text": "$t:sirsoft-pay-kginicis.admin.escrow_deny_confirm_button"
+                                            "text": "$t:sirsoft-pay_kginicis.admin.escrow_deny_confirm_button"
                                         }
                                     ]
                                 }
@@ -839,13 +839,13 @@
                                     "type": "basic",
                                     "name": "H3",
                                     "props": { "className": "text-sm font-semibold text-gray-800 dark:text-gray-200" },
-                                    "text": "$t:sirsoft-pay-kginicis.admin.cash_receipt_title"
+                                    "text": "$t:sirsoft-pay_kginicis.admin.cash_receipt_title"
                                 },
                                 {
                                     "type": "basic",
                                     "name": "Span",
                                     "props": { "className": "text-xs text-gray-400 dark:text-gray-500 hidden sm:inline" },
-                                    "text": "$t:sirsoft-pay-kginicis.admin.cash_receipt_description"
+                                    "text": "$t:sirsoft-pay_kginicis.admin.cash_receipt_description"
                                 }
                             ]
                         },
@@ -882,7 +882,7 @@
                                                     "props": { "className": "inline-flex items-center gap-1 px-2 py-0.5 rounded-full text-xs font-semibold bg-green-100 text-green-800 dark:bg-green-900/30 dark:text-green-300" },
                                                     "children": [
                                                         { "type": "basic", "name": "Icon", "props": { "name": "check-circle", "className": "w-3 h-3" } },
-                                                        { "type": "basic", "name": "Span", "text": "$t:sirsoft-pay-kginicis.admin.cash_receipt_already_issued" }
+                                                        { "type": "basic", "name": "Span", "text": "$t:sirsoft-pay_kginicis.admin.cash_receipt_already_issued" }
                                                     ]
                                                 }
                                             ]
@@ -897,7 +897,7 @@
                                                     "type": "basic",
                                                     "name": "Span",
                                                     "props": { "className": "text-gray-500 dark:text-gray-400" },
-                                                    "text": "$t:sirsoft-pay-kginicis.admin.cash_receipt_issued_at"
+                                                    "text": "$t:sirsoft-pay_kginicis.admin.cash_receipt_issued_at"
                                                 },
                                                 {
                                                     "type": "basic",
@@ -909,13 +909,13 @@
                                                     "type": "basic",
                                                     "name": "Span",
                                                     "props": { "className": "text-gray-500 dark:text-gray-400" },
-                                                    "text": "$t:sirsoft-pay-kginicis.admin.cash_receipt_type_label"
+                                                    "text": "$t:sirsoft-pay_kginicis.admin.cash_receipt_type_label"
                                                 },
                                                 {
                                                     "type": "basic",
                                                     "name": "Span",
                                                     "props": { "className": "text-gray-900 dark:text-gray-100" },
-                                                    "text": "{{payment.cash_receipt_type === 'income_deduction' ? '$t:sirsoft-pay-kginicis.admin.cash_receipt_type_income' : '$t:sirsoft-pay-kginicis.admin.cash_receipt_type_expenditure'}}"
+                                                    "text": "{{payment.cash_receipt_type === 'income_deduction' ? '$t:sirsoft-pay_kginicis.admin.cash_receipt_type_income' : '$t:sirsoft-pay_kginicis.admin.cash_receipt_type_expenditure'}}"
                                                 }
                                             ]
                                         },
@@ -934,7 +934,7 @@
                                                             "type": "basic",
                                                             "name": "Label",
                                                             "props": { "className": "text-xs text-gray-500 dark:text-gray-400 w-16 flex-shrink-0" },
-                                                            "text": "$t:sirsoft-pay-kginicis.admin.cash_receipt_type_label"
+                                                            "text": "$t:sirsoft-pay_kginicis.admin.cash_receipt_type_label"
                                                         },
                                                         {
                                                             "type": "basic",
@@ -959,13 +959,13 @@
                                                                     "type": "basic",
                                                                     "name": "Option",
                                                                     "props": { "value": "0" },
-                                                                    "text": "$t:sirsoft-pay-kginicis.admin.cash_receipt_type_income"
+                                                                    "text": "$t:sirsoft-pay_kginicis.admin.cash_receipt_type_income"
                                                                 },
                                                                 {
                                                                     "type": "basic",
                                                                     "name": "Option",
                                                                     "props": { "value": "1" },
-                                                                    "text": "$t:sirsoft-pay-kginicis.admin.cash_receipt_type_expenditure"
+                                                                    "text": "$t:sirsoft-pay_kginicis.admin.cash_receipt_type_expenditure"
                                                                 }
                                                             ]
                                                         }
@@ -980,14 +980,14 @@
                                                             "type": "basic",
                                                             "name": "Label",
                                                             "props": { "className": "text-xs text-gray-500 dark:text-gray-400 w-16 flex-shrink-0" },
-                                                            "text": "$t:sirsoft-pay-kginicis.admin.cash_receipt_number_label"
+                                                            "text": "$t:sirsoft-pay_kginicis.admin.cash_receipt_number_label"
                                                         },
                                                         {
                                                             "type": "basic",
                                                             "name": "Input",
                                                             "props": {
                                                                 "type": "text",
-                                                                "placeholder": "$t:sirsoft-pay-kginicis.admin.cash_receipt_number_placeholder_income",
+                                                                "placeholder": "$t:sirsoft-pay_kginicis.admin.cash_receipt_number_placeholder_income",
                                                                 "className": "flex-1 text-xs px-2 py-1.5 border border-gray-300 dark:border-gray-600 rounded bg-white dark:bg-gray-700 text-gray-900 dark:text-gray-100 font-mono"
                                                             },
                                                             "actions": [
@@ -1024,7 +1024,7 @@
                                                                         {
                                                                             "handler": "apiCall",
                                                                             "auth_required": true,
-                                                                            "target": "/api/plugins/sirsoft-pay-kginicis/admin/orders/{{route.orderNumber}}/cash-receipt",
+                                                                            "target": "/api/plugins/sirsoft-pay_kginicis/admin/orders/{{route.orderNumber}}/cash-receipt",
                                                                             "params": {
                                                                                 "method": "POST",
                                                                                 "body": {
@@ -1042,7 +1042,7 @@
                                                                                 },
                                                                                 {
                                                                                     "handler": "toast",
-                                                                                    "params": { "type": "success", "message": "$t:sirsoft-pay-kginicis.admin.cash_receipt_success" }
+                                                                                    "params": { "type": "success", "message": "$t:sirsoft-pay_kginicis.admin.cash_receipt_success" }
                                                                                 },
                                                                                 {
                                                                                     "handler": "refetchDataSource",
@@ -1055,7 +1055,7 @@
                                                                                     "params": {
                                                                                         "target": "local",
                                                                                         "_cr_issuing_{{crIdx}}": false,
-                                                                                        "_cr_error_{{crIdx}}": "$t:sirsoft-pay-kginicis.admin.cash_receipt_error"
+                                                                                        "_cr_error_{{crIdx}}": "$t:sirsoft-pay_kginicis.admin.cash_receipt_error"
                                                                                     }
                                                                                 }
                                                                             ]
@@ -1074,13 +1074,13 @@
                                                                     "type": "basic",
                                                                     "name": "Span",
                                                                     "if": "{{_local._cr_issuing_{{crIdx}}}}",
-                                                                    "text": "$t:sirsoft-pay-kginicis.admin.cash_receipt_issuing"
+                                                                    "text": "$t:sirsoft-pay_kginicis.admin.cash_receipt_issuing"
                                                                 },
                                                                 {
                                                                     "type": "basic",
                                                                     "name": "Span",
                                                                     "if": "{{!_local._cr_issuing_{{crIdx}}}}",
-                                                                    "text": "$t:sirsoft-pay-kginicis.admin.cash_receipt_issue_button"
+                                                                    "text": "$t:sirsoft-pay_kginicis.admin.cash_receipt_issue_button"
                                                                 }
                                                             ]
                                                         }

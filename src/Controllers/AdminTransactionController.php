@@ -2,7 +2,7 @@
 
 declare(strict_types=1);
 
-namespace Plugins\Sirsoft\Pay\Kginicis\Controllers;
+namespace Plugins\Sirsoft\PayKginicis\Controllers;
 
 use App\Helpers\ResponseHelper;
 use App\Http\Controllers\Api\Base\AdminBaseController;
@@ -10,7 +10,7 @@ use Illuminate\Http\JsonResponse;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\DB;
 use Illuminate\Support\Facades\Log;
-use Plugins\Sirsoft\Pay\Kginicis\Services\KgInicisApiService;
+use Plugins\Sirsoft\PayKginicis\Services\KgInicisApiService;
 
 class AdminTransactionController extends AdminBaseController
 {
@@ -19,6 +19,18 @@ class AdminTransactionController extends AdminBaseController
     ) {
         parent::__construct();
     }
+
+/**
+
+ * query
+
+ *
+
+ * @param  Request  $request
+
+ * @return JsonResponse
+
+ */
 
     public function query(Request $request): JsonResponse
     {
@@ -30,6 +42,18 @@ class AdminTransactionController extends AdminBaseController
 
         return $this->queryByTid($tid);
     }
+
+/**
+
+ * queryByOrder
+
+ *
+
+ * @param  string  $orderNumber
+
+ * @return JsonResponse
+
+ */
 
     public function queryByOrder(string $orderNumber): JsonResponse
     {

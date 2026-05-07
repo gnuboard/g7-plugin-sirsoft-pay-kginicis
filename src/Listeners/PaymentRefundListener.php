@@ -2,17 +2,27 @@
 
 declare(strict_types=1);
 
-namespace Plugins\Sirsoft\Pay\Kginicis\Listeners;
+namespace Plugins\Sirsoft\PayKginicis\Listeners;
 
 use App\Contracts\Extension\HookListenerInterface;
 use Illuminate\Support\Facades\Log;
 use Modules\Sirsoft\Ecommerce\Models\Order;
 use Modules\Sirsoft\Ecommerce\Models\OrderPayment;
-use Plugins\Sirsoft\Pay\Kginicis\Services\KgInicisApiService;
+use Plugins\Sirsoft\PayKginicis\Services\KgInicisApiService;
 
 class PaymentRefundListener implements HookListenerInterface
 {
     private const PG_PROVIDER_ID = 'kginicis';
+
+/**
+
+ * getSubscribedHooks
+
+ *
+
+ * @return array
+
+ */
 
     public static function getSubscribedHooks(): array
     {
@@ -25,7 +35,32 @@ class PaymentRefundListener implements HookListenerInterface
         ];
     }
 
+    /**
+     * 기본 핸들러 (미사용 — 개별 메서드에서 처리)
+     *
+     * @param  mixed  ...$args  훅 인수
+     */
     public function handle(...$args): void {}
+
+/**
+
+ * processRefund
+
+ *
+
+ * @param  array  $result
+
+ * @param  Order  $order
+
+ * @param  OrderPayment  $payment
+
+ * @param  float  $refundAmount
+
+ * @param  ?string  $reason
+
+ * @return array
+
+ */
 
     public function processRefund(
         array $result,
@@ -43,7 +78,7 @@ class PaymentRefundListener implements HookListenerInterface
             return [
                 'success' => false,
                 'error_code' => 'MISSING_TID',
-                'error_message' => __('sirsoft-pay-kginicis::messages.refund.missing_tid'),
+                'error_message' => __('sirsoft-pay_kginicis::messages.refund.missing_tid'),
                 'transaction_id' => null,
             ];
         }
@@ -51,7 +86,7 @@ class PaymentRefundListener implements HookListenerInterface
         try {
             $apiService = app(KgInicisApiService::class);
 
-            $cancelMsg = $reason ?? __('sirsoft-pay-kginicis::messages.refund.default_reason');
+            $cancelMsg = $reason ?? __('sirsoft-pay_kginicis::messages.refund.default_reason');
             $cancelAmt = (int) $refundAmount;
             $payMethod = $payment->payment_meta['pay_method'] ?? 'Card';
 

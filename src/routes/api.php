@@ -1,21 +1,21 @@
 <?php
 
 use Illuminate\Support\Facades\Route;
-use Plugins\Sirsoft\Pay\Kginicis\Controllers\AdminCashReceiptController;
-use Plugins\Sirsoft\Pay\Kginicis\Controllers\AdminEscrowDeliveryController;
-use Plugins\Sirsoft\Pay\Kginicis\Controllers\AdminEscrowDenyConfirmController;
-use Plugins\Sirsoft\Pay\Kginicis\Controllers\AdminTransactionController;
-use Plugins\Sirsoft\Pay\Kginicis\Controllers\CbtHashDataController;
-use Plugins\Sirsoft\Pay\Kginicis\Controllers\MobileSignatureController;
-use Plugins\Sirsoft\Pay\Kginicis\Controllers\PaymentSignatureController;
-use Plugins\Sirsoft\Pay\Kginicis\Controllers\UserReceiptController;
+use Plugins\Sirsoft\PayKginicis\Controllers\AdminCashReceiptController;
+use Plugins\Sirsoft\PayKginicis\Controllers\AdminEscrowDeliveryController;
+use Plugins\Sirsoft\PayKginicis\Controllers\AdminEscrowDenyConfirmController;
+use Plugins\Sirsoft\PayKginicis\Controllers\AdminTransactionController;
+use Plugins\Sirsoft\PayKginicis\Controllers\CbtHashDataController;
+use Plugins\Sirsoft\PayKginicis\Controllers\MobileSignatureController;
+use Plugins\Sirsoft\PayKginicis\Controllers\PaymentSignatureController;
+use Plugins\Sirsoft\PayKginicis\Controllers\UserReceiptController;
 
 /*
 |--------------------------------------------------------------------------
 | KG Inicis Plugin API Routes
 |--------------------------------------------------------------------------
 |
-| 프리픽스: /api/plugins/sirsoft-pay-kginicis (PluginRouteServiceProvider 자동 적용)
+| 프리픽스: /api/plugins/sirsoft-pay_kginicis (PluginRouteServiceProvider 자동 적용)
 | 미들웨어: api (PluginRouteServiceProvider 자동 적용)
 |
 */
@@ -43,9 +43,9 @@ Route::prefix('admin')->name('admin.')->middleware(['auth:sanctum', 'admin'])->g
         return response()->json([
             'success' => true,
             'data' => [
-                'url' => url('/plugins/sirsoft-pay-kginicis/payment/vbank-notify'),
-                'mobile_url' => url('/plugins/sirsoft-pay-kginicis/payment/mobile/vbank-notify'),
-                'escrow_url' => url('/plugins/sirsoft-pay-kginicis/payment/escrow-notify'),
+                'url' => url('/plugins/sirsoft-pay_kginicis/payment/vbank-notify'),
+                'mobile_url' => url('/plugins/sirsoft-pay_kginicis/payment/mobile/vbank-notify'),
+                'escrow_url' => url('/plugins/sirsoft-pay_kginicis/payment/escrow-notify'),
             ],
         ]);
     })->name('vbank.notify.url');

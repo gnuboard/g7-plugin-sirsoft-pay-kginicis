@@ -2,18 +2,18 @@
 
 declare(strict_types=1);
 
-namespace Plugins\Sirsoft\Pay\Kginicis\Controllers;
+namespace Plugins\Sirsoft\PayKginicis\Controllers;
 
 use App\Extension\HookManager;
 use Illuminate\Http\Response;
 use Illuminate\Support\Facades\Log;
-use Plugins\Sirsoft\Pay\Kginicis\Http\Requests\EscrowNotifyRequest;
+use Plugins\Sirsoft\PayKginicis\Http\Requests\EscrowNotifyRequest;
 use Modules\Sirsoft\Ecommerce\Services\OrderProcessingService;
 
 /**
  * KG 이니시스 에스크로 상태변경 통보 컨트롤러
  *
- * POST /plugins/sirsoft-pay-kginicis/payment/escrow-notify
+ * POST /plugins/sirsoft-pay_kginicis/payment/escrow-notify
  * 응답: "cd_rslt=0000" (200, text/plain)
  */
 class EscrowNotifyController
@@ -21,6 +21,18 @@ class EscrowNotifyController
     public function __construct(
         private readonly OrderProcessingService $orderService,
     ) {}
+
+/**
+
+ * handle
+
+ *
+
+ * @param  EscrowNotifyRequest  $request
+
+ * @return Response
+
+ */
 
     public function handle(EscrowNotifyRequest $request): Response
     {
@@ -49,13 +61,13 @@ class EscrowNotifyController
 
             // cl_status → 이벤트 훅 발행
             match ($clStatus) {
-                '2'  => HookManager::doAction('sirsoft-pay-kginicis.escrow.shipping_registered', $order, $validated),
+                '2'  => HookManager::doAction('sirsoft-pay_kginicis.escrow.shipping_registered', $order, $validated),
                 '3',
                 '31',
-                '32' => HookManager::doAction('sirsoft-pay-kginicis.escrow.purchase_confirmed', $order, $validated),
-                '4'  => HookManager::doAction('sirsoft-pay-kginicis.escrow.purchase_rejected', $order, $validated),
-                '8'  => HookManager::doAction('sirsoft-pay-kginicis.escrow.cancelled', $order, $validated),
-                '10' => HookManager::doAction('sirsoft-pay-kginicis.escrow.denial_confirmed', $order, $validated),
+                '32' => HookManager::doAction('sirsoft-pay_kginicis.escrow.purchase_confirmed', $order, $validated),
+                '4'  => HookManager::doAction('sirsoft-pay_kginicis.escrow.purchase_rejected', $order, $validated),
+                '8'  => HookManager::doAction('sirsoft-pay_kginicis.escrow.cancelled', $order, $validated),
+                '10' => HookManager::doAction('sirsoft-pay_kginicis.escrow.denial_confirmed', $order, $validated),
                 default => Log::info('KG Inicis: escrow notify - unknown cl_status', ['cl_status' => $clStatus, 'moid' => $moid]),
             };
 

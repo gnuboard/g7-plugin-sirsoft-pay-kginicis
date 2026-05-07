@@ -1,6 +1,6 @@
 <?php
 
-namespace Plugins\Sirsoft\Pay\Kginicis;
+namespace Plugins\Sirsoft\PayKginicis;
 
 use App\Extension\AbstractPlugin;
 
@@ -196,7 +196,7 @@ class Plugin extends AbstractPlugin
     {
         return [
             [
-                'name' => 'sirsoft-pay-kginicis.payment.before_authorize',
+                'name' => 'sirsoft-pay_kginicis.payment.before_authorize',
                 'type' => 'action',
                 'description' => [
                     'ko' => 'KG 이니시스 서버 승인 API 호출 전',
@@ -204,11 +204,27 @@ class Plugin extends AbstractPlugin
                 ],
             ],
             [
-                'name' => 'sirsoft-pay-kginicis.payment.after_authorize',
+                'name' => 'sirsoft-pay_kginicis.payment.after_authorize',
                 'type' => 'action',
                 'description' => [
                     'ko' => 'KG 이니시스 서버 승인 완료 후',
                     'en' => 'After KG Inicis server authorization completed',
+                ],
+            ],
+            [
+                'name' => 'sirsoft-pay_kginicis.payment.before_cancel',
+                'type' => 'action',
+                'description' => [
+                    'ko' => 'KG 이니시스 결제 취소 API 호출 전 (본인인증 등 확장 지점)',
+                    'en' => 'Before KG Inicis cancel API call (extension point for re-auth, etc.)',
+                ],
+            ],
+            [
+                'name' => 'sirsoft-pay_kginicis.payment.after_cancel',
+                'type' => 'action',
+                'description' => [
+                    'ko' => 'KG 이니시스 결제 취소 완료 후',
+                    'en' => 'After KG Inicis cancel completed',
                 ],
             ],
         ];

@@ -2,11 +2,11 @@
 
 declare(strict_types=1);
 
-namespace Plugins\Sirsoft\Pay\Kginicis\Controllers;
+namespace Plugins\Sirsoft\PayKginicis\Controllers;
 
 use Illuminate\Http\JsonResponse;
-use Plugins\Sirsoft\Pay\Kginicis\Http\Requests\MobileSignatureRequest;
-use Plugins\Sirsoft\Pay\Kginicis\Services\KgInicisApiService;
+use Plugins\Sirsoft\PayKginicis\Http\Requests\MobileSignatureRequest;
+use Plugins\Sirsoft\PayKginicis\Services\KgInicisApiService;
 
 class MobileSignatureController
 {
@@ -15,10 +15,10 @@ class MobileSignatureController
     ) {}
 
     /**
-     * 모바일 결제 위변조 방지 해시(P_CHKFAKE) 생성
+     * generate
      *
-     * POST /api/plugins/sirsoft-pay-kginicis/payment/mobile/signature
-     * Body: { oid, price, timestamp }
+     * @param  MobileSignatureRequest  $request
+     * @return JsonResponse
      */
     public function generate(MobileSignatureRequest $request): JsonResponse
     {

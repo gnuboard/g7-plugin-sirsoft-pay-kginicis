@@ -6,7 +6,7 @@
             "type": "composite",
             "name": "Modal",
             "props": {
-                "title": "$t:sirsoft-pay-kginicis.payment_error.title",
+                "title": "$t:sirsoft-pay_kginicis.payment_error.title",
                 "size": "small",
                 "showCloseButton": true
             },
@@ -32,7 +32,7 @@
                             "props": {
                                 "className": "text-gray-700 dark:text-gray-300"
                             },
-                            "text": "$t:sirsoft-pay-kginicis.payment_error.message"
+                            "text": "$t:sirsoft-pay_kginicis.payment_error.message"
                         },
                         {
                             "type": "basic",

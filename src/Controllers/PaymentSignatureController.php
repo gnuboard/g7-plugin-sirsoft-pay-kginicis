@@ -2,11 +2,11 @@
 
 declare(strict_types=1);
 
-namespace Plugins\Sirsoft\Pay\Kginicis\Controllers;
+namespace Plugins\Sirsoft\PayKginicis\Controllers;
 
 use Illuminate\Http\JsonResponse;
-use Plugins\Sirsoft\Pay\Kginicis\Http\Requests\SignatureRequest;
-use Plugins\Sirsoft\Pay\Kginicis\Services\KgInicisApiService;
+use Plugins\Sirsoft\PayKginicis\Http\Requests\SignatureRequest;
+use Plugins\Sirsoft\PayKginicis\Services\KgInicisApiService;
 
 class PaymentSignatureController
 {
@@ -15,10 +15,10 @@ class PaymentSignatureController
     ) {}
 
     /**
-     * 결제창 서명 생성
+     * generate
      *
-     * POST /api/plugins/sirsoft-pay-kginicis/payment/signature
-     * Body: { oid, price, timestamp }
+     * @param  SignatureRequest  $request
+     * @return JsonResponse
      */
     public function generate(SignatureRequest $request): JsonResponse
     {

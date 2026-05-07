@@ -1,5 +1,5 @@
 {
-    "identifier": "sirsoft-pay-kginicis",
+    "identifier": "sirsoft-pay_kginicis",
     "vendor": "sirsoft",
     "name": {
         "ko": "KG 이니시스",
@@ -7,8 +7,8 @@
     },
     "version": "1.0.0-beta.1",
     "license": "MIT",
-    "github_url": "https://github.com/gnuboard/g7-plugin-sirsoft-pay-kginicis",
-    "github_changelog_url": "https://github.com/gnuboard/g7-plugin-sirsoft-pay-kginicis/blob/main/CHANGELOG.md",
+    "github_url": "https://github.com/gnuboard/g7-plugin-sirsoft-pay_kginicis",
+    "github_changelog_url": "https://github.com/gnuboard/g7-plugin-sirsoft-pay_kginicis/blob/main/CHANGELOG.md",
     "description": {
         "ko": "KG 이니시스 결제 게이트웨이 (표준결제창 연동, 일본결제 지원)",
         "en": "KG Inicis payment gateway (standard payment window, Japan payment support)"

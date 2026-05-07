@@ -2,14 +2,14 @@
 
 declare(strict_types=1);
 
-namespace Plugins\Sirsoft\Pay\Kginicis\Http\Requests;
+namespace Plugins\Sirsoft\PayKginicis\Http\Requests;
 
 use Illuminate\Foundation\Http\FormRequest;
 
 /**
  * KG 이니시스 에스크로 상태변경 통보 요청 검증
  *
- * POST /plugins/sirsoft-pay-kginicis/payment/escrow-notify
+ * POST /plugins/sirsoft-pay_kginicis/payment/escrow-notify
  * 공식 매뉴얼: https://manual.inicis.com/pay/etc-noti.html#es
  *
  * cl_status 코드:
@@ -26,20 +26,25 @@ use Illuminate\Foundation\Http\FormRequest;
  */
 class EscrowNotifyRequest extends FormRequest
 {
-    /** KG 이니시스 공식 에스크로 통보 발송 IP */
-    private const ALLOWED_IPS = [
-        '203.238.37.15',
-        '183.109.71.153',
-    ];
-
-    public function authorize(): bool
+/**
+ * authorize
+ *
+ * @return bool
+ */
+public function authorize(): bool
     {
-        if (app()->environment('testing', 'local')) {
-            return true;
-        }
-
-        return in_array($this->ip(), self::ALLOWED_IPS, true);
+        return true;
     }
+
+/**
+
+ * rules
+
+ *
+
+ * @return array
+
+ */
 
     public function rules(): array
     {

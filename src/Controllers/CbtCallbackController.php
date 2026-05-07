@@ -2,14 +2,14 @@
 
 declare(strict_types=1);
 
-namespace Plugins\Sirsoft\Pay\Kginicis\Controllers;
+namespace Plugins\Sirsoft\PayKginicis\Controllers;
 
 use App\Services\PluginSettingsService;
 use Illuminate\Http\RedirectResponse;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Log;
 use Modules\Sirsoft\Ecommerce\Services\OrderProcessingService;
-use Plugins\Sirsoft\Pay\Kginicis\Services\KgInicisApiService;
+use Plugins\Sirsoft\PayKginicis\Services\KgInicisApiService;
 
 /**
  * KG 이니시스 CBT (Cross Border Trade) 일본 결제 콜백 컨트롤러
@@ -22,7 +22,7 @@ use Plugins\Sirsoft\Pay\Kginicis\Services\KgInicisApiService;
  */
 class CbtCallbackController
 {
-    private const PLUGIN_IDENTIFIER = 'sirsoft-pay-kginicis';
+    private const PLUGIN_IDENTIFIER = 'sirsoft-pay_kginicis';
 
     public function __construct(
         private readonly OrderProcessingService $orderService,
@@ -31,10 +31,10 @@ class CbtCallbackController
     ) {}
 
     /**
-     * CBT 인증 후 리다이렉트 처리
+     * handle
      *
-     * GET /plugins/sirsoft-pay-kginicis/payment/cbt/callback
-     *   ?oid={주문번호}&amount={금액}&sid={KG이니시스 세션ID}
+     * @param  Request  $request
+     * @return RedirectResponse
      */
     public function handle(Request $request): RedirectResponse
     {

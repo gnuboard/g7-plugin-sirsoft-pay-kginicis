@@ -2,15 +2,17 @@
 
 declare(strict_types=1);
 
-namespace Plugins\Sirsoft\Pay\Kginicis\Services;
+namespace Plugins\Sirsoft\PayKginicis\Services;
 
 use App\Services\PluginSettingsService;
 use Illuminate\Support\Facades\Http;
+use App\Extension\HookManager;
 use Illuminate\Support\Facades\Log;
+use Plugins\Sirsoft\PayKginicis\Exceptions\KgInicisApiException;
 
 class KgInicisApiService
 {
-    private const PLUGIN_IDENTIFIER = 'sirsoft-pay-kginicis';
+    private const PLUGIN_IDENTIFIER = 'sirsoft-pay_kginicis';
 
     private const LIVE_MID_PREFIX = 'SIR';
 
@@ -125,10 +127,30 @@ class KgInicisApiService
             : ($settings['live_mobile_hash_key'] ?? '');
     }
 
+/**
+
+ * isTestMode
+
+ *
+
+ * @return bool
+
+ */
+
     public function isTestMode(): bool
     {
         return $this->isTest;
     }
+
+/**
+
+ * useEscrowCredentials
+
+ *
+
+ * @param  bool  $isEscrow
+
+ */
 
     public function useEscrowCredentials(bool $isEscrow): void
     {
@@ -147,15 +169,25 @@ class KgInicisApiService
         }
     }
 
+/**
+
+ * getMid
+
+ *
+
+ * @return string
+
+ */
+
     public function getMid(): string
     {
         return $this->mid;
     }
 
     /**
-     * PC 에스크로 구매결정 폼의 mKey 반환 (SHA-256(escrow signKey))
-     * 테스트: 이니시스 에스크로 테스트 signKey 사용
-     * 라이브: 에스크로 가맹점 signKey 사용 (live_sign_key 설정값)
+     * getEscrowConfirmMKey
+     *
+     * @return string
      */
     public function getEscrowConfirmMKey(): string
     {
@@ -163,25 +195,75 @@ class KgInicisApiService
         return hash('sha256', $signKey);
     }
 
+/**
+
+ * getJapanMid
+
+ *
+
+ * @return string
+
+ */
+
     public function getJapanMid(): string
     {
         return $this->japanMid;
     }
+
+/**
+
+ * isJapanEnabled
+
+ *
+
+ * @return bool
+
+ */
 
     public function isJapanEnabled(): bool
     {
         return $this->japanEnabled;
     }
 
+/**
+
+ * getJsUrl
+
+ *
+
+ * @return string
+
+ */
+
     public function getJsUrl(): string
     {
         return $this->isTest ? self::JS_URL_TEST : self::JS_URL_LIVE;
     }
 
+/**
+
+ * getCbtAuthUrl
+
+ *
+
+ * @return string
+
+ */
+
     public function getCbtAuthUrl(): string
     {
         return $this->isTest ? self::CBT_AUTH_URL_TEST : self::CBT_AUTH_URL_LIVE;
     }
+
+/**
+
+ * getCbtApproveUrl
+
+ *
+
+ * @return string
+
+ */
 
     public function getCbtApproveUrl(): string
     {
@@ -189,9 +271,11 @@ class KgInicisApiService
     }
 
     /**
-     * idc_name + 수신된 authUrl로 화이트리스트 검증 후 신뢰할 URL을 반환합니다.
-     * PC와 모바일 패턴을 모두 허용합니다 (SSRF 방어).
-     * 일치하는 화이트리스트 URL이 없으면 null 반환.
+     * resolveIdcAuthUrl
+     *
+     * @param  string  $idcName
+     * @param  string  $receivedUrl
+     * @return ?string
      */
     public function resolveIdcAuthUrl(string $idcName, string $receivedUrl = ''): ?string
     {
@@ -206,7 +290,11 @@ class KgInicisApiService
     }
 
     /**
-     * idc_name + 수신된 authUrl이 화이트리스트에 있는지 검증합니다.
+     * isValidIdcAuthUrl
+     *
+     * @param  string  $idcName
+     * @param  string  $receivedUrl
+     * @return bool
      */
     public function isValidIdcAuthUrl(string $idcName, string $receivedUrl): bool
     {
@@ -217,7 +305,10 @@ class KgInicisApiService
     }
 
     /**
-     * idc_name으로 망취소 URL을 결정합니다.
+     * resolveIdcNetCancelUrl
+     *
+     * @param  string  $idcName
+     * @return ?string
      */
     public function resolveIdcNetCancelUrl(string $idcName): ?string
     {
@@ -225,7 +316,9 @@ class KgInicisApiService
     }
 
     /**
-     * mKey 생성: SHA256(signKey)
+     * getMKey
+     *
+     * @return string
      */
     public function getMKey(): string
     {
@@ -233,7 +326,12 @@ class KgInicisApiService
     }
 
     /**
-     * 결제창 서명 생성: SHA256("oid={oid}&price={price}&timestamp={timestamp}")
+     * generateSignature
+     *
+     * @param  string  $oid
+     * @param  int  $price
+     * @param  string  $timestamp
+     * @return string
      */
     public function generateSignature(string $oid, int $price, string $timestamp): string
     {
@@ -243,7 +341,12 @@ class KgInicisApiService
     }
 
     /**
-     * verification 생성: SHA256("oid={oid}&price={price}&signKey={signKey}&timestamp={timestamp}")
+     * generateVerification
+     *
+     * @param  string  $oid
+     * @param  int  $price
+     * @param  string  $timestamp
+     * @return string
      */
     public function generateVerification(string $oid, int $price, string $timestamp): string
     {
@@ -253,12 +356,13 @@ class KgInicisApiService
     }
 
     /**
-     * CBT 해시 데이터 생성: SHA-512(KEY + mid + timestamp + amount + orderId)
+     * generateCbtHashData
      *
-     * @param string $mid       일본 결제용 MID
-     * @param string $timestamp 타임스탬프 (밀리초)
-     * @param int    $amount    결제 금액
-     * @param string $orderId   주문번호
+     * @param  string  $mid
+     * @param  string  $timestamp
+     * @param  int  $amount
+     * @param  string  $orderId
+     * @return string
      */
     public function generateCbtHashData(string $mid, string $timestamp, int $amount, string $orderId): string
     {
@@ -268,13 +372,11 @@ class KgInicisApiService
     }
 
     /**
-     * 서버 승인 API 호출
+     * authorizePayment
      *
-     * 샘플(INIstdpay_pc_return.php) 기준 필수 파라미터:
-     *   mid, authToken, signature, verification, timestamp, charset, format
-     *
-     * signature    = SHA256(알파벳순 정렬: "authToken={v}&timestamp={v}")
-     * verification = SHA256(알파벳순 정렬: "authToken={v}&signKey={v}&timestamp={v}")
+     * @param  string  $authUrl
+     * @param  string  $authToken
+     * @return array
      */
     public function authorizePayment(string $authUrl, string $authToken): array
     {
@@ -297,7 +399,7 @@ class KgInicisApiService
         ]);
 
         if ($response->failed()) {
-            throw new \Exception('KG Inicis authorize API error: HTTP ' . $response->status());
+            throw new KgInicisApiException('KG Inicis authorize API error: HTTP ' . $response->status());
         }
 
         return $response->json() ?? [];
@@ -320,7 +422,7 @@ class KgInicisApiService
         ]);
 
         if ($response->failed()) {
-            throw new \Exception('KG Inicis CBT approve API error: HTTP ' . $response->status());
+            throw new KgInicisApiException('KG Inicis CBT approve API error: HTTP ' . $response->status());
         }
 
         return $response->json() ?? [];
@@ -344,7 +446,9 @@ class KgInicisApiService
     }
 
     /**
-     * 모바일 결제창 URL 반환 (테스트/라이브 모두 동일, MID로 모드 구분)
+     * getMobilePaymentUrl
+     *
+     * @return string
      */
     public function getMobilePaymentUrl(): string
     {
@@ -352,8 +456,12 @@ class KgInicisApiService
     }
 
     /**
-     * 모바일 금액 위변조 방지 해시 생성
-     * base64(sha512_binary(P_AMT + P_OID + P_TIMESTAMP + HashKey))
+     * generateMobileChkfake
+     *
+     * @param  string  $oid
+     * @param  int  $amount
+     * @param  string  $timestamp
+     * @return string
      */
     public function generateMobileChkfake(string $oid, int $amount, string $timestamp): string
     {
@@ -363,12 +471,11 @@ class KgInicisApiService
     }
 
     /**
-     * 모바일 서버 승인 API 호출
+     * authorizeMobilePayment
      *
-     * 샘플(INImobile_mo_return.php) 기준:
-     *   POST P_REQ_URL with { P_MID, P_TID }
-     *   응답: URL-encoded 문자열 (parse_str로 파싱)
-     *   P_STATUS === '00' 이면 성공
+     * @param  string  $reqUrl
+     * @param  string  $tid
+     * @return array
      */
     public function authorizeMobilePayment(string $reqUrl, string $tid): array
     {
@@ -378,7 +485,7 @@ class KgInicisApiService
         ]);
 
         if ($response->failed()) {
-            throw new \Exception('KG Inicis mobile authorize API error: HTTP ' . $response->status());
+            throw new KgInicisApiException('KG Inicis mobile authorize API error: HTTP ' . $response->status());
         }
 
         parse_str($response->body(), $result);
@@ -419,7 +526,7 @@ class KgInicisApiService
             ->post($apiUrl, $payload);
 
         if ($response->failed()) {
-            throw new \Exception('KG Inicis inquiry API error: HTTP ' . $response->status());
+            throw new KgInicisApiException('KG Inicis inquiry API error: HTTP ' . $response->status());
         }
 
         return $response->json() ?? [];
@@ -476,11 +583,14 @@ class KgInicisApiService
             'hashData' => $hashData,
         ];
 
+        // 훅: 결제 취소 전 (본인인증 등 확장 지점)
+        HookManager::doAction('sirsoft-pay_kginicis.payment.before_cancel', $tid, $payMethod, $cancelPrice, $msg);
+
         $response = Http::withHeaders(['Content-Type' => 'application/json;charset=utf-8'])
             ->post($apiUrl, $payload);
 
         if ($response->failed()) {
-            throw new \Exception('KG Inicis cancel API error: HTTP ' . $response->status());
+            throw new KgInicisApiException('KG Inicis cancel API error: HTTP ' . $response->status());
         }
 
         $result = $response->json() ?? [];
@@ -491,8 +601,11 @@ class KgInicisApiService
                 'result_msg' => $result['resultMsg'] ?? '',
                 'tid' => $tid,
             ]);
-            throw new \Exception($result['resultMsg'] ?? 'KG Inicis cancel failed');
+            throw new KgInicisApiException($result['resultMsg'] ?? 'KG Inicis cancel failed');
         }
+
+        // 훅: 결제 취소 완료 후 (외부 소비자 후처리 확장 지점)
+        HookManager::doAction('sirsoft-pay_kginicis.payment.after_cancel', $tid, $result);
 
         return $result;
     }
@@ -571,7 +684,7 @@ class KgInicisApiService
         ])->asForm()->post($apiUrl, $payload);
 
         if ($response->failed()) {
-            throw new \Exception('KG Inicis escrow delivery API error: HTTP ' . $response->status());
+            throw new KgInicisApiException('KG Inicis escrow delivery API error: HTTP ' . $response->status());
         }
 
         // 응답: URL-encoded 문자열 또는 JSON 모두 처리
@@ -621,7 +734,7 @@ class KgInicisApiService
         ])->asForm()->post($baseUrl . '/api/v1/escrow', $payload);
 
         if ($response->failed()) {
-            throw new \Exception('KG Inicis escrow deny confirm API error: HTTP ' . $response->status());
+            throw new KgInicisApiException('KG Inicis escrow deny confirm API error: HTTP ' . $response->status());
         }
 
         $body   = $response->body();
@@ -668,7 +781,7 @@ class KgInicisApiService
         );
 
         if ($encrypted === false) {
-            throw new \Exception('KG Inicis cash receipt: issueNumber encryption failed');
+            throw new KgInicisApiException('KG Inicis cash receipt: issueNumber encryption failed');
         }
 
         $encIssueNumber = base64_encode($encrypted);
@@ -706,7 +819,7 @@ class KgInicisApiService
             ->post($apiUrl, $payload);
 
         if ($response->failed()) {
-            throw new \Exception('KG Inicis cash receipt API error: HTTP ' . $response->status());
+            throw new KgInicisApiException('KG Inicis cash receipt API error: HTTP ' . $response->status());
         }
 
         return $response->json() ?? [];

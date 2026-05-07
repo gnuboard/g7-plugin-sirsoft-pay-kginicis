@@ -2,7 +2,7 @@
 
 declare(strict_types=1);
 
-namespace Plugins\Sirsoft\Pay\Kginicis\Controllers;
+namespace Plugins\Sirsoft\PayKginicis\Controllers;
 
 use App\Helpers\ResponseHelper;
 use App\Http\Controllers\Api\Base\AdminBaseController;
@@ -10,7 +10,7 @@ use Illuminate\Http\JsonResponse;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\DB;
 use Illuminate\Support\Facades\Log;
-use Plugins\Sirsoft\Pay\Kginicis\Services\KgInicisApiService;
+use Plugins\Sirsoft\PayKginicis\Services\KgInicisApiService;
 
 /**
  * KG 이니시스 현금영수증 별도발행 관리자 컨트롤러
@@ -26,11 +26,11 @@ class AdminCashReceiptController extends AdminBaseController
     }
 
     /**
-     * POST /api/plugins/sirsoft-pay-kginicis/admin/orders/{orderNumber}/cash-receipt
+     * issue
      *
-     * Body:
-     *   issue_type:   '0' = 소득공제(소비자), '1' = 지출증빙(사업자)
-     *   issue_number: 휴대폰번호 / 주민등록번호 / 사업자번호 (평문)
+     * @param  Request  $request
+     * @param  string  $orderNumber
+     * @return JsonResponse
      */
     public function issue(Request $request, string $orderNumber): JsonResponse
     {
@@ -38,11 +38,11 @@ class AdminCashReceiptController extends AdminBaseController
         $issueNumber = trim((string) $request->input('issue_number', ''));
 
         if (! in_array($issueType, ['0', '1'], true)) {
-            return ResponseHelper::error('messages.failed', 422, ['issue_type' => ['발행 유형이 올바르지 않습니다.']]);
+            return ResponseHelper::error('messages.failed', 422, ['issue_type' => [__('sirsoft-pay_kginicis::messages.errors.cash_receipt_invalid_issue_type')]]);
         }
 
         if ($issueNumber === '') {
-            return ResponseHelper::error('messages.failed', 422, ['issue_number' => ['식별번호를 입력해주세요.']]);
+            return ResponseHelper::error('messages.failed', 422, ['issue_number' => [__('sirsoft-pay_kginicis::messages.errors.cash_receipt_missing_issue_number')]]);
         }
 
         $payment = DB::table('ecommerce_order_payments as p')
@@ -69,7 +69,7 @@ class AdminCashReceiptController extends AdminBaseController
         }
 
         if ($payment->is_cash_receipt_issued) {
-            return ResponseHelper::error('messages.failed', 409, ['message' => ['이미 현금영수증이 발행된 결제입니다.']]);
+            return ResponseHelper::error('messages.failed', 409, ['message' => [__('sirsoft-pay_kginicis::messages.errors.cash_receipt_already_issued')]]);
         }
 
         // payment_meta에서 구매자 정보 추출 (buyer_name 등이 null인 경우 raw PG 응답에서 사용)
@@ -79,7 +79,7 @@ class AdminCashReceiptController extends AdminBaseController
         $buyerName  = $payment->buyer_name  ?? $rawResponse['buyerName'] ?? '';
         $buyerEmail = $payment->buyer_email ?? $rawResponse['buyerEmail'] ?? $rawResponse['custEmail'] ?? '';
         $buyerTel   = $payment->buyer_phone ?? $rawResponse['buyerTel'] ?? '';
-        $goodName   = $payment->payment_name ?? $rawResponse['goodName'] ?? $rawResponse['goodsName'] ?? '상품';
+        $goodName   = $payment->payment_name ?? $rawResponse['goodName'] ?? $rawResponse['goodsName'] ?? __('sirsoft-pay_kginicis::messages.defaults.good_name');
 
         $price = (int) round((float) $payment->paid_amount_local);
 
@@ -120,7 +120,7 @@ class AdminCashReceiptController extends AdminBaseController
                 ]);
 
                 return ResponseHelper::error('messages.failed', 502, [
-                    'message' => [$pgResponse['resultMsg'] ?? '현금영수증 발행에 실패했습니다.'],
+                    'message' => [$pgResponse['resultMsg'] ?? __('sirsoft-pay_kginicis::messages.errors.cash_receipt_issue_failed')],
                 ]);
             }
 

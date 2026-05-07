@@ -6,8 +6,8 @@
     ],
     "extends": "_admin_base",
     "meta": {
-        "title": "$t:sirsoft-pay-kginicis.settings.title",
-        "description": "$t:sirsoft-pay-kginicis.settings.description"
+        "title": "$t:sirsoft-pay_kginicis.settings.title",
+        "description": "$t:sirsoft-pay_kginicis.settings.description"
     },
     "data_sources": [
         {
@@ -23,7 +23,7 @@
         {
             "id": "vbank_info",
             "type": "api",
-            "endpoint": "/api/plugins/sirsoft-pay-kginicis/admin/vbank-notify-url",
+            "endpoint": "/api/plugins/sirsoft-pay_kginicis/admin/vbank-notify-url",
             "method": "GET",
             "auto_fetch": true,
             "auth_required": true,
@@ -48,8 +48,8 @@
                         "type": "composite",
                         "name": "PageHeader",
                         "props": {
-                            "title": "$t:sirsoft-pay-kginicis.settings.title",
-                            "description": "$t:sirsoft-pay-kginicis.settings.description",
+                            "title": "$t:sirsoft-pay_kginicis.settings.title",
+                            "description": "$t:sirsoft-pay_kginicis.settings.description",
                             "backPath": "/admin/plugins",
                             "backLabel": "$t:admin.plugins.back_to_list"
                         }
@@ -66,12 +66,17 @@
                             {
                                 "type": "basic",
                                 "name": "Div",
-                                "props": { "className": "flex gap-3" },
+                                "props": {
+                                    "className": "flex gap-3"
+                                },
                                 "children": [
                                     {
                                         "type": "basic",
                                         "name": "Icon",
-                                        "props": { "name": "triangle-exclamation", "className": "w-5 h-5 text-red-600 dark:text-red-400 flex-shrink-0 mt-0.5" }
+                                        "props": {
+                                            "name": "triangle-exclamation",
+                                            "className": "w-5 h-5 text-red-600 dark:text-red-400 flex-shrink-0 mt-0.5"
+                                        }
                                     },
                                     {
                                         "type": "basic",
@@ -80,14 +85,18 @@
                                             {
                                                 "type": "basic",
                                                 "name": "H3",
-                                                "props": { "className": "text-sm font-medium text-red-800 dark:text-red-200" },
+                                                "props": {
+                                                    "className": "text-sm font-medium text-red-800 dark:text-red-200"
+                                                },
                                                 "text": "$t:admin.plugins.settings.validation_error"
                                             },
                                             {
                                                 "type": "basic",
                                                 "name": "Ul",
                                                 "if": "{{typeof _local.errors === 'object' && Object.keys(_local.errors).length > 0}}",
-                                                "props": { "className": "mt-2 list-disc list-inside space-y-1" },
+                                                "props": {
+                                                    "className": "mt-2 list-disc list-inside space-y-1"
+                                                },
                                                 "iteration": {
                                                     "source": "Object.entries(_local.errors ?? {}).flatMap(([field, messages]) => Array.isArray(messages) ? messages : [messages])",
                                                     "item_var": "message"
@@ -96,7 +105,9 @@
                                                     {
                                                         "type": "basic",
                                                         "name": "Li",
-                                                        "props": { "className": "text-sm text-red-700 dark:text-red-300" },
+                                                        "props": {
+                                                            "className": "text-sm text-red-700 dark:text-red-300"
+                                                        },
                                                         "text": "{{message}}"
                                                     }
                                                 ]
@@ -111,17 +122,23 @@
                         "id": "test_mode_card",
                         "type": "basic",
                         "name": "Div",
-                        "props": { "className": "mt-6 bg-white dark:bg-gray-800 rounded-lg shadow-sm border border-gray-200 dark:border-gray-700" },
+                        "props": {
+                            "className": "mt-6 bg-white dark:bg-gray-800 rounded-lg shadow-sm border border-gray-200 dark:border-gray-700"
+                        },
                         "children": [
                             {
                                 "type": "basic",
                                 "name": "Div",
-                                "props": { "className": "p-6" },
+                                "props": {
+                                    "className": "p-6"
+                                },
                                 "children": [
                                     {
                                         "type": "basic",
                                         "name": "Div",
-                                        "props": { "className": "flex items-center justify-between" },
+                                        "props": {
+                                            "className": "flex items-center justify-between"
+                                        },
                                         "children": [
                                             {
                                                 "type": "basic",
@@ -130,21 +147,27 @@
                                                     {
                                                         "type": "basic",
                                                         "name": "Label",
-                                                        "props": { "className": "block text-sm font-medium text-gray-700 dark:text-gray-300" },
-                                                        "text": "$t:sirsoft-pay-kginicis.settings.test_mode"
+                                                        "props": {
+                                                            "className": "block text-sm font-medium text-gray-700 dark:text-gray-300"
+                                                        },
+                                                        "text": "$t:sirsoft-pay_kginicis.settings.test_mode"
                                                     },
                                                     {
                                                         "type": "basic",
                                                         "name": "P",
-                                                        "props": { "className": "mt-1 text-xs text-gray-500 dark:text-gray-400" },
-                                                        "text": "$t:sirsoft-pay-kginicis.settings.test_mode_hint"
+                                                        "props": {
+                                                            "className": "mt-1 text-xs text-gray-500 dark:text-gray-400"
+                                                        },
+                                                        "text": "$t:sirsoft-pay_kginicis.settings.test_mode_hint"
                                                     }
                                                 ]
                                             },
                                             {
                                                 "type": "composite",
                                                 "name": "Toggle",
-                                                "props": { "name": "is_test_mode" }
+                                                "props": {
+                                                    "name": "is_test_mode"
+                                                }
                                             }
                                         ]
                                     }
@@ -157,17 +180,24 @@
                         "type": "basic",
                         "name": "Div",
                         "if": "{{_local.form && !_local.form.is_test_mode}}",
-                        "props": { "className": "mt-6 bg-amber-50 dark:bg-amber-900/20 border border-amber-200 dark:border-amber-700 rounded-lg p-4" },
+                        "props": {
+                            "className": "mt-6 bg-amber-50 dark:bg-amber-900/20 border border-amber-200 dark:border-amber-700 rounded-lg p-4"
+                        },
                         "children": [
                             {
                                 "type": "basic",
                                 "name": "Div",
-                                "props": { "className": "flex gap-3" },
+                                "props": {
+                                    "className": "flex gap-3"
+                                },
                                 "children": [
                                     {
                                         "type": "basic",
                                         "name": "Icon",
-                                        "props": { "name": "triangle-exclamation", "className": "w-5 h-5 text-amber-600 dark:text-amber-400 flex-shrink-0 mt-0.5" }
+                                        "props": {
+                                            "name": "triangle-exclamation",
+                                            "className": "w-5 h-5 text-amber-600 dark:text-amber-400 flex-shrink-0 mt-0.5"
+                                        }
                                     },
                                     {
                                         "type": "basic",
@@ -176,14 +206,18 @@
                                             {
                                                 "type": "basic",
                                                 "name": "H3",
-                                                "props": { "className": "text-sm font-semibold text-amber-800 dark:text-amber-200" },
-                                                "text": "$t:sirsoft-pay-kginicis.settings.live_mode_warning_title"
+                                                "props": {
+                                                    "className": "text-sm font-semibold text-amber-800 dark:text-amber-200"
+                                                },
+                                                "text": "$t:sirsoft-pay_kginicis.settings.live_mode_warning_title"
                                             },
                                             {
                                                 "type": "basic",
                                                 "name": "P",
-                                                "props": { "className": "mt-1 text-sm text-amber-700 dark:text-amber-300" },
-                                                "text": "$t:sirsoft-pay-kginicis.settings.live_mode_warning_body"
+                                                "props": {
+                                                    "className": "mt-1 text-sm text-amber-700 dark:text-amber-300"
+                                                },
+                                                "text": "$t:sirsoft-pay_kginicis.settings.live_mode_warning_body"
                                             }
                                         ]
                                     }
@@ -195,65 +229,87 @@
                         "id": "live_keys_section",
                         "type": "basic",
                         "name": "Div",
-                        "props": { "className": "mt-6 bg-white dark:bg-gray-800 rounded-lg shadow-sm border border-gray-200 dark:border-gray-700" },
+                        "props": {
+                            "className": "mt-6 bg-white dark:bg-gray-800 rounded-lg shadow-sm border border-gray-200 dark:border-gray-700"
+                        },
                         "children": [
                             {
                                 "type": "basic",
                                 "name": "Div",
-                                "props": { "className": "px-6 py-4 border-b border-gray-200 dark:border-gray-700" },
+                                "props": {
+                                    "className": "px-6 py-4 border-b border-gray-200 dark:border-gray-700"
+                                },
                                 "children": [
                                     {
                                         "type": "basic",
                                         "name": "H3",
-                                        "props": { "className": "text-base font-semibold text-gray-900 dark:text-white" },
-                                        "text": "$t:sirsoft-pay-kginicis.settings.section_live_keys"
+                                        "props": {
+                                            "className": "text-base font-semibold text-gray-900 dark:text-white"
+                                        },
+                                        "text": "$t:sirsoft-pay_kginicis.settings.section_live_keys"
                                     }
                                 ]
                             },
                             {
                                 "type": "basic",
                                 "name": "Div",
-                                "props": { "className": "p-6 space-y-6" },
+                                "props": {
+                                    "className": "p-6 space-y-6"
+                                },
                                 "children": [
                                     {
                                         "id": "field_live_mid",
                                         "type": "basic",
                                         "name": "Div",
-                                        "props": { "className": "grid grid-cols-1 lg:grid-cols-3 gap-4 items-start" },
+                                        "props": {
+                                            "className": "grid grid-cols-1 lg:grid-cols-3 gap-4 items-start"
+                                        },
                                         "children": [
                                             {
                                                 "type": "basic",
                                                 "name": "Div",
-                                                "props": { "className": "lg:col-span-1" },
+                                                "props": {
+                                                    "className": "lg:col-span-1"
+                                                },
                                                 "children": [
                                                     {
                                                         "type": "basic",
                                                         "name": "Label",
-                                                        "props": { "className": "block text-sm font-medium text-gray-700 dark:text-gray-300" },
-                                                        "text": "$t:sirsoft-pay-kginicis.settings.live_mid"
+                                                        "props": {
+                                                            "className": "block text-sm font-medium text-gray-700 dark:text-gray-300"
+                                                        },
+                                                        "text": "$t:sirsoft-pay_kginicis.settings.live_mid"
                                                     },
                                                     {
                                                         "type": "basic",
                                                         "name": "P",
-                                                        "props": { "className": "mt-1 text-xs text-gray-500 dark:text-gray-400" },
-                                                        "text": "$t:sirsoft-pay-kginicis.settings.live_mid_hint"
+                                                        "props": {
+                                                            "className": "mt-1 text-xs text-gray-500 dark:text-gray-400"
+                                                        },
+                                                        "text": "$t:sirsoft-pay_kginicis.settings.live_mid_hint"
                                                     }
                                                 ]
                                             },
                                             {
                                                 "type": "basic",
                                                 "name": "Div",
-                                                "props": { "className": "lg:col-span-2" },
+                                                "props": {
+                                                    "className": "lg:col-span-2"
+                                                },
                                                 "children": [
                                                     {
                                                         "type": "basic",
                                                         "name": "Div",
-                                                        "props": { "className": "flex rounded-lg border border-gray-300 dark:border-gray-600 overflow-hidden focus-within:ring-2 focus-within:ring-blue-500 focus-within:border-transparent" },
+                                                        "props": {
+                                                            "className": "flex rounded-lg border border-gray-300 dark:border-gray-600 overflow-hidden focus-within:ring-2 focus-within:ring-blue-500 dark:focus-within:ring-blue-400 focus-within:border-transparent"
+                                                        },
                                                         "children": [
                                                             {
                                                                 "type": "basic",
                                                                 "name": "Span",
-                                                                "props": { "className": "inline-flex items-center px-3 bg-gray-100 dark:bg-gray-600 border-r border-gray-300 dark:border-gray-600 text-gray-700 dark:text-gray-300 font-mono text-sm font-bold select-none" },
+                                                                "props": {
+                                                                    "className": "inline-flex items-center px-3 bg-gray-100 dark:bg-gray-600 border-r border-gray-300 dark:border-gray-600 text-gray-700 dark:text-gray-300 font-mono text-sm font-bold select-none"
+                                                                },
                                                                 "text": "SIR"
                                                             },
                                                             {
@@ -271,8 +327,10 @@
                                                     {
                                                         "type": "basic",
                                                         "name": "P",
-                                                        "props": { "className": "mt-1.5 text-xs text-gray-500 dark:text-gray-400" },
-                                                        "text": "$t:sirsoft-pay-kginicis.settings.live_mid_example"
+                                                        "props": {
+                                                            "className": "mt-1.5 text-xs text-gray-500 dark:text-gray-400"
+                                                        },
+                                                        "text": "$t:sirsoft-pay_kginicis.settings.live_mid_example"
                                                     }
                                                 ]
                                             }
@@ -282,31 +340,41 @@
                                         "id": "field_live_sign_key",
                                         "type": "basic",
                                         "name": "Div",
-                                        "props": { "className": "grid grid-cols-1 lg:grid-cols-3 gap-4 items-start" },
+                                        "props": {
+                                            "className": "grid grid-cols-1 lg:grid-cols-3 gap-4 items-start"
+                                        },
                                         "children": [
                                             {
                                                 "type": "basic",
                                                 "name": "Div",
-                                                "props": { "className": "lg:col-span-1" },
+                                                "props": {
+                                                    "className": "lg:col-span-1"
+                                                },
                                                 "children": [
                                                     {
                                                         "type": "basic",
                                                         "name": "Label",
-                                                        "props": { "className": "block text-sm font-medium text-gray-700 dark:text-gray-300" },
-                                                        "text": "$t:sirsoft-pay-kginicis.settings.live_sign_key"
+                                                        "props": {
+                                                            "className": "block text-sm font-medium text-gray-700 dark:text-gray-300"
+                                                        },
+                                                        "text": "$t:sirsoft-pay_kginicis.settings.live_sign_key"
                                                     },
                                                     {
                                                         "type": "basic",
                                                         "name": "P",
-                                                        "props": { "className": "mt-1 text-xs text-gray-500 dark:text-gray-400" },
-                                                        "text": "$t:sirsoft-pay-kginicis.settings.live_sign_key_hint"
+                                                        "props": {
+                                                            "className": "mt-1 text-xs text-gray-500 dark:text-gray-400"
+                                                        },
+                                                        "text": "$t:sirsoft-pay_kginicis.settings.live_sign_key_hint"
                                                     }
                                                 ]
                                             },
                                             {
                                                 "type": "basic",
                                                 "name": "Div",
-                                                "props": { "className": "lg:col-span-2" },
+                                                "props": {
+                                                    "className": "lg:col-span-2"
+                                                },
                                                 "children": [
                                                     {
                                                         "type": "basic",
@@ -315,7 +383,7 @@
                                                             "type": "password",
                                                             "name": "live_sign_key",
                                                             "placeholder": "••••••••••••••••",
-                                                            "className": "w-full px-3 py-2 border border-gray-300 dark:border-gray-600 rounded-lg bg-white dark:bg-gray-700 text-gray-900 dark:text-white focus:ring-2 focus:ring-blue-500 focus:border-transparent font-mono text-sm"
+                                                            "className": "w-full px-3 py-2 border border-gray-300 dark:border-gray-600 rounded-lg bg-white dark:bg-gray-700 text-gray-900 dark:text-white focus:ring-2 focus:ring-blue-500 dark:focus:ring-blue-400 focus:border-transparent font-mono text-sm"
                                                         }
                                                     }
                                                 ]
@@ -326,31 +394,41 @@
                                         "id": "field_live_iniapi_key",
                                         "type": "basic",
                                         "name": "Div",
-                                        "props": { "className": "grid grid-cols-1 lg:grid-cols-3 gap-4 items-start" },
+                                        "props": {
+                                            "className": "grid grid-cols-1 lg:grid-cols-3 gap-4 items-start"
+                                        },
                                         "children": [
                                             {
                                                 "type": "basic",
                                                 "name": "Div",
-                                                "props": { "className": "lg:col-span-1" },
+                                                "props": {
+                                                    "className": "lg:col-span-1"
+                                                },
                                                 "children": [
                                                     {
                                                         "type": "basic",
                                                         "name": "Label",
-                                                        "props": { "className": "block text-sm font-medium text-gray-700 dark:text-gray-300" },
-                                                        "text": "$t:sirsoft-pay-kginicis.settings.live_iniapi_key"
+                                                        "props": {
+                                                            "className": "block text-sm font-medium text-gray-700 dark:text-gray-300"
+                                                        },
+                                                        "text": "$t:sirsoft-pay_kginicis.settings.live_iniapi_key"
                                                     },
                                                     {
                                                         "type": "basic",
                                                         "name": "P",
-                                                        "props": { "className": "mt-1 text-xs text-gray-500 dark:text-gray-400" },
-                                                        "text": "$t:sirsoft-pay-kginicis.settings.live_iniapi_key_hint"
+                                                        "props": {
+                                                            "className": "mt-1 text-xs text-gray-500 dark:text-gray-400"
+                                                        },
+                                                        "text": "$t:sirsoft-pay_kginicis.settings.live_iniapi_key_hint"
                                                     }
                                                 ]
                                             },
                                             {
                                                 "type": "basic",
                                                 "name": "Div",
-                                                "props": { "className": "lg:col-span-2" },
+                                                "props": {
+                                                    "className": "lg:col-span-2"
+                                                },
                                                 "children": [
                                                     {
                                                         "type": "basic",
@@ -359,7 +437,7 @@
                                                             "type": "password",
                                                             "name": "live_iniapi_key",
                                                             "placeholder": "••••••••••••••••",
-                                                            "className": "w-full px-3 py-2 border border-gray-300 dark:border-gray-600 rounded-lg bg-white dark:bg-gray-700 text-gray-900 dark:text-white focus:ring-2 focus:ring-blue-500 focus:border-transparent font-mono text-sm"
+                                                            "className": "w-full px-3 py-2 border border-gray-300 dark:border-gray-600 rounded-lg bg-white dark:bg-gray-700 text-gray-900 dark:text-white focus:ring-2 focus:ring-blue-500 dark:focus:ring-blue-400 focus:border-transparent font-mono text-sm"
                                                         }
                                                     }
                                                 ]
@@ -370,31 +448,41 @@
                                         "id": "field_live_iniapi_iv",
                                         "type": "basic",
                                         "name": "Div",
-                                        "props": { "className": "grid grid-cols-1 lg:grid-cols-3 gap-4 items-start" },
+                                        "props": {
+                                            "className": "grid grid-cols-1 lg:grid-cols-3 gap-4 items-start"
+                                        },
                                         "children": [
                                             {
                                                 "type": "basic",
                                                 "name": "Div",
-                                                "props": { "className": "lg:col-span-1" },
+                                                "props": {
+                                                    "className": "lg:col-span-1"
+                                                },
                                                 "children": [
                                                     {
                                                         "type": "basic",
                                                         "name": "Label",
-                                                        "props": { "className": "block text-sm font-medium text-gray-700 dark:text-gray-300" },
-                                                        "text": "$t:sirsoft-pay-kginicis.settings.live_iniapi_iv"
+                                                        "props": {
+                                                            "className": "block text-sm font-medium text-gray-700 dark:text-gray-300"
+                                                        },
+                                                        "text": "$t:sirsoft-pay_kginicis.settings.live_iniapi_iv"
                                                     },
                                                     {
                                                         "type": "basic",
                                                         "name": "P",
-                                                        "props": { "className": "mt-1 text-xs text-gray-500 dark:text-gray-400" },
-                                                        "text": "$t:sirsoft-pay-kginicis.settings.live_iniapi_iv_hint"
+                                                        "props": {
+                                                            "className": "mt-1 text-xs text-gray-500 dark:text-gray-400"
+                                                        },
+                                                        "text": "$t:sirsoft-pay_kginicis.settings.live_iniapi_iv_hint"
                                                     }
                                                 ]
                                             },
                                             {
                                                 "type": "basic",
                                                 "name": "Div",
-                                                "props": { "className": "lg:col-span-2" },
+                                                "props": {
+                                                    "className": "lg:col-span-2"
+                                                },
                                                 "children": [
                                                     {
                                                         "type": "basic",
@@ -403,7 +491,7 @@
                                                             "type": "password",
                                                             "name": "live_iniapi_iv",
                                                             "placeholder": "••••••••••••••••",
-                                                            "className": "w-full px-3 py-2 border border-gray-300 dark:border-gray-600 rounded-lg bg-white dark:bg-gray-700 text-gray-900 dark:text-white focus:ring-2 focus:ring-blue-500 focus:border-transparent font-mono text-sm"
+                                                            "className": "w-full px-3 py-2 border border-gray-300 dark:border-gray-600 rounded-lg bg-white dark:bg-gray-700 text-gray-900 dark:text-white focus:ring-2 focus:ring-blue-500 dark:focus:ring-blue-400 focus:border-transparent font-mono text-sm"
                                                         }
                                                     }
                                                 ]
@@ -418,37 +506,49 @@
                         "id": "japan_section",
                         "type": "basic",
                         "name": "Div",
-                        "props": { "className": "mt-6 bg-white dark:bg-gray-800 rounded-lg shadow-sm border border-gray-200 dark:border-gray-700" },
+                        "props": {
+                            "className": "mt-6 bg-white dark:bg-gray-800 rounded-lg shadow-sm border border-gray-200 dark:border-gray-700"
+                        },
                         "children": [
                             {
                                 "type": "basic",
                                 "name": "Div",
-                                "props": { "className": "px-6 py-4 border-b border-gray-200 dark:border-gray-700" },
+                                "props": {
+                                    "className": "px-6 py-4 border-b border-gray-200 dark:border-gray-700"
+                                },
                                 "children": [
                                     {
                                         "type": "basic",
                                         "name": "H3",
-                                        "props": { "className": "text-base font-semibold text-gray-900 dark:text-white" },
-                                        "text": "$t:sirsoft-pay-kginicis.settings.section_japan"
+                                        "props": {
+                                            "className": "text-base font-semibold text-gray-900 dark:text-white"
+                                        },
+                                        "text": "$t:sirsoft-pay_kginicis.settings.section_japan"
                                     },
                                     {
                                         "type": "basic",
                                         "name": "P",
-                                        "props": { "className": "mt-1 text-xs text-gray-500 dark:text-gray-400" },
-                                        "text": "$t:sirsoft-pay-kginicis.settings.section_japan_hint"
+                                        "props": {
+                                            "className": "mt-1 text-xs text-gray-500 dark:text-gray-400"
+                                        },
+                                        "text": "$t:sirsoft-pay_kginicis.settings.section_japan_hint"
                                     }
                                 ]
                             },
                             {
                                 "type": "basic",
                                 "name": "Div",
-                                "props": { "className": "p-6 space-y-6" },
+                                "props": {
+                                    "className": "p-6 space-y-6"
+                                },
                                 "children": [
                                     {
                                         "id": "field_japan_enabled",
                                         "type": "basic",
                                         "name": "Div",
-                                        "props": { "className": "flex items-center justify-between" },
+                                        "props": {
+                                            "className": "flex items-center justify-between"
+                                        },
                                         "children": [
                                             {
                                                 "type": "basic",
@@ -457,21 +557,27 @@
                                                     {
                                                         "type": "basic",
                                                         "name": "Label",
-                                                        "props": { "className": "block text-sm font-medium text-gray-700 dark:text-gray-300" },
-                                                        "text": "$t:sirsoft-pay-kginicis.settings.japan_enabled"
+                                                        "props": {
+                                                            "className": "block text-sm font-medium text-gray-700 dark:text-gray-300"
+                                                        },
+                                                        "text": "$t:sirsoft-pay_kginicis.settings.japan_enabled"
                                                     },
                                                     {
                                                         "type": "basic",
                                                         "name": "P",
-                                                        "props": { "className": "mt-1 text-xs text-gray-500 dark:text-gray-400" },
-                                                        "text": "$t:sirsoft-pay-kginicis.settings.japan_enabled_hint"
+                                                        "props": {
+                                                            "className": "mt-1 text-xs text-gray-500 dark:text-gray-400"
+                                                        },
+                                                        "text": "$t:sirsoft-pay_kginicis.settings.japan_enabled_hint"
                                                     }
                                                 ]
                                             },
                                             {
                                                 "type": "composite",
                                                 "name": "Toggle",
-                                                "props": { "name": "japan_enabled" }
+                                                "props": {
+                                                    "name": "japan_enabled"
+                                                }
                                             }
                                         ]
                                     },
@@ -480,37 +586,49 @@
                                         "type": "basic",
                                         "name": "Div",
                                         "if": "{{_local.form && _local.form.japan_enabled}}",
-                                        "props": { "className": "space-y-6 pt-4 border-t border-gray-100 dark:border-gray-700" },
+                                        "props": {
+                                            "className": "space-y-6 pt-4 border-t border-gray-100 dark:border-gray-700"
+                                        },
                                         "children": [
                                             {
                                                 "id": "field_test_japan_mid",
                                                 "type": "basic",
                                                 "name": "Div",
-                                                "props": { "className": "grid grid-cols-1 lg:grid-cols-3 gap-4 items-start" },
+                                                "props": {
+                                                    "className": "grid grid-cols-1 lg:grid-cols-3 gap-4 items-start"
+                                                },
                                                 "children": [
                                                     {
                                                         "type": "basic",
                                                         "name": "Div",
-                                                        "props": { "className": "lg:col-span-1" },
+                                                        "props": {
+                                                            "className": "lg:col-span-1"
+                                                        },
                                                         "children": [
                                                             {
                                                                 "type": "basic",
                                                                 "name": "Label",
-                                                                "props": { "className": "block text-sm font-medium text-gray-700 dark:text-gray-300" },
-                                                                "text": "$t:sirsoft-pay-kginicis.settings.test_japan_mid"
+                                                                "props": {
+                                                                    "className": "block text-sm font-medium text-gray-700 dark:text-gray-300"
+                                                                },
+                                                                "text": "$t:sirsoft-pay_kginicis.settings.test_japan_mid"
                                                             },
                                                             {
                                                                 "type": "basic",
                                                                 "name": "P",
-                                                                "props": { "className": "mt-1 text-xs text-gray-500 dark:text-gray-400" },
-                                                                "text": "$t:sirsoft-pay-kginicis.settings.test_japan_mid_hint"
+                                                                "props": {
+                                                                    "className": "mt-1 text-xs text-gray-500 dark:text-gray-400"
+                                                                },
+                                                                "text": "$t:sirsoft-pay_kginicis.settings.test_japan_mid_hint"
                                                             }
                                                         ]
                                                     },
                                                     {
                                                         "type": "basic",
                                                         "name": "Div",
-                                                        "props": { "className": "lg:col-span-2" },
+                                                        "props": {
+                                                            "className": "lg:col-span-2"
+                                                        },
                                                         "children": [
                                                             {
                                                                 "type": "basic",
@@ -519,7 +637,7 @@
                                                                     "type": "text",
                                                                     "name": "test_japan_mid",
                                                                     "placeholder": "CBTTEST001",
-                                                                    "className": "w-full px-3 py-2 border border-gray-300 dark:border-gray-600 rounded-lg bg-white dark:bg-gray-700 text-gray-900 dark:text-white focus:ring-2 focus:ring-blue-500 focus:border-transparent font-mono text-sm"
+                                                                    "className": "w-full px-3 py-2 border border-gray-300 dark:border-gray-600 rounded-lg bg-white dark:bg-gray-700 text-gray-900 dark:text-white focus:ring-2 focus:ring-blue-500 dark:focus:ring-blue-400 focus:border-transparent font-mono text-sm"
                                                                 }
                                                             }
                                                         ]
@@ -530,31 +648,41 @@
                                                 "id": "field_live_japan_mid",
                                                 "type": "basic",
                                                 "name": "Div",
-                                                "props": { "className": "grid grid-cols-1 lg:grid-cols-3 gap-4 items-start" },
+                                                "props": {
+                                                    "className": "grid grid-cols-1 lg:grid-cols-3 gap-4 items-start"
+                                                },
                                                 "children": [
                                                     {
                                                         "type": "basic",
                                                         "name": "Div",
-                                                        "props": { "className": "lg:col-span-1" },
+                                                        "props": {
+                                                            "className": "lg:col-span-1"
+                                                        },
                                                         "children": [
                                                             {
                                                                 "type": "basic",
                                                                 "name": "Label",
-                                                                "props": { "className": "block text-sm font-medium text-gray-700 dark:text-gray-300" },
-                                                                "text": "$t:sirsoft-pay-kginicis.settings.live_japan_mid"
+                                                                "props": {
+                                                                    "className": "block text-sm font-medium text-gray-700 dark:text-gray-300"
+                                                                },
+                                                                "text": "$t:sirsoft-pay_kginicis.settings.live_japan_mid"
                                                             },
                                                             {
                                                                 "type": "basic",
                                                                 "name": "P",
-                                                                "props": { "className": "mt-1 text-xs text-gray-500 dark:text-gray-400" },
-                                                                "text": "$t:sirsoft-pay-kginicis.settings.live_japan_mid_hint"
+                                                                "props": {
+                                                                    "className": "mt-1 text-xs text-gray-500 dark:text-gray-400"
+                                                                },
+                                                                "text": "$t:sirsoft-pay_kginicis.settings.live_japan_mid_hint"
                                                             }
                                                         ]
                                                     },
                                                     {
                                                         "type": "basic",
                                                         "name": "Div",
-                                                        "props": { "className": "lg:col-span-2" },
+                                                        "props": {
+                                                            "className": "lg:col-span-2"
+                                                        },
                                                         "children": [
                                                             {
                                                                 "type": "basic",
@@ -563,7 +691,7 @@
                                                                     "type": "text",
                                                                     "name": "live_japan_mid",
                                                                     "placeholder": "",
-                                                                    "className": "w-full px-3 py-2 border border-gray-300 dark:border-gray-600 rounded-lg bg-white dark:bg-gray-700 text-gray-900 dark:text-white focus:ring-2 focus:ring-blue-500 focus:border-transparent font-mono text-sm"
+                                                                    "className": "w-full px-3 py-2 border border-gray-300 dark:border-gray-600 rounded-lg bg-white dark:bg-gray-700 text-gray-900 dark:text-white focus:ring-2 focus:ring-blue-500 dark:focus:ring-blue-400 focus:border-transparent font-mono text-sm"
                                                                 }
                                                             }
                                                         ]
@@ -574,31 +702,41 @@
                                                 "id": "field_live_japan_cbt_key",
                                                 "type": "basic",
                                                 "name": "Div",
-                                                "props": { "className": "grid grid-cols-1 lg:grid-cols-3 gap-4 items-start" },
+                                                "props": {
+                                                    "className": "grid grid-cols-1 lg:grid-cols-3 gap-4 items-start"
+                                                },
                                                 "children": [
                                                     {
                                                         "type": "basic",
                                                         "name": "Div",
-                                                        "props": { "className": "lg:col-span-1" },
+                                                        "props": {
+                                                            "className": "lg:col-span-1"
+                                                        },
                                                         "children": [
                                                             {
                                                                 "type": "basic",
                                                                 "name": "Label",
-                                                                "props": { "className": "block text-sm font-medium text-gray-700 dark:text-gray-300" },
-                                                                "text": "$t:sirsoft-pay-kginicis.settings.live_japan_cbt_key"
+                                                                "props": {
+                                                                    "className": "block text-sm font-medium text-gray-700 dark:text-gray-300"
+                                                                },
+                                                                "text": "$t:sirsoft-pay_kginicis.settings.live_japan_cbt_key"
                                                             },
                                                             {
                                                                 "type": "basic",
                                                                 "name": "P",
-                                                                "props": { "className": "mt-1 text-xs text-gray-500 dark:text-gray-400" },
-                                                                "text": "$t:sirsoft-pay-kginicis.settings.live_japan_cbt_key_hint"
+                                                                "props": {
+                                                                    "className": "mt-1 text-xs text-gray-500 dark:text-gray-400"
+                                                                },
+                                                                "text": "$t:sirsoft-pay_kginicis.settings.live_japan_cbt_key_hint"
                                                             }
                                                         ]
                                                     },
                                                     {
                                                         "type": "basic",
                                                         "name": "Div",
-                                                        "props": { "className": "lg:col-span-2" },
+                                                        "props": {
+                                                            "className": "lg:col-span-2"
+                                                        },
                                                         "children": [
                                                             {
                                                                 "type": "basic",
@@ -607,7 +745,7 @@
                                                                     "type": "password",
                                                                     "name": "live_japan_sign_key",
                                                                     "placeholder": "••••••••••••••••",
-                                                                    "className": "w-full px-3 py-2 border border-gray-300 dark:border-gray-600 rounded-lg bg-white dark:bg-gray-700 text-gray-900 dark:text-white focus:ring-2 focus:ring-blue-500 focus:border-transparent font-mono text-sm"
+                                                                    "className": "w-full px-3 py-2 border border-gray-300 dark:border-gray-600 rounded-lg bg-white dark:bg-gray-700 text-gray-900 dark:text-white focus:ring-2 focus:ring-blue-500 dark:focus:ring-blue-400 focus:border-transparent font-mono text-sm"
                                                                 }
                                                             }
                                                         ]
@@ -624,37 +762,49 @@
                         "id": "escrow_section",
                         "type": "basic",
                         "name": "Div",
-                        "props": { "className": "mt-6 bg-white dark:bg-gray-800 rounded-lg shadow-sm border border-gray-200 dark:border-gray-700" },
+                        "props": {
+                            "className": "mt-6 bg-white dark:bg-gray-800 rounded-lg shadow-sm border border-gray-200 dark:border-gray-700"
+                        },
                         "children": [
                             {
                                 "type": "basic",
                                 "name": "Div",
-                                "props": { "className": "px-6 py-4 border-b border-gray-200 dark:border-gray-700" },
+                                "props": {
+                                    "className": "px-6 py-4 border-b border-gray-200 dark:border-gray-700"
+                                },
                                 "children": [
                                     {
                                         "type": "basic",
                                         "name": "H3",
-                                        "props": { "className": "text-base font-semibold text-gray-900 dark:text-white" },
-                                        "text": "$t:sirsoft-pay-kginicis.settings.section_escrow"
+                                        "props": {
+                                            "className": "text-base font-semibold text-gray-900 dark:text-white"
+                                        },
+                                        "text": "$t:sirsoft-pay_kginicis.settings.section_escrow"
                                     },
                                     {
                                         "type": "basic",
                                         "name": "P",
-                                        "props": { "className": "mt-1 text-xs text-gray-500 dark:text-gray-400" },
-                                        "text": "$t:sirsoft-pay-kginicis.settings.section_escrow_hint"
+                                        "props": {
+                                            "className": "mt-1 text-xs text-gray-500 dark:text-gray-400"
+                                        },
+                                        "text": "$t:sirsoft-pay_kginicis.settings.section_escrow_hint"
                                     }
                                 ]
                             },
                             {
                                 "type": "basic",
                                 "name": "Div",
-                                "props": { "className": "p-6" },
+                                "props": {
+                                    "className": "p-6"
+                                },
                                 "children": [
                                     {
                                         "id": "field_use_escrow",
                                         "type": "basic",
                                         "name": "Div",
-                                        "props": { "className": "flex items-center justify-between" },
+                                        "props": {
+                                            "className": "flex items-center justify-between"
+                                        },
                                         "children": [
                                             {
                                                 "type": "basic",
@@ -663,21 +813,27 @@
                                                     {
                                                         "type": "basic",
                                                         "name": "Label",
-                                                        "props": { "className": "block text-sm font-medium text-gray-700 dark:text-gray-300" },
-                                                        "text": "$t:sirsoft-pay-kginicis.settings.use_escrow"
+                                                        "props": {
+                                                            "className": "block text-sm font-medium text-gray-700 dark:text-gray-300"
+                                                        },
+                                                        "text": "$t:sirsoft-pay_kginicis.settings.use_escrow"
                                                     },
                                                     {
                                                         "type": "basic",
                                                         "name": "P",
-                                                        "props": { "className": "mt-1 text-xs text-gray-500 dark:text-gray-400" },
-                                                        "text": "$t:sirsoft-pay-kginicis.settings.use_escrow_hint"
+                                                        "props": {
+                                                            "className": "mt-1 text-xs text-gray-500 dark:text-gray-400"
+                                                        },
+                                                        "text": "$t:sirsoft-pay_kginicis.settings.use_escrow_hint"
                                                     }
                                                 ]
                                             },
                                             {
                                                 "type": "composite",
                                                 "name": "Toggle",
-                                                "props": { "name": "use_escrow" }
+                                                "props": {
+                                                    "name": "use_escrow"
+                                                }
                                             }
                                         ]
                                     }
@@ -689,55 +845,73 @@
                         "id": "redirect_section",
                         "type": "basic",
                         "name": "Div",
-                        "props": { "className": "mt-6 bg-white dark:bg-gray-800 rounded-lg shadow-sm border border-gray-200 dark:border-gray-700" },
+                        "props": {
+                            "className": "mt-6 bg-white dark:bg-gray-800 rounded-lg shadow-sm border border-gray-200 dark:border-gray-700"
+                        },
                         "children": [
                             {
                                 "type": "basic",
                                 "name": "Div",
-                                "props": { "className": "px-6 py-4 border-b border-gray-200 dark:border-gray-700" },
+                                "props": {
+                                    "className": "px-6 py-4 border-b border-gray-200 dark:border-gray-700"
+                                },
                                 "children": [
                                     {
                                         "type": "basic",
                                         "name": "H3",
-                                        "props": { "className": "text-base font-semibold text-gray-900 dark:text-white" },
-                                        "text": "$t:sirsoft-pay-kginicis.settings.section_redirect"
+                                        "props": {
+                                            "className": "text-base font-semibold text-gray-900 dark:text-white"
+                                        },
+                                        "text": "$t:sirsoft-pay_kginicis.settings.section_redirect"
                                     }
                                 ]
                             },
                             {
                                 "type": "basic",
                                 "name": "Div",
-                                "props": { "className": "p-6 space-y-6" },
+                                "props": {
+                                    "className": "p-6 space-y-6"
+                                },
                                 "children": [
                                     {
                                         "id": "field_redirect_success_url",
                                         "type": "basic",
                                         "name": "Div",
-                                        "props": { "className": "grid grid-cols-1 lg:grid-cols-3 gap-4 items-start" },
+                                        "props": {
+                                            "className": "grid grid-cols-1 lg:grid-cols-3 gap-4 items-start"
+                                        },
                                         "children": [
                                             {
                                                 "type": "basic",
                                                 "name": "Div",
-                                                "props": { "className": "lg:col-span-1" },
+                                                "props": {
+                                                    "className": "lg:col-span-1"
+                                                },
                                                 "children": [
                                                     {
                                                         "type": "basic",
                                                         "name": "Label",
-                                                        "props": { "className": "block text-sm font-medium text-gray-700 dark:text-gray-300" },
-                                                        "text": "$t:sirsoft-pay-kginicis.settings.redirect_success_url"
+                                                        "props": {
+                                                            "className": "block text-sm font-medium text-gray-700 dark:text-gray-300"
+                                                        },
+                                                        "text": "$t:sirsoft-pay_kginicis.settings.redirect_success_url"
                                                     },
                                                     {
                                                         "type": "basic",
                                                         "name": "P",
-                                                        "props": { "className": "mt-1 text-xs text-gray-500 dark:text-gray-400" },
-                                                        "text": "$t:sirsoft-pay-kginicis.settings.redirect_success_url_hint"
+                                                        "props": {
+                                                            "className": "mt-1 text-xs text-gray-500 dark:text-gray-400"
+                                                        },
+                                                        "text": "$t:sirsoft-pay_kginicis.settings.redirect_success_url_hint"
                                                     }
                                                 ]
                                             },
                                             {
                                                 "type": "basic",
                                                 "name": "Div",
-                                                "props": { "className": "lg:col-span-2" },
+                                                "props": {
+                                                    "className": "lg:col-span-2"
+                                                },
                                                 "children": [
                                                     {
                                                         "type": "basic",
@@ -746,7 +920,7 @@
                                                             "type": "text",
                                                             "name": "redirect_success_url",
                                                             "placeholder": "/shop/orders/{orderId}/complete",
-                                                            "className": "w-full px-3 py-2 border border-gray-300 dark:border-gray-600 rounded-lg bg-white dark:bg-gray-700 text-gray-900 dark:text-white focus:ring-2 focus:ring-blue-500 focus:border-transparent text-sm"
+                                                            "className": "w-full px-3 py-2 border border-gray-300 dark:border-gray-600 rounded-lg bg-white dark:bg-gray-700 text-gray-900 dark:text-white focus:ring-2 focus:ring-blue-500 dark:focus:ring-blue-400 focus:border-transparent text-sm"
                                                         }
                                                     }
                                                 ]
@@ -757,31 +931,41 @@
                                         "id": "field_redirect_fail_url",
                                         "type": "basic",
                                         "name": "Div",
-                                        "props": { "className": "grid grid-cols-1 lg:grid-cols-3 gap-4 items-start" },
+                                        "props": {
+                                            "className": "grid grid-cols-1 lg:grid-cols-3 gap-4 items-start"
+                                        },
                                         "children": [
                                             {
                                                 "type": "basic",
                                                 "name": "Div",
-                                                "props": { "className": "lg:col-span-1" },
+                                                "props": {
+                                                    "className": "lg:col-span-1"
+                                                },
                                                 "children": [
                                                     {
                                                         "type": "basic",
                                                         "name": "Label",
-                                                        "props": { "className": "block text-sm font-medium text-gray-700 dark:text-gray-300" },
-                                                        "text": "$t:sirsoft-pay-kginicis.settings.redirect_fail_url"
+                                                        "props": {
+                                                            "className": "block text-sm font-medium text-gray-700 dark:text-gray-300"
+                                                        },
+                                                        "text": "$t:sirsoft-pay_kginicis.settings.redirect_fail_url"
                                                     },
                                                     {
                                                         "type": "basic",
                                                         "name": "P",
-                                                        "props": { "className": "mt-1 text-xs text-gray-500 dark:text-gray-400" },
-                                                        "text": "$t:sirsoft-pay-kginicis.settings.redirect_fail_url_hint"
+                                                        "props": {
+                                                            "className": "mt-1 text-xs text-gray-500 dark:text-gray-400"
+                                                        },
+                                                        "text": "$t:sirsoft-pay_kginicis.settings.redirect_fail_url_hint"
                                                     }
                                                 ]
                                             },
                                             {
                                                 "type": "basic",
                                                 "name": "Div",
-                                                "props": { "className": "lg:col-span-2" },
+                                                "props": {
+                                                    "className": "lg:col-span-2"
+                                                },
                                                 "children": [
                                                     {
                                                         "type": "basic",
@@ -790,7 +974,7 @@
                                                             "type": "text",
                                                             "name": "redirect_fail_url",
                                                             "placeholder": "/shop/checkout",
-                                                            "className": "w-full px-3 py-2 border border-gray-300 dark:border-gray-600 rounded-lg bg-white dark:bg-gray-700 text-gray-900 dark:text-white focus:ring-2 focus:ring-blue-500 focus:border-transparent text-sm"
+                                                            "className": "w-full px-3 py-2 border border-gray-300 dark:border-gray-600 rounded-lg bg-white dark:bg-gray-700 text-gray-900 dark:text-white focus:ring-2 focus:ring-blue-500 dark:focus:ring-blue-400 focus:border-transparent text-sm"
                                                         }
                                                     }
                                                 ]
@@ -805,28 +989,39 @@
                         "id": "vbank_notify_section",
                         "type": "basic",
                         "name": "Div",
-                        "props": { "className": "mt-6 bg-white dark:bg-gray-800 rounded-lg shadow-sm border border-blue-200 dark:border-blue-800" },
+                        "props": {
+                            "className": "mt-6 bg-white dark:bg-gray-800 rounded-lg shadow-sm border border-blue-200 dark:border-blue-800"
+                        },
                         "children": [
                             {
                                 "type": "basic",
                                 "name": "Div",
-                                "props": { "className": "px-6 py-4 border-b border-blue-200 dark:border-blue-800 bg-blue-50 dark:bg-blue-900/20 rounded-t-lg" },
+                                "props": {
+                                    "className": "px-6 py-4 border-b border-blue-200 dark:border-blue-800 bg-blue-50 dark:bg-blue-900/20 rounded-t-lg"
+                                },
                                 "children": [
                                     {
                                         "type": "basic",
                                         "name": "Div",
-                                        "props": { "className": "flex items-center gap-2" },
+                                        "props": {
+                                            "className": "flex items-center gap-2"
+                                        },
                                         "children": [
                                             {
                                                 "type": "basic",
                                                 "name": "Icon",
-                                                "props": { "name": "bell", "className": "w-4 h-4 text-blue-600 dark:text-blue-400" }
+                                                "props": {
+                                                    "name": "bell",
+                                                    "className": "w-4 h-4 text-blue-600 dark:text-blue-400"
+                                                }
                                             },
                                             {
                                                 "type": "basic",
                                                 "name": "H3",
-                                                "props": { "className": "text-base font-semibold text-blue-900 dark:text-blue-100" },
-                                                "text": "$t:sirsoft-pay-kginicis.settings.section_vbank_notify"
+                                                "props": {
+                                                    "className": "text-base font-semibold text-blue-900 dark:text-blue-100"
+                                                },
+                                                "text": "$t:sirsoft-pay_kginicis.settings.section_vbank_notify"
                                             }
                                         ]
                                     }
@@ -835,7 +1030,9 @@
                             {
                                 "type": "basic",
                                 "name": "Div",
-                                "props": { "className": "p-6 space-y-4" },
+                                "props": {
+                                    "className": "p-6 space-y-4"
+                                },
                                 "children": [
                                     {
                                         "type": "basic",
@@ -844,13 +1041,17 @@
                                             {
                                                 "type": "basic",
                                                 "name": "P",
-                                                "props": { "className": "text-sm text-gray-600 dark:text-gray-400 mb-2" },
-                                                "text": "$t:sirsoft-pay-kginicis.settings.vbank_notify_hint"
+                                                "props": {
+                                                    "className": "text-sm text-gray-600 dark:text-gray-400 mb-2"
+                                                },
+                                                "text": "$t:sirsoft-pay_kginicis.settings.vbank_notify_hint"
                                             },
                                             {
                                                 "type": "basic",
                                                 "name": "Div",
-                                                "props": { "className": "flex items-center gap-2" },
+                                                "props": {
+                                                    "className": "flex items-center gap-2"
+                                                },
                                                 "children": [
                                                     {
                                                         "type": "basic",
@@ -858,14 +1059,16 @@
                                                         "props": {
                                                             "type": "text",
                                                             "readOnly": true,
-                                                            "value": "{{_local.vbankInfo?.url ?? '/plugins/sirsoft-pay-kginicis/payment/vbank-notify'}}",
+                                                            "value": "{{_local.vbankInfo?.url ?? '/plugins/sirsoft-pay_kginicis/payment/vbank-notify'}}",
                                                             "className": "flex-1 px-3 py-2 border border-gray-300 dark:border-gray-600 rounded-lg bg-gray-50 dark:bg-gray-900 text-gray-700 dark:text-gray-300 font-mono text-sm"
                                                         }
                                                     },
                                                     {
                                                         "type": "basic",
                                                         "name": "Button",
-                                                        "props": { "className": "flex items-center gap-1.5 px-3 py-2 bg-gray-100 dark:bg-gray-700 hover:bg-gray-200 dark:hover:bg-gray-600 text-gray-700 dark:text-gray-300 border border-gray-300 dark:border-gray-600 rounded-lg text-sm font-medium transition-colors whitespace-nowrap" },
+                                                        "props": {
+                                                            "className": "flex items-center gap-1.5 px-3 py-2 bg-gray-100 dark:bg-gray-700 hover:bg-gray-200 dark:hover:bg-gray-600 text-gray-700 dark:text-gray-300 border border-gray-300 dark:border-gray-600 rounded-lg text-sm font-medium transition-colors whitespace-nowrap"
+                                                        },
                                                         "actions": [
                                                             {
                                                                 "type": "click",
@@ -873,18 +1076,34 @@
                                                                 "actions": [
                                                                     {
                                                                         "handler": "copyToClipboard",
-                                                                        "params": { "text": "{{_local.vbankInfo?.url ?? '/plugins/sirsoft-pay-kginicis/payment/vbank-notify'}}" }
+                                                                        "params": {
+                                                                            "text": "{{_local.vbankInfo?.url ?? '/plugins/sirsoft-pay_kginicis/payment/vbank-notify'}}"
+                                                                        }
                                                                     },
                                                                     {
                                                                         "handler": "toast",
-                                                                        "params": { "type": "success", "message": "$t:sirsoft-pay-kginicis.settings.vbank_notify_copied" }
+                                                                        "params": {
+                                                                            "type": "success",
+                                                                            "message": "$t:sirsoft-pay_kginicis.settings.vbank_notify_copied"
+                                                                        }
                                                                     }
                                                                 ]
                                                             }
                                                         ],
                                                         "children": [
-                                                            { "type": "basic", "name": "Icon", "props": { "name": "copy", "className": "w-4 h-4" } },
-                                                            { "type": "basic", "name": "Span", "text": "$t:sirsoft-pay-kginicis.settings.copy" }
+                                                            {
+                                                                "type": "basic",
+                                                                "name": "Icon",
+                                                                "props": {
+                                                                    "name": "copy",
+                                                                    "className": "w-4 h-4"
+                                                                }
+                                                            },
+                                                            {
+                                                                "type": "basic",
+                                                                "name": "Span",
+                                                                "text": "$t:sirsoft-pay_kginicis.settings.copy"
+                                                            }
                                                         ]
                                                     }
                                                 ]
@@ -894,24 +1113,32 @@
                                     {
                                         "type": "basic",
                                         "name": "Div",
-                                        "props": { "className": "pt-4 border-t border-blue-100 dark:border-blue-900" },
+                                        "props": {
+                                            "className": "pt-4 border-t border-blue-100 dark:border-blue-900"
+                                        },
                                         "children": [
                                             {
                                                 "type": "basic",
                                                 "name": "P",
-                                                "props": { "className": "text-sm font-medium text-gray-700 dark:text-gray-300 mb-1" },
-                                                "text": "$t:sirsoft-pay-kginicis.settings.section_mobile_vbank_notify"
+                                                "props": {
+                                                    "className": "text-sm font-medium text-gray-700 dark:text-gray-300 mb-1"
+                                                },
+                                                "text": "$t:sirsoft-pay_kginicis.settings.section_mobile_vbank_notify"
                                             },
                                             {
                                                 "type": "basic",
                                                 "name": "P",
-                                                "props": { "className": "text-sm text-gray-600 dark:text-gray-400 mb-2" },
-                                                "text": "$t:sirsoft-pay-kginicis.settings.mobile_vbank_notify_hint"
+                                                "props": {
+                                                    "className": "text-sm text-gray-600 dark:text-gray-400 mb-2"
+                                                },
+                                                "text": "$t:sirsoft-pay_kginicis.settings.mobile_vbank_notify_hint"
                                             },
                                             {
                                                 "type": "basic",
                                                 "name": "Div",
-                                                "props": { "className": "flex items-center gap-2" },
+                                                "props": {
+                                                    "className": "flex items-center gap-2"
+                                                },
                                                 "children": [
                                                     {
                                                         "type": "basic",
@@ -919,14 +1146,16 @@
                                                         "props": {
                                                             "type": "text",
                                                             "readOnly": true,
-                                                            "value": "{{_local.vbankInfo?.mobile_url ?? '/plugins/sirsoft-pay-kginicis/payment/mobile/vbank-notify'}}",
+                                                            "value": "{{_local.vbankInfo?.mobile_url ?? '/plugins/sirsoft-pay_kginicis/payment/mobile/vbank-notify'}}",
                                                             "className": "flex-1 px-3 py-2 border border-gray-300 dark:border-gray-600 rounded-lg bg-gray-50 dark:bg-gray-900 text-gray-700 dark:text-gray-300 font-mono text-sm"
                                                         }
                                                     },
                                                     {
                                                         "type": "basic",
                                                         "name": "Button",
-                                                        "props": { "className": "flex items-center gap-1.5 px-3 py-2 bg-gray-100 dark:bg-gray-700 hover:bg-gray-200 dark:hover:bg-gray-600 text-gray-700 dark:text-gray-300 border border-gray-300 dark:border-gray-600 rounded-lg text-sm font-medium transition-colors whitespace-nowrap" },
+                                                        "props": {
+                                                            "className": "flex items-center gap-1.5 px-3 py-2 bg-gray-100 dark:bg-gray-700 hover:bg-gray-200 dark:hover:bg-gray-600 text-gray-700 dark:text-gray-300 border border-gray-300 dark:border-gray-600 rounded-lg text-sm font-medium transition-colors whitespace-nowrap"
+                                                        },
                                                         "actions": [
                                                             {
                                                                 "type": "click",
@@ -934,18 +1163,34 @@
                                                                 "actions": [
                                                                     {
                                                                         "handler": "copyToClipboard",
-                                                                        "params": { "text": "{{_local.vbankInfo?.mobile_url ?? '/plugins/sirsoft-pay-kginicis/payment/mobile/vbank-notify'}}" }
+                                                                        "params": {
+                                                                            "text": "{{_local.vbankInfo?.mobile_url ?? '/plugins/sirsoft-pay_kginicis/payment/mobile/vbank-notify'}}"
+                                                                        }
                                                                     },
                                                                     {
                                                                         "handler": "toast",
-                                                                        "params": { "type": "success", "message": "$t:sirsoft-pay-kginicis.settings.mobile_vbank_notify_copied" }
+                                                                        "params": {
+                                                                            "type": "success",
+                                                                            "message": "$t:sirsoft-pay_kginicis.settings.mobile_vbank_notify_copied"
+                                                                        }
                                                                     }
                                                                 ]
                                                             }
                                                         ],
                                                         "children": [
-                                                            { "type": "basic", "name": "Icon", "props": { "name": "copy", "className": "w-4 h-4" } },
-                                                            { "type": "basic", "name": "Span", "text": "$t:sirsoft-pay-kginicis.settings.copy" }
+                                                            {
+                                                                "type": "basic",
+                                                                "name": "Icon",
+                                                                "props": {
+                                                                    "name": "copy",
+                                                                    "className": "w-4 h-4"
+                                                                }
+                                                            },
+                                                            {
+                                                                "type": "basic",
+                                                                "name": "Span",
+                                                                "text": "$t:sirsoft-pay_kginicis.settings.copy"
+                                                            }
                                                         ]
                                                     }
                                                 ]
@@ -956,24 +1201,32 @@
                                         "type": "basic",
                                         "name": "Div",
                                         "if": "{{_local.form && _local.form.use_escrow}}",
-                                        "props": { "className": "pt-4 border-t border-blue-100 dark:border-blue-900" },
+                                        "props": {
+                                            "className": "pt-4 border-t border-blue-100 dark:border-blue-900"
+                                        },
                                         "children": [
                                             {
                                                 "type": "basic",
                                                 "name": "P",
-                                                "props": { "className": "text-sm font-medium text-gray-700 dark:text-gray-300 mb-1" },
-                                                "text": "$t:sirsoft-pay-kginicis.settings.section_escrow_notify"
+                                                "props": {
+                                                    "className": "text-sm font-medium text-gray-700 dark:text-gray-300 mb-1"
+                                                },
+                                                "text": "$t:sirsoft-pay_kginicis.settings.section_escrow_notify"
                                             },
                                             {
                                                 "type": "basic",
                                                 "name": "P",
-                                                "props": { "className": "text-sm text-gray-600 dark:text-gray-400 mb-2" },
-                                                "text": "$t:sirsoft-pay-kginicis.settings.escrow_notify_hint"
+                                                "props": {
+                                                    "className": "text-sm text-gray-600 dark:text-gray-400 mb-2"
+                                                },
+                                                "text": "$t:sirsoft-pay_kginicis.settings.escrow_notify_hint"
                                             },
                                             {
                                                 "type": "basic",
                                                 "name": "Div",
-                                                "props": { "className": "flex items-center gap-2" },
+                                                "props": {
+                                                    "className": "flex items-center gap-2"
+                                                },
                                                 "children": [
                                                     {
                                                         "type": "basic",
@@ -981,14 +1234,16 @@
                                                         "props": {
                                                             "type": "text",
                                                             "readOnly": true,
-                                                            "value": "{{_local.vbankInfo?.escrow_url ?? '/plugins/sirsoft-pay-kginicis/payment/escrow-notify'}}",
+                                                            "value": "{{_local.vbankInfo?.escrow_url ?? '/plugins/sirsoft-pay_kginicis/payment/escrow-notify'}}",
                                                             "className": "flex-1 px-3 py-2 border border-gray-300 dark:border-gray-600 rounded-lg bg-gray-50 dark:bg-gray-900 text-gray-700 dark:text-gray-300 font-mono text-sm"
                                                         }
                                                     },
                                                     {
                                                         "type": "basic",
                                                         "name": "Button",
-                                                        "props": { "className": "flex items-center gap-1.5 px-3 py-2 bg-gray-100 dark:bg-gray-700 hover:bg-gray-200 dark:hover:bg-gray-600 text-gray-700 dark:text-gray-300 border border-gray-300 dark:border-gray-600 rounded-lg text-sm font-medium transition-colors whitespace-nowrap" },
+                                                        "props": {
+                                                            "className": "flex items-center gap-1.5 px-3 py-2 bg-gray-100 dark:bg-gray-700 hover:bg-gray-200 dark:hover:bg-gray-600 text-gray-700 dark:text-gray-300 border border-gray-300 dark:border-gray-600 rounded-lg text-sm font-medium transition-colors whitespace-nowrap"
+                                                        },
                                                         "actions": [
                                                             {
                                                                 "type": "click",
@@ -996,18 +1251,34 @@
                                                                 "actions": [
                                                                     {
                                                                         "handler": "copyToClipboard",
-                                                                        "params": { "text": "{{_local.vbankInfo?.escrow_url ?? '/plugins/sirsoft-pay-kginicis/payment/escrow-notify'}}" }
+                                                                        "params": {
+                                                                            "text": "{{_local.vbankInfo?.escrow_url ?? '/plugins/sirsoft-pay_kginicis/payment/escrow-notify'}}"
+                                                                        }
                                                                     },
                                                                     {
                                                                         "handler": "toast",
-                                                                        "params": { "type": "success", "message": "$t:sirsoft-pay-kginicis.settings.escrow_notify_copied" }
+                                                                        "params": {
+                                                                            "type": "success",
+                                                                            "message": "$t:sirsoft-pay_kginicis.settings.escrow_notify_copied"
+                                                                        }
                                                                     }
                                                                 ]
                                                             }
                                                         ],
                                                         "children": [
-                                                            { "type": "basic", "name": "Icon", "props": { "name": "copy", "className": "w-4 h-4" } },
-                                                            { "type": "basic", "name": "Span", "text": "$t:sirsoft-pay-kginicis.settings.copy" }
+                                                            {
+                                                                "type": "basic",
+                                                                "name": "Icon",
+                                                                "props": {
+                                                                    "name": "copy",
+                                                                    "className": "w-4 h-4"
+                                                                }
+                                                            },
+                                                            {
+                                                                "type": "basic",
+                                                                "name": "Span",
+                                                                "text": "$t:sirsoft-pay_kginicis.settings.copy"
+                                                            }
                                                         ]
                                                     }
                                                 ]
@@ -1022,18 +1293,32 @@
                         "id": "footer_buttons",
                         "type": "basic",
                         "name": "Div",
-                        "props": { "className": "flex justify-end gap-3 mt-6" },
+                        "props": {
+                            "className": "flex justify-end gap-3 mt-6"
+                        },
                         "children": [
                             {
                                 "id": "cancel_button",
                                 "type": "basic",
                                 "name": "Button",
-                                "props": { "className": "px-4 py-2 bg-white dark:bg-gray-800 text-gray-700 dark:text-gray-300 border border-gray-300 dark:border-gray-600 rounded-lg hover:bg-gray-50 dark:hover:bg-gray-700 font-medium transition-colors" },
+                                "props": {
+                                    "className": "px-4 py-2 bg-white dark:bg-gray-800 text-gray-700 dark:text-gray-300 border border-gray-300 dark:border-gray-600 rounded-lg hover:bg-gray-50 dark:hover:bg-gray-700 font-medium transition-colors"
+                                },
                                 "actions": [
-                                    { "type": "click", "handler": "navigate", "params": { "path": "/admin/plugins" } }
+                                    {
+                                        "type": "click",
+                                        "handler": "navigate",
+                                        "params": {
+                                            "path": "/admin/plugins"
+                                        }
+                                    }
                                 ],
                                 "children": [
-                                    { "type": "basic", "name": "Span", "text": "$t:common.cancel" }
+                                    {
+                                        "type": "basic",
+                                        "name": "Span",
+                                        "text": "$t:common.cancel"
+                                    }
                                 ]
                             },
                             {
@@ -1049,29 +1334,88 @@
                                         "type": "click",
                                         "handler": "sequence",
                                         "actions": [
-                                            { "handler": "setState", "params": { "target": "local", "isSaving": true, "errors": null } },
+                                            {
+                                                "handler": "setState",
+                                                "params": {
+                                                    "target": "local",
+                                                    "isSaving": true,
+                                                    "errors": null
+                                                }
+                                            },
                                             {
                                                 "handler": "apiCall",
                                                 "auth_required": true,
                                                 "target": "/api/admin/plugins/{{route.identifier}}/settings",
-                                                "params": { "method": "PUT", "body": "{{_local.form}}" },
+                                                "params": {
+                                                    "method": "PUT",
+                                                    "body": "{{_local.form}}"
+                                                },
                                                 "onSuccess": [
-                                                    { "handler": "setState", "params": { "target": "local", "isSaving": false, "hasChanges": false } },
-                                                    { "handler": "toast", "params": { "type": "success", "message": "$t:admin.plugins.settings.save_success" } },
-                                                    { "handler": "refetchDataSource", "params": { "dataSourceId": "settings" } }
+                                                    {
+                                                        "handler": "setState",
+                                                        "params": {
+                                                            "target": "local",
+                                                            "isSaving": false,
+                                                            "hasChanges": false
+                                                        }
+                                                    },
+                                                    {
+                                                        "handler": "toast",
+                                                        "params": {
+                                                            "type": "success",
+                                                            "message": "$t:admin.plugins.settings.save_success"
+                                                        }
+                                                    },
+                                                    {
+                                                        "handler": "refetchDataSource",
+                                                        "params": {
+                                                            "dataSourceId": "settings"
+                                                        }
+                                                    }
                                                 ],
                                                 "onError": [
-                                                    { "handler": "setState", "params": { "target": "local", "isSaving": false, "errors": "{{$error.errors}}" } },
-                                                    { "handler": "toast", "params": { "type": "error", "message": "$t:admin.plugins.settings.save_error" } }
+                                                    {
+                                                        "handler": "setState",
+                                                        "params": {
+                                                            "target": "local",
+                                                            "isSaving": false,
+                                                            "errors": "{{$error.errors}}"
+                                                        }
+                                                    },
+                                                    {
+                                                        "handler": "toast",
+                                                        "params": {
+                                                            "type": "error",
+                                                            "message": "$t:admin.plugins.settings.save_error"
+                                                        }
+                                                    }
                                                 ]
                                             }
                                         ]
                                     }
                                 ],
                                 "children": [
-                                    { "type": "basic", "name": "Icon", "if": "{{_local.isSaving}}", "props": { "name": "spinner", "className": "w-4 h-4 animate-spin" } },
-                                    { "type": "basic", "name": "Span", "if": "{{!_local.isSaving}}", "text": "$t:common.save" },
-                                    { "type": "basic", "name": "Span", "if": "{{_local.isSaving}}", "text": "$t:common.saving" }
+                                    {
+                                        "type": "basic",
+                                        "name": "Icon",
+                                        "if": "{{_local.isSaving}}",
+                                        "props": {
+                                            "name": "spinner",
+                                            "className": "w-4 h-4 animate-spin"
+                                        }
+                                    },
+                                    {
+                                        "type": "basic",
+                                        "name": "Span",
+                                        "if": "{{!_local.isSaving}}",
+                                        "text": "$t:common.save"
+                                    },
+                                    {
+                                        "type": "basic",
+                                        "name": "Span",
+                                        "if": "{{_local.isSaving}}",
+                                        "text": "$t:common.saving"
+                                    }
                                 ]
                             }
                         ]
@@ -1079,19 +1423,5 @@
                 ]
             }
         ]
-    },
-    "schema": {
-        "is_test_mode": { "type": "boolean", "default": true },
-        "live_mid": { "type": "string", "default": "" },
-        "live_sign_key": { "type": "string", "default": "", "sensitive": true },
-        "live_iniapi_key": { "type": "string", "default": "", "sensitive": true },
-        "live_iniapi_iv": { "type": "string", "default": "", "sensitive": true },
-        "japan_enabled": { "type": "boolean", "default": false },
-        "use_escrow": { "type": "boolean", "default": false },
-        "test_japan_mid": { "type": "string", "default": "" },
-        "live_japan_mid": { "type": "string", "default": "" },
-        "live_japan_sign_key": { "type": "string", "default": "", "sensitive": true },
-        "redirect_success_url": { "type": "string", "default": "/shop/orders/{orderId}/complete" },
-        "redirect_fail_url": { "type": "string", "default": "/shop/checkout" }
     }
 }

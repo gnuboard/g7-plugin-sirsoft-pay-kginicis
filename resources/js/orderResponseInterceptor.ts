@@ -20,7 +20,7 @@ import { requestPaymentHandler } from './handlers/requestPayment';
 
 const ORDER_CREATE_PATH = '/api/modules/sirsoft-ecommerce/user/orders';
 const TARGET_PG_PROVIDER = 'sirsoft-kginicis';
-const PLUGIN_IDENTIFIER = 'sirsoft-pay-kginicis';
+const PLUGIN_IDENTIFIER = 'sirsoft-pay_kginicis';
 
 const logger = {
     info: (...args: unknown[]) => console.info(`[${PLUGIN_IDENTIFIER}]`, ...args),

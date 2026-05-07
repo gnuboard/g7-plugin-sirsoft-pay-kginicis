@@ -2,11 +2,11 @@
 
 declare(strict_types=1);
 
-namespace Plugins\Sirsoft\Pay\Kginicis\Controllers;
+namespace Plugins\Sirsoft\PayKginicis\Controllers;
 
 use Illuminate\Http\JsonResponse;
 use Illuminate\Http\Request;
-use Plugins\Sirsoft\Pay\Kginicis\Services\KgInicisApiService;
+use Plugins\Sirsoft\PayKginicis\Services\KgInicisApiService;
 
 class CbtHashDataController
 {
@@ -15,10 +15,10 @@ class CbtHashDataController
     ) {}
 
     /**
-     * CBT 해시 데이터 생성
+     * generate
      *
-     * POST /api/plugins/sirsoft-pay-kginicis/payment/cbt/hash-data
-     * Body: { oid, price, timestamp }
+     * @param  Request  $request
+     * @return JsonResponse
      */
     public function generate(Request $request): JsonResponse
     {

@@ -2,14 +2,14 @@
 
 declare(strict_types=1);
 
-namespace Plugins\Sirsoft\Pay\Kginicis\Controllers;
+namespace Plugins\Sirsoft\PayKginicis\Controllers;
 
 use App\Services\PluginSettingsService;
 use Illuminate\Support\Facades\Log;
 use Modules\Sirsoft\Ecommerce\Exceptions\PaymentAmountMismatchException;
 use Modules\Sirsoft\Ecommerce\Services\OrderProcessingService;
-use Plugins\Sirsoft\Pay\Kginicis\Http\Requests\MobileCallbackRequest;
-use Plugins\Sirsoft\Pay\Kginicis\Services\KgInicisApiService;
+use Plugins\Sirsoft\PayKginicis\Http\Requests\MobileCallbackRequest;
+use Plugins\Sirsoft\PayKginicis\Services\KgInicisApiService;
 
 /**
  * KG 이니시스 모바일 결제 콜백 컨트롤러
@@ -22,7 +22,7 @@ use Plugins\Sirsoft\Pay\Kginicis\Services\KgInicisApiService;
  */
 class MobileCallbackController
 {
-    private const PLUGIN_IDENTIFIER = 'sirsoft-pay-kginicis';
+    private const PLUGIN_IDENTIFIER = 'sirsoft-pay_kginicis';
 
     public function __construct(
         private readonly OrderProcessingService $orderService,
@@ -31,10 +31,10 @@ class MobileCallbackController
     ) {}
 
     /**
-     * KG 이니시스 모바일 결제 콜백 (P_NEXT_URL)
+     * handle
      *
-     * GET /plugins/sirsoft-pay-kginicis/payment/mobile/callback
-     * (KG 이니시스가 인증 후 브라우저를 이 URL로 리다이렉트)
+     * @param  MobileCallbackRequest  $request
+     * @return \Illuminate\Http\RedirectResponse
      */
     public function handle(MobileCallbackRequest $request): \Illuminate\Http\RedirectResponse
     {

@@ -2,7 +2,7 @@
 
 declare(strict_types=1);
 
-namespace Plugins\Sirsoft\Pay\Kginicis\Controllers;
+namespace Plugins\Sirsoft\PayKginicis\Controllers;
 
 use App\Extension\HookManager;
 use App\Services\PluginSettingsService;
@@ -11,10 +11,10 @@ use Illuminate\Http\Response;
 use Illuminate\Support\Facades\Log;
 use Modules\Sirsoft\Ecommerce\Exceptions\PaymentAmountMismatchException;
 use Modules\Sirsoft\Ecommerce\Services\OrderProcessingService;
-use Plugins\Sirsoft\Pay\Kginicis\Http\Requests\AuthCallbackRequest;
-use Plugins\Sirsoft\Pay\Kginicis\Http\Requests\MobileVbankNotifyRequest;
-use Plugins\Sirsoft\Pay\Kginicis\Http\Requests\VbankNotifyRequest;
-use Plugins\Sirsoft\Pay\Kginicis\Services\KgInicisApiService;
+use Plugins\Sirsoft\PayKginicis\Http\Requests\AuthCallbackRequest;
+use Plugins\Sirsoft\PayKginicis\Http\Requests\MobileVbankNotifyRequest;
+use Plugins\Sirsoft\PayKginicis\Http\Requests\VbankNotifyRequest;
+use Plugins\Sirsoft\PayKginicis\Services\KgInicisApiService;
 
 /**
  * KG 이니시스 결제 콜백 컨트롤러
@@ -25,7 +25,7 @@ use Plugins\Sirsoft\Pay\Kginicis\Services\KgInicisApiService;
  */
 class PaymentCallbackController
 {
-    private const PLUGIN_IDENTIFIER = 'sirsoft-pay-kginicis';
+    private const PLUGIN_IDENTIFIER = 'sirsoft-pay_kginicis';
 
     public function __construct(
         private readonly OrderProcessingService $orderService,
@@ -34,10 +34,10 @@ class PaymentCallbackController
     ) {}
 
     /**
-     * KG 이니시스 결제 승인 콜백
+     * authCallback
      *
-     * POST /plugins/sirsoft-pay-kginicis/payment/callback
-     * (CSRF 제외 - 이니시스가 브라우저 통해 POST 전달)
+     * @param  AuthCallbackRequest  $request
+     * @return \Illuminate\Http\RedirectResponse
      */
     public function authCallback(AuthCallbackRequest $request): \Illuminate\Http\RedirectResponse
     {
@@ -122,11 +122,11 @@ class PaymentCallbackController
                 return redirect($this->resolveFailUrl(['error' => 'order_not_found', 'orderId' => $moid]));
             }
 
-            HookManager::doAction('sirsoft-pay-kginicis.payment.before_authorize', $order, $validated);
+            HookManager::doAction('sirsoft-pay_kginicis.payment.before_authorize', $order, $validated);
 
             $pgResponse = $this->apiService->authorizePayment($authUrl, $authToken);
 
-            HookManager::doAction('sirsoft-pay-kginicis.payment.after_authorize', $order, $pgResponse);
+            HookManager::doAction('sirsoft-pay_kginicis.payment.after_authorize', $order, $pgResponse);
 
             $pgResultCode = $pgResponse['resultCode'] ?? '';
 
@@ -204,11 +204,10 @@ class PaymentCallbackController
     }
 
     /**
-     * PC 가상계좌 입금 통보 처리
+     * vbankNotify
      *
-     * POST /plugins/sirsoft-pay-kginicis/payment/vbank-notify
-     * (KG 이니시스 서버 → 우리 서버, CSRF 제외)
-     * 매뉴얼: https://manual.inicis.com/pay/etc-noti.html#pc
+     * @param  VbankNotifyRequest  $request
+     * @return Response
      */
     public function vbankNotify(VbankNotifyRequest $request): Response
     {
@@ -263,13 +262,10 @@ class PaymentCallbackController
     }
 
     /**
-     * 모바일 가상계좌 입금 통보 처리
+     * mobileVbankNotify
      *
-     * POST /plugins/sirsoft-pay-kginicis/payment/mobile/vbank-notify
-     * (KG 이니시스 서버 → 우리 서버, CSRF 제외)
-     * 매뉴얼: https://manual.inicis.com/pay/etc-noti.html#mo
-     *
-     * P_STATUS == "02" && P_TYPE == "VBANK" 인 경우만 입금 처리.
+     * @param  MobileVbankNotifyRequest  $request
+     * @return Response
      */
     public function mobileVbankNotify(MobileVbankNotifyRequest $request): Response
     {

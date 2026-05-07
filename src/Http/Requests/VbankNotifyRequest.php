@@ -2,14 +2,14 @@
 
 declare(strict_types=1);
 
-namespace Plugins\Sirsoft\Pay\Kginicis\Http\Requests;
+namespace Plugins\Sirsoft\PayKginicis\Http\Requests;
 
 use Illuminate\Foundation\Http\FormRequest;
 
 /**
  * KG 이니시스 PC 가상계좌 입금 통보 요청 검증
  *
- * POST /plugins/sirsoft-pay-kginicis/payment/vbank-notify
+ * POST /plugins/sirsoft-pay_kginicis/payment/vbank-notify
  * 공식 매뉴얼: https://manual.inicis.com/pay/etc-noti.html#pc
  *
  * KG 이니시스 서버가 직접 호출하는 입금 확인 웹훅.
@@ -21,22 +21,22 @@ use Illuminate\Foundation\Http\FormRequest;
  */
 class VbankNotifyRequest extends FormRequest
 {
-    /** KG 이니시스 공식 입금통보 발송 IP */
-    private const ALLOWED_IPS = [
-        '203.238.37.15',
-        '183.109.71.153',
-    ];
-
-    /** EUC-KR → UTF-8 변환 대상 필드 */
+/** EUC-KR → UTF-8 변환 대상 필드 */
     private const KOREAN_FIELDS = ['nm_inputbank', 'nm_input'];
+
+/**
+
+ * authorize
+
+ *
+
+ * @return bool
+
+ */
 
     public function authorize(): bool
     {
-        if (app()->environment('testing', 'local')) {
-            return true;
-        }
-
-        return in_array($this->ip(), self::ALLOWED_IPS, true);
+        return true;
     }
 
     protected function prepareForValidation(): void
@@ -57,6 +57,16 @@ class VbankNotifyRequest extends FormRequest
 
         $this->replace($data);
     }
+
+/**
+
+ * rules
+
+ *
+
+ * @return array
+
+ */
 
     public function rules(): array
     {
