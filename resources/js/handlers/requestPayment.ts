@@ -323,7 +323,7 @@ export async function requestPaymentHandler(action: any, _context?: any): Promis
 
     } catch (error: unknown) {
         const errorMessage = error instanceof Error ? error.message : 'Unknown error';
-        G7Core?.state?.setLocal?.({ paymentErrorMessage: errorMessage, isSubmittingOrder: false });
+        G7Core?.state?.setLocal?.({ paymentErrorMessage: errorMessage, isSubmittingOrder: false, paymentMethod });
         G7Core?.modal?.open?.('kginicis_payment_error_modal');
     }
 }
