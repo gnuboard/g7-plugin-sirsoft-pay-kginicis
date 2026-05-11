@@ -21,7 +21,11 @@
         "payment_type_label": "결제 방식",
         "receipt_label": "영수증",
         "receipt_view": "영수증 조회",
-        "escrow_confirm_button": "구매결정"
+        "escrow_confirm_button": "구매결정",
+        "tax_breakdown_title": "세금 상세",
+        "supply_amount": "공급가액",
+        "vat_amount": "부가세",
+        "tax_free_amount": "면세금액"
     },
     "admin": {
         "test_mode_badge": "테스트 결제",
