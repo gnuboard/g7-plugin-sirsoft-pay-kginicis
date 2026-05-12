@@ -6,6 +6,7 @@ const ORDER_SHOW_RE = /^\/mypage\/orders\/([^/]+)$/;
 
 interface Payment {
     pg_provider?: string;
+    payment_status?: string;
     payment_method?: string;
     transaction_id?: string | null;
     [key: string]: unknown;
@@ -104,6 +105,7 @@ async function tryInject(orderNumber: string): Promise<boolean> {
 
     const { payment } = orderData;
     if (!payment || payment.pg_provider !== 'kginicis') return true;
+    if (payment.payment_status !== 'paid') return true;
     if (!payment.transaction_id) return true;
 
     if (document.getElementById(ROW_ID)) return true;

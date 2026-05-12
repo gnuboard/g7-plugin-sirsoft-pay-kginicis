@@ -6,6 +6,7 @@ const ORDER_COMPLETE_RE = /^\/shop\/orders\/([^/]+)\/complete$/;
 
 type Payment = {
     pg_provider: string;
+    payment_status: string;
     transaction_id: string | null;
     [key: string]: unknown;
 };
@@ -50,7 +51,9 @@ async function injectOnOrderComplete(orderNumber: string): Promise<void> {
     if (document.getElementById(BTN_ID)) return;
 
     const payment = await fetchPayment(orderNumber);
-    if (!payment || payment.pg_provider !== 'kginicis' || !payment.transaction_id) return;
+    if (!payment || payment.pg_provider !== 'kginicis') return;
+    if (payment.payment_status !== 'paid') return;
+    if (!payment.transaction_id) return;
 
     const blueBtn = Array.from(document.querySelectorAll<HTMLButtonElement>('button[type="button"]'))
         .find(b => b.className.includes('bg-blue-600'));
