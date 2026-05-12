@@ -2,6 +2,7 @@ import { handlerMap } from './handlers';
 import { installOrderResponseInterceptor } from './orderResponseInterceptor';
 import { installMypageOrderShowInjector } from './mypageOrderShowInjector';
 import { installOrderCompleteReceiptInjector } from './orderCompleteReceiptInjector';
+import { installVbankInfoInjector } from './vbankInfoInjector';
 
 const PLUGIN_IDENTIFIER = 'sirsoft-pay_kginicis';
 
@@ -84,6 +85,7 @@ installOrderResponseInterceptor();
 
 installMypageOrderShowInjector();
 installOrderCompleteReceiptInjector();
+installVbankInfoInjector();
 
 initPlugin();
 
