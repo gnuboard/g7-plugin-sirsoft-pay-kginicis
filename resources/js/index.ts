@@ -3,6 +3,7 @@ import { installOrderResponseInterceptor } from './orderResponseInterceptor';
 import { installMypageOrderShowInjector } from './mypageOrderShowInjector';
 import { installOrderCompleteReceiptInjector } from './orderCompleteReceiptInjector';
 import { installVbankInfoInjector } from './vbankInfoInjector';
+import { installCheckoutEasyPayInjector } from './checkoutEasyPayInjector';
 
 const PLUGIN_IDENTIFIER = 'sirsoft-pay_kginicis';
 
@@ -86,6 +87,7 @@ installOrderResponseInterceptor();
 installMypageOrderShowInjector();
 installOrderCompleteReceiptInjector();
 installVbankInfoInjector();
+installCheckoutEasyPayInjector();
 
 initPlugin();
 
